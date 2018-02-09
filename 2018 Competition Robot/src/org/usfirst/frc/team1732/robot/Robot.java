@@ -13,7 +13,11 @@ import org.usfirst.frc.team1732.robot.conf.ConfigNotFoundException;
 import org.usfirst.frc.team1732.robot.input.Joysticks;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.sensors.navx.NavXData;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
+import org.usfirst.frc.team1732.robot.subsystems.Climber;
+import org.usfirst.frc.team1732.robot.subsystems.CubeManip;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -32,15 +36,21 @@ public class Robot extends TimedRobot {
 
 	// subsystems
 	public static Drivetrain drivetrain;
+	public static Arm arm;
+	public static CubeManip intake;
+	public static Elevator elevator;
+	public static Climber climber;
 	public static Sensors sensors;
+	
 	// input
 	public static Joysticks joysticks;
+	
 	// config
 	public static final int PERIOD_MS = 10;
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 
 	// Commands
-	public static Command teleop;// = new OperatorControl();
+	public static Command teleop = new OperatorControl();
 	// Auto command Choices
 	public static Command autoCommand;
 	public static SendableChooser<Command> autoCommands = new SendableChooser<>();
@@ -63,6 +73,10 @@ public class Robot extends TimedRobot {
 	public void initSubsystems() {
 		try {
 			drivetrain = new Drivetrain();
+			intake = new CubeManip();
+			arm = new Arm();
+			elevator = new Elevator();
+			climber = new Climber();
 			sensors = new Sensors();
 		} catch (ConfigNotFoundException e) {
 			System.out.println("Failed to Init Subsystems");

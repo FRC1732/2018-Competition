@@ -22,6 +22,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class Config {
@@ -50,6 +51,22 @@ public class Config {
 					tf.setInverted((Boolean) ((JSONObject)a.get(i)).get("reversed"));
 				}
 				tf.set(ControlMode.Follower, t.getDeviceID());
+			}
+		} else {
+			throw new ConfigNotFoundException("Could not find path '"+path+"'");
+		}
+
+		return t;
+	}
+	
+	public Spark spark(String path) {
+		Object cur = getValue(path, OBJ);
+
+		Spark t;
+		if (cur instanceof JSONObject) {
+			t = new Spark(getValue(path + ".num", 0));
+			if (getValue(path + ".reversed", false)) {
+				t.setInverted(true);
 			}
 		} else {
 			throw new ConfigNotFoundException("Could not find path '"+path+"'");
