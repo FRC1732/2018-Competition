@@ -68,11 +68,12 @@ public class RobotConfig {
 		}
 	}
 
-	private static final String PREF_KEY = "Robot";
+	private static final String PREF_KEY = "ROBOT";
 
 	public static RobotConfig getConfig() {
-		return ROBOTS.valueOf(ROBOTS.class, Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name()))
-				.getConfig();
+		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
+		System.out.println("Loaded robot: " + robot);
+		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}
 
 	private RobotConfig() {
