@@ -7,8 +7,10 @@
 
 package org.usfirst.frc.team1732.robot;
 
+import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Joysticks;
+import org.usfirst.frc.team1732.robot.math.BooleanTimer;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
 	// other
 	public static final int PERIOD_MS = 20;
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
+	private static BooleanTimer gameDataWaiter;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -63,6 +66,16 @@ public class Robot extends TimedRobot {
 		sensors = new Sensors(robotConfig);
 
 		joysticks = new Joysticks(robotConfig);
+		Runnable ifDataNotReceived = () -> {
+			// start the default command, maybe "new DriveAcrossAutoLine().start()"
+		};
+		Runnable ifDataReceived = () -> {
+			// start the chosen command, maybe "getChosenCommand().start()"
+		};
+		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions, DriverStationData::cancelPolling,
+				ifDataNotReceived, ifDataReceived);
+		// gameDataWaiter will either start the auto if game data is received before 10
+		// seconds, or it will drive across the auto line after 10 seconds
 	}
 
 	@Override
@@ -97,13 +110,18 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		gameDataWaiter.start();
 	}
+
+	private boolean autoStarted = false;
 
 	/**
 	 * This function is called periodically during autonomous.
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		if (!autoStarted)
+			autoStarted = gameDataWaiter.checkIfDone();
 	}
 
 	@Override
