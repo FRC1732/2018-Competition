@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.conf;
+package org.usfirst.frc.team1732.robot.config;
 
 import java.util.function.Supplier;
 

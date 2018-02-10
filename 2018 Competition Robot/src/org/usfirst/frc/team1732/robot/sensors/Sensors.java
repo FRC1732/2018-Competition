@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.sensors;
 
-import org.usfirst.frc.team1732.robot.conf.RobotConfig;
+import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
 import com.kauailabs.navx.frc.AHRS;
 

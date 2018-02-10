@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.input;
 
-import org.usfirst.frc.team1732.robot.conf.RobotConfig;
+import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
 import edu.wpi.first.wpilibj.Joystick;
 

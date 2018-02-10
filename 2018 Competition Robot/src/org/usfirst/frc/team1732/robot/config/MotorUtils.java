@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.conf;
+package org.usfirst.frc.team1732.robot.config;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlFrame;

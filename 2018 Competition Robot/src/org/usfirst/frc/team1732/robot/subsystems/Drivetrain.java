@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.commands.DriveWithJoysticks;
-import org.usfirst.frc.team1732.robot.conf.MotorUtils;
-import org.usfirst.frc.team1732.robot.conf.RobotConfig;
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
+import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
