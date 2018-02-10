@@ -35,18 +35,22 @@ public class BooleanTimer {
 		t.start();
 	}
 
+	private boolean isTimedOut() {
+		return t.get() > timeOut;
+	}
+
 	public boolean checkIfDone() {
-		boolean timedOut = t.hasPeriodPassed(timeOut);
+		boolean timedOut = isTimedOut();
 		boolean finished = checker.get();
-		if (timedOut || finished) {
-			end.run();
-			if (timedOut)
-				ifTimedOut.run();
-			if (finished)
-				ifFinished.run();
-			return true;
-		}
-		return false;
+		return timedOut || finished;
+	}
+
+	public void finish() {
+		end.run();
+		if (isTimedOut())
+			ifTimedOut.run();
+		if (checker.get())
+			ifFinished.run();
 	}
 
 }

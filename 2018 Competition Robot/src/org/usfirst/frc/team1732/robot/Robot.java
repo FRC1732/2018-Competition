@@ -120,8 +120,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		if (!autoStarted)
+		if (!autoStarted) {
 			autoStarted = gameDataWaiter.checkIfDone();
+			if (autoStarted)
+				gameDataWaiter.finish(); // runs the auto
+		}
 	}
 
 	@Override
