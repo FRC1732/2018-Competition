@@ -1,15 +1,20 @@
-package org.usfirst.frc.team1732.robot.subsystems;
+package org.usfirst.frc.team1732.robot.conf;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 // configure base and open loop parameters. Configure close loop parameters somewhere else
 
-public class TalonConfiguration {
-
-	public static final TalonConfiguration DEFAULT_CONFIG = new TalonConfiguration();
+public class CTREConfig {
 
 	public static final int CONFIG_TIMEOUT = 10;
+
+	public static CTREConfig getDefaultConfig() {
+		return new CTREConfig();
+	}
+
+	private CTREConfig() {
+	}
 
 	public NeutralMode neutralMode = NeutralMode.Coast;
 	public double neutralDeadbandPercent = 0.0;
@@ -24,9 +29,9 @@ public class TalonConfiguration {
 	public int continousCurrentLimit = 0;
 	public int peakCurrentLimit = 0;
 	public int peakCurrentDuration = 0;
-	public VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_10Ms;
-	public int velocityMeasurementWindow = 4;
-	public int voltageMeasurementWindow = 4;
+	public VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
+	public int velocityMeasurementWindow = 64;
+	public int voltageMeasurementWindow = 32;
 
 	// update rate from talon in ms
 	// these are the defaults. In general, don't change them.

@@ -7,9 +7,9 @@
 
 package org.usfirst.frc.team1732.robot;
 
+import org.usfirst.frc.team1732.robot.conf.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Joysticks;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
-import org.usfirst.frc.team1732.robot.sensors.navx.NavXData;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
 import org.usfirst.frc.team1732.robot.subsystems.CubeManip;
@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  */
 public class Robot extends TimedRobot {
 
+	// RobotConfig
+	public static RobotConfig robotConfig;
+
 	// subsystems
 	public static Drivetrain drivetrain;
 	public static Arm arm;
@@ -39,7 +42,7 @@ public class Robot extends TimedRobot {
 	// input
 	public static Joysticks joysticks;
 
-	// config
+	// other
 	public static final int PERIOD_MS = 20;
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 
@@ -50,21 +53,21 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		setPeriod(PERIOD_MS / 1000.0); // periodic methods will loop every 10 ms (1/100 sec)
+		robotConfig = RobotConfig.getConfig();
 
-		drivetrain = new Drivetrain();
-		intake = new CubeManip();
+		drivetrain = new Drivetrain(robotConfig);
+		intake = new CubeManip(robotConfig);
 		arm = new Arm();
-		elevator = new Elevator();
-		climber = new Climber();
-		sensors = new Sensors();
+		elevator = new Elevator(robotConfig);
+		climber = new Climber(robotConfig);
+		sensors = new Sensors(robotConfig);
 
-		joysticks = new Joysticks();
+		joysticks = new Joysticks(robotConfig);
 	}
 
 	@Override
 	public void robotPeriodic() {
 		Scheduler.getInstance().run();
-		NavXData.sendNavXData(sensors.navX);
 	}
 
 	/**

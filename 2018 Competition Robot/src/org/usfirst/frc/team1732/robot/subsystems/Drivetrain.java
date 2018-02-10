@@ -1,10 +1,13 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.commands.DriveWithJoysticks;
+import org.usfirst.frc.team1732.robot.conf.MotorUtils;
+import org.usfirst.frc.team1732.robot.conf.RobotConfig;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -12,34 +15,39 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Drivetrain extends Subsystem {
 
-	public TalonSRX leftTalon1;
-	public TalonSRX rightTalon1;
+	public TalonSRX leftMaster;
+	public TalonSRX rightMaster;
 
 	public DifferentialDrive drive;
 
 	private final TalonEncoder leftEncoder;
 	private final TalonEncoder rightEncoder;
 
-	public static final double DRIVE_DEADBAND = 0.04; // CTRE default, but also need to pass to DifferentialDrive
-	public static final int ENCODER_PULSES_PER_INCH = 520; // probably should double check this
+	public static final double INPUT_DEADBAND = 0.025; // 2.5%.
+	public static final double MIN_OUTPUT = 0.0;
+	public static final double MAX_OUTPUT = 1.0;
+	public static final double ENCODER_INCHES_PER_PULSE = 0.002099;
 
-	public Drivetrain() {
-		int leftMaster = 0;
-		leftTalon1 = MotorUtils.configTalon(leftMaster, false, TalonConfiguration.DEFAULT_CONFIG);
-		MotorUtils.configFollowerTalon(MotorUtils.configTalon(1, false, TalonConfiguration.DEFAULT_CONFIG), leftMaster);
-		MotorUtils.configFollowerTalon(MotorUtils.configTalon(2, false, TalonConfiguration.DEFAULT_CONFIG), leftMaster);
+	public Drivetrain(RobotConfig config) {
+		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
+		MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
+		MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
 
-		int rightMaster = 3;
-		rightTalon1 = MotorUtils.configTalon(rightMaster, true, TalonConfiguration.DEFAULT_CONFIG);
-		MotorUtils.configFollowerTalon(MotorUtils.configTalon(4, true, TalonConfiguration.DEFAULT_CONFIG), rightMaster);
-		MotorUtils.configFollowerTalon(MotorUtils.configTalon(5, true, TalonConfiguration.DEFAULT_CONFIG), rightMaster);
+		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
+		MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
+		MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
 
-		drive = new DifferentialDrive(leftTalon1, rightTalon1);
-		drive.setDeadband(DRIVE_DEADBAND); // might not need these: talon's have their own "neutral zone"
-		leftEncoder = new TalonEncoder(leftTalon1, FeedbackDevice.QuadEncoder);
-		rightEncoder = new TalonEncoder(rightTalon1, FeedbackDevice.QuadEncoder);
-		leftEncoder.setDistancePerPulse(1.0 / ENCODER_PULSES_PER_INCH);
-		rightEncoder.setDistancePerPulse(1.0 / ENCODER_PULSES_PER_INCH);
+		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
+				INPUT_DEADBAND);
+
+		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
+		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
+		leftEncoder.setPhase(true);
+		rightEncoder.setPhase(true);
+		leftEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
+		rightEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
+		rightEncoder.zero();
+		leftEncoder.zero();
 	}
 
 	@Override
