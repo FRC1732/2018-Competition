@@ -9,25 +9,11 @@ public class BooleanTimer {
 	private final Timer t;
 	private final double timeOut;
 	private final Supplier<Boolean> checker;
-	private final Runnable end;
-	private final Runnable ifTimedOut;
-	private final Runnable ifFinished;
 
 	public BooleanTimer(double timeOutSeconds, Supplier<Boolean> checker) {
-		this(timeOutSeconds, checker, () -> {
-		}, () -> {
-		}, () -> {
-		});
-	}
-
-	public BooleanTimer(double timeOutSeconds, Supplier<Boolean> checker, Runnable end, Runnable ifTimedOut,
-			Runnable ifFinished) {
 		t = new Timer();
 		this.timeOut = timeOutSeconds;
 		this.checker = checker;
-		this.end = end;
-		this.ifTimedOut = ifTimedOut;
-		this.ifFinished = ifFinished;
 	}
 
 	public void start() {
@@ -35,7 +21,7 @@ public class BooleanTimer {
 		t.start();
 	}
 
-	private boolean isTimedOut() {
+	public boolean isTimedOut() {
 		return t.get() > timeOut;
 	}
 
@@ -43,14 +29,6 @@ public class BooleanTimer {
 		boolean timedOut = isTimedOut();
 		boolean finished = checker.get();
 		return timedOut || finished;
-	}
-
-	public void finish() {
-		end.run();
-		if (isTimedOut())
-			ifTimedOut.run();
-		if (checker.get())
-			ifFinished.run();
 	}
 
 }

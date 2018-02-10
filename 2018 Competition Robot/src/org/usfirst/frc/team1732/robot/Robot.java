@@ -66,14 +66,8 @@ public class Robot extends TimedRobot {
 		sensors = new Sensors(robotConfig);
 
 		joysticks = new Joysticks(robotConfig);
-		Runnable ifDataNotReceived = () -> {
-			// start the default command, maybe "new DriveAcrossAutoLine().start()"
-		};
-		Runnable ifDataReceived = () -> {
-			// start the chosen command, maybe "getChosenCommand().start()"
-		};
-		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions, DriverStationData::cancelPolling,
-				ifDataNotReceived, ifDataReceived);
+
+		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
 	}
@@ -122,8 +116,12 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		if (!autoStarted) {
 			autoStarted = gameDataWaiter.checkIfDone();
-			if (autoStarted)
-				gameDataWaiter.finish(); // runs the auto
+			if (autoStarted) {
+				if (gameDataWaiter.isTimedOut()) // start default auto
+					;
+				else // start chosen auto
+					;
+			}
 		}
 	}
 
