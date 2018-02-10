@@ -5,7 +5,9 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the intakes
+ * 
+ * Manages 2 TalonSPX (right, left)
  */
 public class CubeManip extends Subsystem {
 

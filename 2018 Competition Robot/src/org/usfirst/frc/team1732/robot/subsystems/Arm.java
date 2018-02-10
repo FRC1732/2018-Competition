@@ -3,7 +3,9 @@ package org.usfirst.frc.team1732.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the arm
+ * 
+ * Manages 1 motor
  */
 public class Arm extends Subsystem {
 

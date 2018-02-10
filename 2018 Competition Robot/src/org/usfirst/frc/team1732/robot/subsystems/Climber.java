@@ -5,7 +5,9 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the climber
+ * 
+ * Manages 2 motors
  */
 public class Climber extends Subsystem {
 

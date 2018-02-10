@@ -13,6 +13,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Subsystem to control the drivetrain
+ * 
+ * Manages 6 TalonSPXs (3 right, 3 left),
+ * and associated Encoders
+ * 
+ */
 public class Drivetrain extends Subsystem {
 
 	public TalonSRX leftMaster;

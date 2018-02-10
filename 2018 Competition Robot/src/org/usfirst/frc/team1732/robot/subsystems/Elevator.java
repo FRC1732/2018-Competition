@@ -5,7 +5,9 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the elevator
+ * 
+ * Manages 1 motor
  */
 public class Elevator extends Subsystem {
 
