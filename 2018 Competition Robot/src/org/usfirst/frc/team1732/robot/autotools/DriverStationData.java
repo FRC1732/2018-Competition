@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1732.robot.autotools;
 
+import java.util.concurrent.FutureTask;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -9,16 +11,33 @@ public class DriverStationData {
 	public static TeeterTotter scale;
 	public static TeeterTotter farSwitch;
 
-	private static String platePosition = "";
+	private static volatile String platePosition = "";
 
-	public static void pollPlatePosition() {
-		platePosition = DriverStation.getInstance().getGameSpecificMessage();
-		if (platePosition.length() >= 3) {
-			Alliance a = getAlliance();
-			closeSwitch = new TeeterTotter(a, platePosition.charAt(0));
-			scale = new TeeterTotter(a, platePosition.charAt(1));
-			farSwitch = new TeeterTotter(a, platePosition.charAt(2));
-		}
+	private static final FutureTask<Boolean> task;
+
+	static {
+		task = new FutureTask<>(() -> {
+			while (!gotPlatePositions()) {
+				platePosition = DriverStation.getInstance().getGameSpecificMessage();
+			}
+			closeSwitch = new TeeterTotter(platePosition.charAt(0));
+			scale = new TeeterTotter(platePosition.charAt(1));
+			farSwitch = new TeeterTotter(platePosition.charAt(2));
+		}, true);
+		Thread t = new Thread(() -> {
+			while (!task.isDone())
+				task.run();
+		});
+		t.setDaemon(true);
+		t.start();
+	}
+
+	public static boolean gotPlatePositions() {
+		return platePosition != null && !platePosition.equals("");
+	}
+
+	public static void cancelPolling() {
+		task.cancel(true);
 	}
 
 	public static Alliance getAlliance() {
@@ -27,21 +46,18 @@ public class DriverStationData {
 
 	public static class TeeterTotter {
 
-		public final Alliance leftPlateAlliance;
-		public final Alliance rightPlateAlliance;
+		private final boolean goLeft;
 
-		public TeeterTotter(Alliance ourAlliance, char side) {
+		public TeeterTotter(char side) {
 			if (side == 'L') {
-				leftPlateAlliance = ourAlliance;
-				rightPlateAlliance = getOpposite(ourAlliance);
+				goLeft = true;
 			} else {
-				leftPlateAlliance = getOpposite(ourAlliance);
-				rightPlateAlliance = ourAlliance;
+				goLeft = false;
 			}
 		}
 
-		private static Alliance getOpposite(Alliance a) {
-			return a.equals(Alliance.Red) ? Alliance.Blue : Alliance.Red;
+		public boolean goLeft() {
+			return goLeft;
 		}
 	}
 }
