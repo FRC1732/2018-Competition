@@ -7,9 +7,6 @@
 
 package org.usfirst.frc.team1732.robot;
 
-import org.usfirst.frc.team1732.robot.commands.OperatorControl;
-import org.usfirst.frc.team1732.robot.conf.Config;
-import org.usfirst.frc.team1732.robot.conf.ConfigNotFoundException;
 import org.usfirst.frc.team1732.robot.input.Joysticks;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.sensors.navx.NavXData;
@@ -20,9 +17,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +27,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static Config config;
 
 	// subsystems
 	public static Drivetrain drivetrain;
@@ -41,19 +35,13 @@ public class Robot extends TimedRobot {
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
-	
+
 	// input
 	public static Joysticks joysticks;
-	
-	// config
-	public static final int PERIOD_MS = 10;
-	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 
-	// Commands
-	public static Command teleop = new OperatorControl();
-	// Auto command Choices
-	public static Command autoCommand;
-	public static SendableChooser<Command> autoCommands = new SendableChooser<>();
+	// config
+	public static final int PERIOD_MS = 20;
+	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -62,51 +50,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		setPeriod(PERIOD_MS / 1000.0); // periodic methods will loop every 10 ms (1/100 sec)
-		config = Config.load();
 
-		initIO();
-		initSubsystems();
-		initCommands();
+		drivetrain = new Drivetrain();
+		intake = new CubeManip();
+		arm = new Arm();
+		elevator = new Elevator();
+		climber = new Climber();
+		sensors = new Sensors();
 
-	}
-
-	public void initSubsystems() {
-		try {
-			drivetrain = new Drivetrain();
-			intake = new CubeManip();
-			arm = new Arm();
-			elevator = new Elevator();
-			climber = new Climber();
-			sensors = new Sensors();
-		} catch (ConfigNotFoundException e) {
-			System.out.println("Failed to Init Subsystems");
-		}
-	}
-
-	public void initCommands() {
-		try {
-			autoCommands.addDefault("Defualt", null);// defualt auto command, null
-			// autoCommands.addObject("NAME", new Command());// adds [Command] [NAME] to
-			// dashboard selection
-			// auto commands should not require subsytems, but rather instantiate commands
-			// to control subsystems
-		} catch (ConfigNotFoundException e) {
-			System.out.println("Failed to Init Commands");
-		}
-	}
-
-	public void initIO() {
-		try {
-			joysticks = new Joysticks();
-		} catch (ConfigNotFoundException e) {
-			System.out.println("Failed to Init Commands");
-		}
-	}
-
-	private static boolean shouldReload = false;
-
-	public static void reload() {
-		shouldReload = true;
+		joysticks = new Joysticks();
 	}
 
 	@Override
@@ -122,25 +74,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		if(shouldReload) {
-			robotInit();
-		}
-		
-		// guarantees that the teleop and auto commands are not running
-		teleop.cancel();
-		if(autoCommand != null) {
-			autoCommand.cancel();
-		}
-
-		drivetrain.setStop();
 	}
 
 	@Override
 	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-		if(shouldReload) {
-			robotInit();
-		}
 	}
 
 	/**
@@ -157,22 +94,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		if (Config.isLoaded()) {// Guarantees that the subsystems have initialized correctly
-			/*
-			 * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-			 * switch(autoSelected) { case "My Auto": autonomousCommand = new
-			 * MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new
-			 * ExampleCommand(); break; }
-			 */
-
-			// schedule the autonomous command
-			autoCommand = autoCommands.getSelected();
-			if(autoCommand != null) {
-				autoCommand.start();
-			}else {
-				System.out.println("No auto command Selected");
-			}
-		}
 	}
 
 	/**
@@ -180,21 +101,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		if (Config.isLoaded()) {// Guarantees that the subsystems have initialized correctly
-			Scheduler.getInstance().run();
-		}
 	}
 
 	@Override
 	public void teleopInit() {
-		if (Config.isLoaded()) {// Guarantees that the subsystems have initialized correctly
-			// This makes sure that the autonomous stops running when
-			// teleop starts running. If you want the autonomous to
-			// continue until interrupted by another command, remove
-			// this line or comment it out.
-			
-			teleop.start();
-		}
 	}
 
 	/**
@@ -202,9 +112,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		if (Config.isLoaded()) {// Guarantees that the subsystems have initialized correctly
-			Scheduler.getInstance().run();
-		}
+	}
+
+	@Override
+	public void testInit() {
 	}
 
 	/**
@@ -212,8 +123,5 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		if (Config.isLoaded()) {// Guarantees that the subsystems have initialized correctly
-
-		}
 	}
 }
