@@ -25,7 +25,6 @@ public class RobotConfig {
 	}
 
 	// default configuration:
-
 	public CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 	{
 		// make default changes to drivetrainConfig here
@@ -45,8 +44,8 @@ public class RobotConfig {
 	public Port navxPort = SPI.Port.kMXP;
 
 	public final int leftJoystickPort = 0;
-	public final int rightJoystickPort = 0;
-	public final int buttonJoystickPort = 0;
+	public final int rightJoystickPort = 1;
+	public final int buttonJoystickPort = 2;
 
 	private static RobotConfig defaultConfig() {
 		RobotConfig config = new RobotConfig();
