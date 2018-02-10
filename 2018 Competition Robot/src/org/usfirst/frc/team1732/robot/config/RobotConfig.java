@@ -2,6 +2,9 @@ package org.usfirst.frc.team1732.robot.config;
 
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team1732.robot.config.robots.CompetitionConfig;
+import org.usfirst.frc.team1732.robot.config.robots.PracticeConfig;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -10,25 +13,9 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 public class RobotConfig {
 
-	private static RobotConfig competitionConfig() {
-		RobotConfig config = new RobotConfig();
-		// config stuff
-
-		return config;
-	}
-
-	private static RobotConfig practiceConfig() {
-		RobotConfig config = new RobotConfig();
-		// config stuff
-
-		return config;
-	}
-
-	// default configuration:
+	// default configuration
 	public CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
-	{
-		// make default changes to drivetrainConfig here
-	}
+
 	public int leftMasterID = 1;
 	boolean reverseLeft = false;
 	public CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
@@ -47,14 +34,8 @@ public class RobotConfig {
 	public final int rightJoystickPort = 1;
 	public final int buttonJoystickPort = 2;
 
-	private static RobotConfig defaultConfig() {
-		RobotConfig config = new RobotConfig();
-		return config;
-	}
-
 	public static enum ROBOTS {
-		DEFAULT(RobotConfig::defaultConfig), COMPETITION(RobotConfig::competitionConfig), PRACTICE(
-				RobotConfig::practiceConfig);
+		DEFAULT(RobotConfig::new), COMPETITION(CompetitionConfig::new), PRACTICE(PracticeConfig::new);
 
 		private final Supplier<RobotConfig> supplier;
 
@@ -75,7 +56,7 @@ public class RobotConfig {
 		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}
 
-	private RobotConfig() {
+	protected RobotConfig() {
 	}
 
 }
