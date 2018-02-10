@@ -1,58 +1,52 @@
 package org.usfirst.frc.team1732.robot.autotools;
 
+import java.util.concurrent.FutureTask;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class DriverStationData {
 
-	public static volatile TeeterTotter closeSwitch;
-	public static volatile TeeterTotter scale;
-	public static volatile TeeterTotter farSwitch;
+	// volatile means variable writes are done straight to memory rather than CPU
+	// cache. This ensures other threads will get the new value as soon as it's
+	// written.
 
+	public static volatile boolean closeSwitchIsLeft;
+	public static volatile boolean scaleIsLeft;
+	public static volatile boolean farSwitchIsLeft;
 	private static volatile String platePosition = "";
 
-	private static final Thread thread;
+	private static Thread thread;
+	private static FutureTask<Boolean> task;
 
-	static {
-		thread = new Thread(() -> {
-			while (!gotPlatePositions()) {
+	public static void startPolling() {
+		task = new FutureTask<>(() -> {
+			while (platePosition == null || platePosition == "") {
 				platePosition = DriverStation.getInstance().getGameSpecificMessage();
 			}
-			closeSwitch = new TeeterTotter(platePosition.charAt(0));
-			scale = new TeeterTotter(platePosition.charAt(1));
-			farSwitch = new TeeterTotter(platePosition.charAt(2));
+			closeSwitchIsLeft = platePosition.charAt(0) == 'L';
+			scaleIsLeft = platePosition.charAt(1) == 'L';
+			farSwitchIsLeft = platePosition.charAt(2) == 'L';
+			return true;
 		});
-		// thread.setPriority(newPriority);
+		thread = new Thread(() -> {
+			while (!task.isDone())
+				task.run();
+		});
 		thread.setDaemon(true);
 		thread.start();
 	}
 
 	public static boolean gotPlatePositions() {
-		return platePosition != null && !platePosition.equals("");
+		return task.isDone(); // makes sure that thread finished writing to IsLeft variables
 	}
 
 	public static void cancelPolling() {
-		thread.interrupt();
+		task.cancel(true);
 	}
 
 	public static Alliance getAlliance() {
 		return DriverStation.getInstance().getAlliance();
 	}
 
-	public static class TeeterTotter {
-
-		private final boolean goLeft;
-
-		public TeeterTotter(char side) {
-			if (side == 'L') {
-				goLeft = true;
-			} else {
-				goLeft = false;
-			}
-		}
-
-		public boolean goLeft() {
-			return goLeft;
-		}
-	}
 }
