@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.math;
+package org.usfirst.frc.team1732.robot.util;
 
 import java.util.function.Supplier;
 

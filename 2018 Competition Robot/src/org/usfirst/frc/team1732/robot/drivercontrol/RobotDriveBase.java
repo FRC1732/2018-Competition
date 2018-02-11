@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.drivercontrol;
 
-import org.usfirst.frc.team1732.robot.math.Utils;
+import org.usfirst.frc.team1732.robot.util.Utils;
 
 public abstract class RobotDriveBase {
 	public static final double kDefaultDeadband = 0.0;
