@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -10,12 +13,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Manages 2 TalonSPX (right, left)
  */
 public class CubeManip extends Subsystem {
-
+	public VictorSPX master;
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
-	public CubeManip(RobotConfig robotConfig) {
-		// TODO Auto-generated constructor stub
+	public CubeManip(RobotConfig config) {
+		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
+		MotorUtils.makeVictor(config.manipFollower, config.manipConfig);
 	}
 
 	@Override

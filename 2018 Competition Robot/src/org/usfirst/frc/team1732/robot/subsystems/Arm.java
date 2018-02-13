@@ -1,5 +1,10 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
+import org.usfirst.frc.team1732.robot.config.RobotConfig;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -8,6 +13,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Manages 1 motor
  */
 public class Arm extends Subsystem {
+	public TalonSRX motor;
+
+	public Arm(RobotConfig config) {
+		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
+	}
 
 	public static enum Positions {
 

@@ -1,6 +1,9 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -10,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Manages 1 motor
  */
 public class Elevator extends Subsystem {
+	public TalonSRX motor;
 
 	public static enum Positions {
 
@@ -22,8 +26,8 @@ public class Elevator extends Subsystem {
 		}
 	}
 
-	public Elevator(RobotConfig robotConfig) {
-		// TODO Auto-generated constructor stub
+	public Elevator(RobotConfig config) {
+		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
 	}
 
 	@Override

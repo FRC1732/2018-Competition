@@ -56,12 +56,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		setPeriod(PERIOD_MS / 1000.0); // periodic methods will loop every 10 ms (1/100 sec)
+		setPeriod(PERIOD_S); // periodic methods will loop every 10 ms (1/100 sec)
 		robotConfig = RobotConfig.getConfig();
 
 		drivetrain = new Drivetrain(robotConfig);
 		intake = new CubeManip(robotConfig);
-		arm = new Arm();
+		arm = new Arm(robotConfig);
 		elevator = new Elevator(robotConfig);
 		climber = new Climber(robotConfig);
 		sensors = new Sensors(robotConfig);
