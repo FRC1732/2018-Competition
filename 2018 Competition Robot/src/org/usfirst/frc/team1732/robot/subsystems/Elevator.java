@@ -50,7 +50,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void setDown() {
-
+		set(Positions.DOWN);
 	}
 
 	public void setStop() {

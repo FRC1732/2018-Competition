@@ -6,6 +6,7 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Utils;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -63,8 +64,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 	@Override
-	public void periodic() {
-	}
+	public void periodic() {}
 
 	public EncoderReader getRightEncoderReader() {
 		return rightEncoder.makeReader();
@@ -78,4 +78,11 @@ public class Drivetrain extends Subsystem {
 		drive.tankDrive(0, 0);
 	}
 
+	public void setLeft(double speed) {
+		leftMaster.set(ControlMode.PercentOutput, Utils.constrain(speed, -1, 1));
+	}
+
+	public void setRight(double speed) {
+		rightMaster.set(ControlMode.PercentOutput, Utils.constrain(speed, -1, 1));
+	}
 }

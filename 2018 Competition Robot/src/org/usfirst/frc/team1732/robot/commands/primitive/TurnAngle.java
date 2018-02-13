@@ -9,23 +9,23 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Drives a distance in inches using the encoders
+ * Turns the robot an angle using NavX
  */
-public class DriveDistance extends Command {
+public class TurnAngle extends Command {
 	private PIDController left, right;
 
-	public DriveDistance(double dist) {
+	public TurnAngle(double angle) {
 		requires(drivetrain);
 		// need to tune PIDs
 		left = new PIDController(1, 0, 0, new DisplacementPIDSource() {
 			public double pidGet() {
-				return (dist - drivetrain.getLeftEncoderReader().getPosition()) / dist;
+				return 0;
 			}
 		}, d -> drivetrain.setLeft(d), PERIOD_S);
 		left.setAbsoluteTolerance(0.05);
 		right = new PIDController(1, 0, 0, new DisplacementPIDSource() {
 			public double pidGet() {
-				return (dist - drivetrain.getRightEncoderReader().getPosition()) / dist;
+				return 0;
 			}
 		}, d -> drivetrain.setRight(d), PERIOD_S);
 		right.setAbsoluteTolerance(0.05);
