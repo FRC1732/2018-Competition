@@ -23,16 +23,15 @@ public class Elevator extends Subsystem {
 	public TalonSRX motor;
 	public final EncoderBase encoder;
 
-	private static final ClosedLoopProfile pidGains = new ClosedLoopProfile("Elevator PID", 0, 0, 0, 0, 0, 0, 0, 0);
-	public static final double DEGREES_PER_PULSE = 0.0;
+	public final ClosedLoopProfile pidGains;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
-
+		pidGains = config.elevatorPID;
 		ClosedLoopProfile.applyZeroGainToTalon(motor, 0, 1);
 		pidGains.applyToTalon(motor, 0, 0);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute, false);
-		encoder.setDistancePerPulse(DEGREES_PER_PULSE);
+		encoder.setDistancePerPulse(config.elevatorDegreesPerPulse);
 	}
 
 	public static enum Positions {

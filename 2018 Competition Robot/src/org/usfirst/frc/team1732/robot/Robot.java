@@ -9,7 +9,7 @@ package org.usfirst.frc.team1732.robot;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.input.Joysticks;
+import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -36,13 +36,13 @@ public class Robot extends TimedRobot {
 	// subsystems
 	public static Drivetrain drivetrain;
 	public static Arm arm;
-	public static CubeManip intake;
+	public static CubeManip manip;
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
 
 	// input
-	public static Joysticks joysticks;
+	public static Input joysticks;
 
 	// other
 	public static final int PERIOD_MS = 20;
@@ -60,13 +60,13 @@ public class Robot extends TimedRobot {
 		robotConfig = RobotConfig.getConfig();
 
 		drivetrain = new Drivetrain(robotConfig);
-		intake = new CubeManip(robotConfig);
+		manip = new CubeManip(robotConfig);
 		arm = new Arm(robotConfig);
 		elevator = new Elevator(robotConfig);
 		climber = new Climber(robotConfig);
 		sensors = new Sensors(robotConfig);
 
-		joysticks = new Joysticks(robotConfig);
+		joysticks = new Input(robotConfig);
 
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10

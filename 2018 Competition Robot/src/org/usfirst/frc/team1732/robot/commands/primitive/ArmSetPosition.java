@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.commands;
+package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
@@ -10,9 +10,14 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ArmSetPosition extends Command {
 
-	Arm.Positions position;
+	private double position;
 
 	public ArmSetPosition(Arm.Positions position) {
+		requires(Robot.arm);
+		this.position = position.value;
+	}
+
+	public ArmSetPosition(double position) {
 		requires(Robot.arm);
 		this.position = position;
 	}

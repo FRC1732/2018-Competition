@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
-import org.usfirst.frc.team1732.robot.commands.DriveWithJoysticks;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
@@ -35,6 +35,9 @@ public class Drivetrain extends Subsystem {
 	public static final double MAX_OUTPUT = 1.0;
 	public static final double ENCODER_INCHES_PER_PULSE = 0.002099;
 
+	public static final double ROBOT_WIDTH = 30;
+	public static final double ROBOT_LENGTH = 30;
+
 	public Drivetrain(RobotConfig config) {
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
 		MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
@@ -51,8 +54,8 @@ public class Drivetrain extends Subsystem {
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder, true);
 		leftEncoder.setPhase(true);
 		rightEncoder.setPhase(true);
-		leftEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
-		rightEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
+		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
+		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 	}
 
 	@Override

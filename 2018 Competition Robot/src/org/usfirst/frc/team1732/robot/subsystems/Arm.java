@@ -24,16 +24,15 @@ public class Arm extends Subsystem {
 	public TalonSRX motor;
 	public final EncoderBase encoder;
 
-	private static final ClosedLoopProfile pidGains = new ClosedLoopProfile("Arm PID", 0, 0, 0, 0, 0, 0, 0, 0);
-	public static final double DEGREES_PER_PULSE = 0.0;
+	public final ClosedLoopProfile pidGains;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
-
+		pidGains = config.armPID;
 		ClosedLoopProfile.applyZeroGainToTalon(motor, 0, 1);
 		pidGains.applyToTalon(motor, 0, 0);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute, false);
-		encoder.setDistancePerPulse(DEGREES_PER_PULSE);
+		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 	}
 
 	public static enum Positions {

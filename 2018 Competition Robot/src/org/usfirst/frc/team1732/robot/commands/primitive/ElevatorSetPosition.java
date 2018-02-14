@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.commands;
+package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
@@ -10,9 +10,14 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorSetPosition extends Command {
 
-	Elevator.Positions position;
+	private double position;
 
 	public ElevatorSetPosition(Elevator.Positions position) {
+		requires(Robot.elevator);
+		this.position = position.value;
+	}
+
+	public ElevatorSetPosition(double position) {
 		requires(Robot.elevator);
 		this.position = position;
 	}
