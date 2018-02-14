@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Subsystem to control the drivetrain
  * 
- * Manages 6 TalonSPXs (3 right, 3 left),
- * and associated Encoders
+ * Manages 6 TalonSPXs (3 right, 3 left), and associated Encoders
  * 
  */
 public class Drivetrain extends Subsystem {
@@ -48,14 +47,12 @@ public class Drivetrain extends Subsystem {
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				INPUT_DEADBAND);
 
-		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
-		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
+		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder, true);
+		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder, true);
 		leftEncoder.setPhase(true);
 		rightEncoder.setPhase(true);
 		leftEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
 		rightEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
-		rightEncoder.zero();
-		leftEncoder.zero();
 	}
 
 	@Override
@@ -64,7 +61,8 @@ public class Drivetrain extends Subsystem {
 	}
 
 	@Override
-	public void periodic() {}
+	public void periodic() {
+	}
 
 	public EncoderReader getRightEncoderReader() {
 		return rightEncoder.makeReader();

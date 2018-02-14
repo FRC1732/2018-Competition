@@ -2,6 +2,11 @@ package org.usfirst.frc.team1732.robot.sensors.encoders;
 
 public abstract class EncoderBase {
 
+	public EncoderBase(boolean zeroAtStart) {
+		if (zeroAtStart)
+			zero();
+	}
+
 	public EncoderReader makeReader() {
 		return new EncoderReader(this);
 	}
@@ -28,6 +33,6 @@ public abstract class EncoderBase {
 	 * Zeros the encoder. Be careful, this will zero all encoder readers.
 	 * 
 	 */
-	public abstract void zero();
+	protected abstract void zero();
 
 }

@@ -10,7 +10,8 @@ public class TalonEncoder extends EncoderBase {
 	protected final TalonSRX talon;
 	protected double distancePerPulse;
 
-	public TalonEncoder(TalonSRX talon, FeedbackDevice selectedSensor) {
+	public TalonEncoder(TalonSRX talon, FeedbackDevice selectedSensor, boolean zeroAtStart) {
+		super(zeroAtStart);
 		this.talon = talon;
 		talon.configSelectedFeedbackSensor(selectedSensor, 0, Robot.CONFIG_TIMEOUT);
 
@@ -48,7 +49,7 @@ public class TalonEncoder extends EncoderBase {
 	}
 
 	@Override
-	public void zero() {
+	protected void zero() {
 		talon.setSelectedSensorPosition(0, 0, Robot.CONFIG_TIMEOUT);
 	}
 
