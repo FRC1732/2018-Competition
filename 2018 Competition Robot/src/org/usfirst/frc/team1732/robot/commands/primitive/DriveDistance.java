@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 import static org.usfirst.frc.team1732.robot.Robot.PERIOD_S;
 import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
 
+import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -17,18 +18,25 @@ public class DriveDistance extends Command {
 	public DriveDistance(double dist) {
 		requires(drivetrain);
 		// need to tune PIDs
-		left = new PIDController(1, 0, 0, new DisplacementPIDSource() {
+		double p = 0.1, i = 0, d = 0.5;
+		left = new PIDController(p, i, d, new DisplacementPIDSource() {
+			EncoderReader reader = drivetrain.getLeftEncoderReader(true);
+
 			public double pidGet() {
-				return (dist - drivetrain.getLeftEncoderReader().getPosition()) / dist;
+				return reader.getPosition();
 			}
-		}, d -> drivetrain.setLeft(d), PERIOD_S);
-		left.setAbsoluteTolerance(0.05);
-		right = new PIDController(1, 0, 0, new DisplacementPIDSource() {
+		}, drivetrain::setLeft, PERIOD_S);
+		left.setSetpoint(dist);
+		left.setAbsoluteTolerance(1);
+		right = new PIDController(p, i, d, new DisplacementPIDSource() {
+			EncoderReader reader = drivetrain.getRightEncoderReader(true);
+
 			public double pidGet() {
-				return (dist - drivetrain.getRightEncoderReader().getPosition()) / dist;
+				return reader.getPosition();
 			}
-		}, d -> drivetrain.setRight(d), PERIOD_S);
-		right.setAbsoluteTolerance(0.05);
+		}, drivetrain::setRight, PERIOD_S);
+		right.setSetpoint(dist);
+		right.setAbsoluteTolerance(1);
 	}
 	protected void initialize() {
 		left.enable();

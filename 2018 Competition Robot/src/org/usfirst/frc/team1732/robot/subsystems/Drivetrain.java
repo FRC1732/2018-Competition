@@ -67,11 +67,20 @@ public class Drivetrain extends Subsystem {
 	public void periodic() {}
 
 	public EncoderReader getRightEncoderReader() {
-		return rightEncoder.makeReader();
+		return getRightEncoderReader(false);
 	}
-
+	public EncoderReader getRightEncoderReader(boolean zero) {
+		EncoderReader r = rightEncoder.makeReader();
+		if (zero) r.zero();
+		return r;
+	}
 	public EncoderReader getLeftEncoderReader() {
-		return leftEncoder.makeReader();
+		return getLeftEncoderReader(false);
+	}
+	public EncoderReader getLeftEncoderReader(boolean zero) {
+		EncoderReader r = leftEncoder.makeReader();
+		if (zero) r.zero();
+		return r;
 	}
 
 	public void setStop() {
