@@ -10,6 +10,7 @@ import org.usfirst.frc.team1732.robot.util.Utils;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -22,8 +23,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Drivetrain extends Subsystem {
 
-	public TalonSRX leftMaster;
-	public TalonSRX rightMaster;
+	public TalonSRX leftMaster, l2, l3;
+	public TalonSRX rightMaster, r2, r3;
 
 	public DifferentialDrive drive;
 
@@ -40,12 +41,12 @@ public class Drivetrain extends Subsystem {
 
 	public Drivetrain(RobotConfig config) {
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
+		l2 = MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
+		l3 = MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
+		r2 = MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
+		r3 = MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				INPUT_DEADBAND);
@@ -64,8 +65,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 	@Override
-	public void periodic() {
-	}
+	public void periodic() {}
 
 	public EncoderReader getRightEncoderReader() {
 		return getRightEncoderReader(false);
@@ -94,5 +94,15 @@ public class Drivetrain extends Subsystem {
 
 	public void setRight(double speed) {
 		rightMaster.set(ControlMode.PercentOutput, Utils.constrain(speed, -1, 1));
+	}
+
+	public void setBrakeMode(boolean enabled) {
+		NeutralMode mode = enabled ? NeutralMode.Brake : NeutralMode.Coast;
+		leftMaster.setNeutralMode(mode);
+		l2.setNeutralMode(mode);
+		l2.setNeutralMode(mode);
+		rightMaster.setNeutralMode(mode);
+		r2.setNeutralMode(mode);
+		r3.setNeutralMode(mode);
 	}
 }
