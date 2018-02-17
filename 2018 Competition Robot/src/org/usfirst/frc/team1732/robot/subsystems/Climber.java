@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Manages 2 motors
  */
 public class Climber extends Subsystem {
-	public VictorSPX master;
+	public final VictorSPX master;
 
 	public Climber(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.climberMaster, config.climberConfig);

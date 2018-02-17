@@ -1,6 +1,7 @@
-package org.usfirst.frc.team1732.robot.commands.primitive;
+package org.usfirst.frc.team1732.robot.commands.teleop;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -9,8 +10,11 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveWithJoysticks extends Command {
 
-	public DriveWithJoysticks() {
+	private final DifferentialDrive drive;
+
+	public DriveWithJoysticks(DifferentialDrive drive) {
 		requires(Robot.drivetrain);
+		this.drive = drive;
 	}
 
 	// Called just before this Command runs the first time
@@ -21,7 +25,7 @@ public class DriveWithJoysticks extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.drivetrain.drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight());
+		drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(), false);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

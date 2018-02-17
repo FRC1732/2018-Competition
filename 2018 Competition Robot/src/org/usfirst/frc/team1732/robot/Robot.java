@@ -13,7 +13,7 @@ import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
-import org.usfirst.frc.team1732.robot.subsystems.CubeManip;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
 	// subsystems
 	public static Drivetrain drivetrain;
 	public static Arm arm;
-	public static CubeManip manip;
+	public static Manip manip;
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
 		robotConfig = RobotConfig.getConfig();
 
 		drivetrain = new Drivetrain(robotConfig);
-		manip = new CubeManip(robotConfig);
+		manip = new Manip(robotConfig);
 		arm = new Arm(robotConfig);
 		elevator = new Elevator(robotConfig);
 		climber = new Climber(robotConfig);
