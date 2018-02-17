@@ -8,7 +8,7 @@
 package org.usfirst.frc.team1732.robot;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
-import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingle;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingle;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -123,7 +123,7 @@ public class Robot extends TimedRobot {
 				if (gameDataWaiter.isTimedOut()) // start default auto
 					;
 				else // start chosen auto
-					new ScaleRightSingle(DriverStationData.scaleIsLeft).start();
+					new ScaleLeftSingle(DriverStationData.scaleIsLeft).start();
 			}
 		}
 	}
