@@ -93,7 +93,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void setStop() {
-		motor.set(ControlMode.PercentOutput, 0);
+		motor.neutralOutput();
 	}
 
 	public boolean atSetpoint(double allowableError) {

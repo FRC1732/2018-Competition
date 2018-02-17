@@ -46,6 +46,6 @@ public class Manip extends Subsystem {
 	}
 
 	public void setStop() {
-		master.set(ControlMode.PercentOutput, 0);
+		master.neutralOutput();
 	}
 }
