@@ -8,14 +8,15 @@
 package org.usfirst.frc.team1732.robot;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingle;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
-import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -84,10 +85,12 @@ public class Robot extends TimedRobot {
 	 * robot is disabled.
 	 */
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
@@ -104,6 +107,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		gameDataWaiter.start();
+		// choose command
 	}
 
 	private boolean autoStarted = false;
@@ -119,26 +123,31 @@ public class Robot extends TimedRobot {
 				if (gameDataWaiter.isTimedOut()) // start default auto
 					;
 				else // start chosen auto
-					;
+					new ScaleRightSingle(DriverStationData.scaleIsLeft).start();
 			}
 		}
 	}
 
 	@Override
-	public void teleopInit() {}
+	public void teleopInit() {
+		// cancel auto command here
+	}
 
 	/**
 	 * This function is called periodically during operator control.
 	 */
 	@Override
-	public void teleopPeriodic() {}
+	public void teleopPeriodic() {
+	}
 
 	@Override
-	public void testInit() {}
+	public void testInit() {
+	}
 
 	/**
 	 * This function is called periodically during test mode.
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
 }

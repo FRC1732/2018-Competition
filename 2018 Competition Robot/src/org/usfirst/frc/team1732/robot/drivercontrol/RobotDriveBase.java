@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.drivercontrol;
 
-import org.usfirst.frc.team1732.robot.util.Utils;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 public abstract class RobotDriveBase {
 	public static final double kDefaultDeadband = 0.0;
@@ -56,7 +56,7 @@ public abstract class RobotDriveBase {
 	}
 
 	protected double applyMinMax(double value) {
-		return Math.copySign(Utils.interpolate(m_minOut, m_maxOut, Math.abs(value)), value);
+		return Math.copySign(Util.interpolate(m_minOut, m_maxOut, Math.abs(value)), value);
 	}
 
 }

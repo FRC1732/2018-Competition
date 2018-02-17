@@ -22,6 +22,8 @@ public class PracticeConfig extends RobotConfig {
 		drivetrainMotionPID.allowableError = 0;
 		drivetrainMotionPID.maxIntegralAccumulated = 0;
 		drivetrainMotionPID.secondsFromNeutralToFull = 0;
+		leftFF = new Feedforward(0, 0, 0, 0, 0, 0);
+		rightFF = new Feedforward(0, 0, 0, 0, 0, 0);
 
 		// arm
 		armConfig.enableVoltageCompensation = true;

@@ -1,9 +1,9 @@
 package org.usfirst.frc.team1732.robot.input;
 
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
-import org.usfirst.frc.team1732.robot.commands.teleop.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;

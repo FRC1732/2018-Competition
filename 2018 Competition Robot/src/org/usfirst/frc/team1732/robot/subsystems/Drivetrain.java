@@ -4,13 +4,15 @@ import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
+import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
-import org.usfirst.frc.team1732.robot.util.Utils;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,6 +31,11 @@ public class Drivetrain extends Subsystem {
 	public final TalonSRX leftMaster;
 	public final TalonSRX rightMaster;
 
+	private final TalonSRX leftTalon1;
+	private final TalonSRX leftTalon2;
+	private final TalonSRX rightTalon1;
+	private final TalonSRX rightTalon2;
+
 	private final TalonEncoder leftEncoder;
 	private final TalonEncoder rightEncoder;
 
@@ -41,17 +48,24 @@ public class Drivetrain extends Subsystem {
 	public final double maxInPerSec;
 	public final double maxInPerSecSq;
 
+	// Feedforward
+	public final Feedforward leftFF;
+	public final Feedforward rightFF;
+
 	public final ClosedLoopProfile motionGains;
 	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
+		leftTalon1 = MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
+		leftTalon2 = MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
+		rightTalon1 = MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
+		rightTalon2 = MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
+
+		leftFF = config.leftFF;
+		rightFF = config.rightFF;
 
 		motionGains = config.drivetrainMotionPID;
 		motionGains.applyToTalon(leftMaster, rightMaster);
@@ -117,12 +131,21 @@ public class Drivetrain extends Subsystem {
 		rightMaster.neutralOutput();
 	}
 
+	public void setNeutralMode(NeutralMode mode) {
+		leftMaster.setNeutralMode(mode);
+		rightMaster.setNeutralMode(mode);
+		leftTalon1.setNeutralMode(mode);
+		leftTalon2.setNeutralMode(mode);
+		rightTalon1.setNeutralMode(mode);
+		rightTalon2.setNeutralMode(mode);
+	}
+
 	public void setLeft(double percentVolt) {
-		leftMaster.set(ControlMode.PercentOutput, Utils.constrain(percentVolt, -1, 1));
+		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -1, 1));
 	}
 
 	public void setRight(double percentVolt) {
-		rightMaster.set(ControlMode.PercentOutput, Utils.constrain(percentVolt, -1, 1));
+		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -1, 1));
 	}
 
 	public void selectGains(ClosedLoopProfile gains) {
