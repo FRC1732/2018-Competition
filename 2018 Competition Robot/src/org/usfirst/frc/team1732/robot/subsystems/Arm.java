@@ -96,7 +96,7 @@ public class Arm extends Subsystem {
 		motor.set(ControlMode.PercentOutput, 0);
 	}
 
-	public boolean atSetpoint(double allowableError) {
+	public boolean atSetpoint(int allowableError) {
 		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
 	}
 

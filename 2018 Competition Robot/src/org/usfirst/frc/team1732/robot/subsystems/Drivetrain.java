@@ -124,4 +124,8 @@ public class Drivetrain extends Subsystem {
 	public void setRight(double percentVolt) {
 		rightMaster.set(ControlMode.PercentOutput, Utils.constrain(percentVolt, -1, 1));
 	}
+
+	public void selectGains(ClosedLoopProfile gains) {
+		gains.selectGains(leftMaster, rightMaster);
+	}
 }
