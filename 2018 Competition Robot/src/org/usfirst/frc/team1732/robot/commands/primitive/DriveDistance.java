@@ -2,9 +2,10 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.PERIOD_S;
 import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
+import static org.usfirst.frc.team1732.robot.Robot.sensors;
 
-import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
+import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveDistance extends Command {
 	private PIDController trans, rot;
 	EncoderReader l = drivetrain.getLeftEncoderReader(), r = drivetrain.getRightEncoderReader();
+	GyroReader g = sensors.navx.makeReader();
 
 	public DriveDistance(double dist) {
 		requires(drivetrain);
@@ -29,7 +31,7 @@ public class DriveDistance extends Command {
 		trans.setAbsoluteTolerance(1);
 		rot = new PIDController(0.05, 0, 0, new DisplacementPIDSource() {
 			public double pidGet() {
-				return Robot.sensors.navx.getAngle();
+				return g.getAngle();
 			}
 		}, d -> {}, PERIOD_S);
 		rot.setSetpoint(0);
@@ -39,7 +41,7 @@ public class DriveDistance extends Command {
 		l.zero();
 		r.zero();
 		trans.enable();
-		Robot.sensors.navx.zeroYaw();
+		g.zero();
 		rot.enable();
 		drivetrain.setBrakeMode(true);
 	}

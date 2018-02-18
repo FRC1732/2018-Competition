@@ -38,7 +38,7 @@ public class Drivetrain extends Subsystem {
 	private final TalonEncoder leftEncoder;
 	private final TalonEncoder rightEncoder;
 
-	private final DifferentialDrive drive;
+	public final DifferentialDrive drive;
 
 	public final double inchesPerPulse;
 	public final double robotLength;
