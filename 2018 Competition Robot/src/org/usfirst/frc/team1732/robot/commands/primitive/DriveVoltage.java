@@ -22,7 +22,7 @@ public class DriveVoltage extends InstantCommand {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		Robot.drivetrain.setNeutralMode(NeutralMode.Coast);
+		Robot.drivetrain.setNeutralMode(mode);
 		Robot.drivetrain.setLeft(leftVolt);
 		Robot.drivetrain.setLeft(rightVolt);
 	}
