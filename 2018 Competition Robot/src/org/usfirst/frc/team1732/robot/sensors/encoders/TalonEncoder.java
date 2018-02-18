@@ -49,7 +49,7 @@ public class TalonEncoder extends EncoderBase {
 	}
 
 	@Override
-	protected void zero() {
+	public void zero() {
 		talon.setSelectedSensorPosition(0, 0, Robot.CONFIG_TIMEOUT);
 	}
 

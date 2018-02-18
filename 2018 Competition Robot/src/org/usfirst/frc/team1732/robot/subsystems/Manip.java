@@ -13,15 +13,20 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 
  * Manages 2 TalonSPX (right, left)
  */
-public class CubeManip extends Subsystem {
+public class Manip extends Subsystem {
 
-	public VictorSPX master;
+	public final VictorSPX master;
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
-	public CubeManip(RobotConfig config) {
+	public final double stopCurrent;
+	public final double holdCurrent;
+
+	public Manip(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
 		MotorUtils.makeVictor(config.manipFollower, config.manipConfig);
+		stopCurrent = config.manipStopCurrent;
+		holdCurrent = config.manipHoldCurrent;
 	}
 
 	@Override
@@ -41,6 +46,6 @@ public class CubeManip extends Subsystem {
 	}
 
 	public void setStop() {
-		master.set(ControlMode.PercentOutput, 0);
+		master.neutralOutput();
 	}
 }

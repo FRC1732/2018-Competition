@@ -21,17 +21,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Arm extends Subsystem {
 
-	public TalonSRX motor;
+	public final TalonSRX motor;
 	public final EncoderBase encoder;
 
-	public final ClosedLoopProfile pidGains;
+	public final ClosedLoopProfile upGains;
+	public final ClosedLoopProfile downGains;
+
+	public final double degreesPerPulse;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
-		pidGains = config.armPID;
-		ClosedLoopProfile.applyZeroGainToTalon(motor, 0, 1);
-		pidGains.applyToTalon(motor, 0, 0);
+		upGains = config.armDownPID;
+		downGains = config.armDownPID;
+		upGains.applyToTalon(motor);
+		downGains.applyToTalon(motor);
+		ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1, motor);
+		ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx, 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute, false);
+		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 	}
 
@@ -86,10 +93,11 @@ public class Arm extends Subsystem {
 	}
 
 	public void setStop() {
-		motor.set(ControlMode.PercentOutput, 0);
+		motor.neutralOutput();
 	}
 
-	public boolean atSetpoint() {
-		return Math.abs(motor.getClosedLoopError(0)) < pidGains.allowableError;
+	public boolean atSetpoint(int allowableError) {
+		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
 	}
+
 }
