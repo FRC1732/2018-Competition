@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the drivetrain
@@ -106,6 +107,12 @@ public class Drivetrain extends Subsystem {
 
 	@Override
 	public void periodic() {
+		SmartDashboard.putNumber("Left Pos", leftEncoder.getPosition());
+		SmartDashboard.putNumber("Left Pulses", leftEncoder.getPosition());
+		SmartDashboard.putNumber("Left Vel", leftEncoder.getPosition());
+		SmartDashboard.putNumber("Right Pos", rightEncoder.getPosition());
+		SmartDashboard.putNumber("Right Pulses", rightEncoder.getPosition());
+		SmartDashboard.putNumber("Right Vel", rightEncoder.getPosition());
 	}
 
 	public EncoderReader getRightEncoderReader() {

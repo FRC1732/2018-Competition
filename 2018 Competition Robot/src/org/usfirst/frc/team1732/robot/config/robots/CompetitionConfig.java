@@ -7,7 +7,7 @@ public class CompetitionConfig extends RobotConfig {
 
 	{
 		// drivetrain
-		effectiveRobotWidth = robotWidth; // calculate
+		effectiveRobotWidth = 25; // calculate
 		drivetrainInchesPerPulse = 0; // calculate
 		maxInPerSec = 0; // calculate
 		maxInPerSecSq = 0; // calculate

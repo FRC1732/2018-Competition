@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.SPI.Port;
 public class RobotConfig {
 
 	// drivetrain
-	public final double robotLength = 0;
-	public final double robotWidth = 0;
+	public final double robotLength = 38.5;
+	public final double robotWidth = 33.5;
 
 	public double effectiveRobotWidth = 0;
 	public double drivetrainInchesPerPulse = 0;
