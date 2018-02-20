@@ -8,7 +8,7 @@
 package org.usfirst.frc.team1732.robot;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
-import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingle;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -18,6 +18,8 @@ import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -123,7 +125,7 @@ public class Robot extends TimedRobot {
 				if (gameDataWaiter.isTimedOut()) // start default auto
 					;
 				else // start chosen auto
-					new ScaleLeftSingle(DriverStationData.scaleIsLeft).start();
+					new DriveVoltage(1, 1, NeutralMode.Coast).start();
 			}
 		}
 	}
