@@ -1,25 +1,33 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the climber
+ * 
+ * Manages 2 motors
  */
 public class Climber extends Subsystem {
+	public final VictorSPX master;
 
-	// Put methods for controlling this subsystem
-	// here. Call these from Commands.
-
-	public Climber(RobotConfig robotConfig) {
-		// TODO Auto-generated constructor stub
+	public Climber(RobotConfig config) {
+		master = MotorUtils.makeVictor(config.climberMaster, config.climberConfig);
+		MotorUtils.makeVictor(config.climberFollower, config.climberConfig);
 	}
 
 	@Override
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+
+	public void periodic() {
+
 	}
 
 }

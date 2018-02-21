@@ -1,15 +1,17 @@
 package org.usfirst.frc.team1732.robot.sensors;
 
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.sensors.navx.NavX;
 
 import com.kauailabs.navx.frc.AHRS;
 
 public class Sensors {
 
-	public final AHRS navx;
+	public final NavX navx;
 
 	public Sensors(RobotConfig robotConfig) {
-		navx = new AHRS(robotConfig.navxPort);
+		navx = new NavX(new AHRS(robotConfig.navxPort));
+		navx.zero();
 	}
 
 	public static double convertTotalAngle(double angle) {

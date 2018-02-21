@@ -2,6 +2,13 @@ package org.usfirst.frc.team1732.robot.config;
 
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team1732.robot.config.robots.CompetitionConfig;
+import org.usfirst.frc.team1732.robot.config.robots.PracticeConfig;
+import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
+import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -10,52 +17,93 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 public class RobotConfig {
 
-	private static RobotConfig competitionConfig() {
-		RobotConfig config = new RobotConfig();
-		// config stuff
+	// drivetrain
+	public final double robotLength = 38.5;
+	public final double robotWidth = 33.5;
 
-		return config;
-	}
+	public double effectiveRobotWidth = 0;
+	public double drivetrainInchesPerPulse = 0;
+	public double maxInPerSec = 0;
+	public double maxInPerSecSq = 0;
 
-	private static RobotConfig practiceConfig() {
-		RobotConfig config = new RobotConfig();
-		// config stuff
+	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
-		return config;
-	}
+	public final int shiftingSolenoidID = 0;
+	public final boolean highGearValue = true; // setting the shifter solenoid to this value should make the drivetrain
+												// go in high gear
 
-	// default configuration:
+	private final int leftMasterID = 15;
+	private final boolean reverseLeft = false;
+	public final boolean reverseLeftSensor = true;
+	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
+	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
+	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
 
-	public CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
-	{
-		// make default changes to drivetrainConfig here
-	}
-	public int leftMasterID = 1;
-	boolean reverseLeft = false;
-	public CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
-	public CTREParam leftFollower1 = new CTREParam(2, reverseLeft, leftMasterID);
-	public CTREParam leftFollower2 = new CTREParam(3, reverseLeft, leftMasterID);
+	private final int rightMasterID = 0;
+	private final boolean reverseRight = true;
+	public final boolean reverseRightSensor = true;
+	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
+	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
+	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);
 
-	public int rightMasterID = 4;
-	boolean reverseRight = false;
-	public CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
-	public CTREParam rightFollower1 = new CTREParam(5, reverseRight, rightMasterID);
-	public CTREParam rightFollower2 = new CTREParam(6, reverseRight, rightMasterID);
+	public final ClosedLoopProfile drivetrainMotionPID = new ClosedLoopProfile("Drivetrain Motion PID",
+			FeedbackDevice.QuadEncoder, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
+			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public Feedforward leftFF;
+	public Feedforward rightFF;
 
-	public Port navxPort = SPI.Port.kMXP;
+	// arm
+	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
+	private final boolean reverseArm = false;
+	public final CTREParam arm = new CTREParam(12, reverseArm);
+	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public double armDegreesPerPulse = 0;
 
+	// climber
+	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
+	private final int climberMasterID = 4;
+	private final boolean reverseClimberMaster = false;
+	private final boolean reverseClimberFollower = false;
+	public final CTREParam climberMaster = new CTREParam(climberMasterID, reverseClimberMaster);
+	public final CTREParam climberFollower = new CTREParam(5, reverseClimberFollower, climberMasterID);
+
+	// elevator
+	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
+	private final boolean reverseElevator = true;
+	public final boolean reverseElevatorEncoder = true;
+	public final CTREParam elevator = new CTREParam(3, reverseElevator);
+	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public double elevatorInchesPerPulse = 0;
+
+	// cube manip (intake)
+	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
+	private final int manipMasterID = 10;
+	private final boolean reverseManipMaster = false;
+	private final boolean reverseManipFollower = false;
+	public final CTREParam manipMaster = new CTREParam(manipMasterID, reverseManipMaster);
+	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
+	public double manipStopCurrent = 0;
+
+	// ramp
+	public final int rampSolenoidID = 1;
+	public final boolean rampOutValue = true;// setting the ramp solenoid to this value should make it go out
+
+	public final Port navxPort = SPI.Port.kMXP;
+
+	public final double inputDeadband = 0.025; // 2.5%
 	public final int leftJoystickPort = 0;
-	public final int rightJoystickPort = 0;
-	public final int buttonJoystickPort = 0;
-
-	private static RobotConfig defaultConfig() {
-		RobotConfig config = new RobotConfig();
-		return config;
-	}
+	public final int rightJoystickPort = 1;
+	public final int buttonJoystickPort = 2;
 
 	public static enum ROBOTS {
-		DEFAULT(RobotConfig::defaultConfig), COMPETITION(RobotConfig::competitionConfig), PRACTICE(
-				RobotConfig::practiceConfig);
+		DEFAULT(RobotConfig::new), COMPETITION(CompetitionConfig::new), PRACTICE(PracticeConfig::new);
 
 		private final Supplier<RobotConfig> supplier;
 
@@ -72,11 +120,12 @@ public class RobotConfig {
 
 	public static RobotConfig getConfig() {
 		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
+		Preferences.getInstance().putString(PREF_KEY, robot);
 		System.out.println("Loaded robot: " + robot);
 		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}
 
-	private RobotConfig() {
+	protected RobotConfig() {
 	}
 
 }

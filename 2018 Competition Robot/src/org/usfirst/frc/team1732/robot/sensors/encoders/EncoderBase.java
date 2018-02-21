@@ -2,6 +2,9 @@ package org.usfirst.frc.team1732.robot.sensors.encoders;
 
 public abstract class EncoderBase {
 
+	public EncoderBase() {
+	}
+
 	public EncoderReader makeReader() {
 		return new EncoderReader(this);
 	}
@@ -16,7 +19,7 @@ public abstract class EncoderBase {
 	 */
 	public abstract double getRate();
 
-	public abstract double getPulses();
+	public abstract int getPulses();
 
 	/**
 	 * @param distancePerPulse
@@ -24,10 +27,5 @@ public abstract class EncoderBase {
 	 */
 	public abstract void setDistancePerPulse(double distancePerPulse);
 
-	/**
-	 * Zeros the encoder. Be careful, this will zero all encoder readers.
-	 * 
-	 */
 	public abstract void zero();
-
 }

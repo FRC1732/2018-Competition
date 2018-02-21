@@ -7,16 +7,25 @@
 
 package org.usfirst.frc.team1732.robot;
 
+import java.util.function.Supplier;
+
+import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.Direction;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.TestMode;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.input.Joysticks;
+import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
-import org.usfirst.frc.team1732.robot.subsystems.CubeManip;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
+import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -34,17 +43,22 @@ public class Robot extends TimedRobot {
 	// subsystems
 	public static Drivetrain drivetrain;
 	public static Arm arm;
-	public static CubeManip intake;
+	public static Manip manip;
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
 
 	// input
-	public static Joysticks joysticks;
+	public static Input joysticks;
 
 	// other
 	public static final int PERIOD_MS = 20;
+	public static final double PERIOD_S = PERIOD_MS / 1000.0;
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
+	private static BooleanTimer gameDataWaiter;
+
+	private Command defaultAuto;
+	private Supplier<Command> chosenAuto;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -52,17 +66,22 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		setPeriod(PERIOD_MS / 1000.0); // periodic methods will loop every 10 ms (1/100 sec)
+		setPeriod(PERIOD_S); // periodic methods will loop every 10 ms (1/100 sec)
 		robotConfig = RobotConfig.getConfig();
 
 		drivetrain = new Drivetrain(robotConfig);
-		intake = new CubeManip(robotConfig);
-		arm = new Arm();
+		manip = new Manip(robotConfig);
+		arm = new Arm(robotConfig);
 		elevator = new Elevator(robotConfig);
 		climber = new Climber(robotConfig);
 		sensors = new Sensors(robotConfig);
 
-		joysticks = new Joysticks(robotConfig);
+		joysticks = new Input(robotConfig);
+
+		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
+		defaultAuto = new DriveDistance(140);
+		// gameDataWaiter will either start the auto if game data is received before 10
+		// seconds, or it will drive across the auto line after 10 seconds
 	}
 
 	@Override
@@ -97,17 +116,39 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		gameDataWaiter.start();
+		// in the below line we would get our chosen auto through whatever means
+		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
+		autoStarted = false;
 	}
+
+	private boolean autoStarted = false;
 
 	/**
 	 * This function is called periodically during autonomous.
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		if (!autoStarted) {
+			autoStarted = gameDataWaiter.checkIfDone();
+			if (autoStarted) {
+				if (gameDataWaiter.isTimedOut()) {// start default auto
+					System.out.println("ERROR: Game data not received. Starting default auto.");
+					defaultAuto.start();
+				} else {
+					System.out.println("Game data received. Starting chosen auto.");
+					chosenAuto.get().start();
+				}
+			} else {
+				System.out.println("Game data not yet received");
+			}
+		}
 	}
 
 	@Override
 	public void teleopInit() {
+		// cancel auto command here
+		drivetrain.setCoast();
 	}
 
 	/**

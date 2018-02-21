@@ -47,6 +47,8 @@ public class CTREConfig {
 	public int PIDerrorStatusPeriod = 160;
 	public int controlFramePeriod = 10;
 
+	public int motionControlFramePeriod = 160;
+
 	// ControlFrame.Control_3_General;
 	// ControlFrame.Control_4_Advanced;
 	// ControlFrame.Control_6_MotProfAddTrajPoint;
