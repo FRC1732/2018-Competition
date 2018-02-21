@@ -27,7 +27,7 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
 
-	public final double degreesPerPulse;
+	public final double inchesPerPulse;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -39,20 +39,19 @@ public class Elevator extends Subsystem {
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
-		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
-		encoder.zero();
-		degreesPerPulse = config.elevatorDegreesPerPulse;
-		encoder.setDistancePerPulse(config.elevatorDegreesPerPulse);
+		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
+		inchesPerPulse = config.elevatorInchesPerPulse;
+		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
 	}
 
 	public static enum Positions {
 
-		// set these in
-		MIN(0.0), INTAKE(0.0), SWITCH(0.0), SCALE(0.0), MAX(0.0);
+		// set these in pulses
+		MIN(0), INTAKE(0), SWITCH(0), SCALE(0), MAX(0);
 
-		public final double value;
+		public final int value;
 
-		private Positions(double value) {
+		private Positions(int value) {
 			this.value = value;
 		}
 	}
@@ -62,7 +61,8 @@ public class Elevator extends Subsystem {
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("Elevator Encoder Position", encoder.getPosition());
-		SmartDashboard.putNumber("Elevator Encoder Position", encoder.getPosition());
+		SmartDashboard.putNumber("Elevator Encoder Pulses", encoder.getPulses());
+		SmartDashboard.putNumber("Elevator Encoder Talon Pulses", motor.getSelectedSensorPosition(0));
 	}
 
 	@Override
@@ -73,7 +73,8 @@ public class Elevator extends Subsystem {
 		return encoder.makeReader();
 	}
 
-	public void set(double position) {
+	public void set(double pos) {
+		int position = (int) (pos / inchesPerPulse);
 		if (position < Positions.MIN.value) {
 			position = Positions.MIN.value;
 		}

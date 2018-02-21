@@ -26,4 +26,8 @@ public class Climber extends Subsystem {
 		// setDefaultCommand(new MySpecialCommand());
 	}
 
+	public void periodic() {
+
+	}
+
 }

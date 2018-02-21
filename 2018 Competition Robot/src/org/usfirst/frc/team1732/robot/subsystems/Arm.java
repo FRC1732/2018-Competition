@@ -40,19 +40,18 @@ public class Arm extends Subsystem {
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
-		encoder.zero();
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 	}
 
 	public static enum Positions {
 
-		// set these in
-		MIN(0.0), INTAKE(0.0), SWITCH(0.0), SCALE(0.0), MAX(0.0);
+		// set these in pulses
+		MIN(0), INTAKE(0), SWITCH(0), SCALE(0), MAX(0);
 
-		public final double value;
+		public final int value;
 
-		private Positions(double value) {
+		private Positions(int value) {
 			this.value = value;
 		}
 	}
@@ -62,7 +61,7 @@ public class Arm extends Subsystem {
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
-		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
+		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
 	}
 
 	@Override
@@ -73,7 +72,8 @@ public class Arm extends Subsystem {
 		return encoder.makeReader();
 	}
 
-	public void set(double position) {
+	public void set(double pos) {
+		int position = (int) (pos / degreesPerPulse);
 		if (position < Positions.MIN.value) {
 			position = Positions.MIN.value;
 		}

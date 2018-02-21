@@ -28,6 +28,10 @@ public class RobotConfig {
 
 	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
+	public final int shiftingSolenoidID = 0;
+	public final boolean highGearValue = true; // setting the shifter solenoid to this value should make the drivetrain
+												// go in high gear
+
 	private final int leftMasterID = 15;
 	private final boolean reverseLeft = true;
 	public final boolean reverseLeftSensor = false;
@@ -75,7 +79,7 @@ public class RobotConfig {
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public double elevatorDegreesPerPulse = 0;
+	public double elevatorInchesPerPulse = 0;
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
@@ -86,6 +90,10 @@ public class RobotConfig {
 	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
 	public double manipStopCurrent = 0;
 	public double manipHoldCurrent = 0;
+
+	// ramp
+	public final int rampSolenoidID = 1;
+	public final boolean rampOutValue = true;// setting the ramp solenoid to this value should make it go out
 
 	public final Port navxPort = SPI.Port.kMXP;
 

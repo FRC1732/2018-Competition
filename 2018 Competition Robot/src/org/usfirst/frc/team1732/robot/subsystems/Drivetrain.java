@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,6 +32,9 @@ public class Drivetrain extends Subsystem {
 
 	public final TalonSRX leftMaster;
 	public final TalonSRX rightMaster;
+
+	private final Solenoid shifter;
+	private final boolean highGearValue;
 
 	private final VictorSPX leftVictor1;
 	private final VictorSPX leftVictor2;
@@ -57,6 +61,9 @@ public class Drivetrain extends Subsystem {
 	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
+		shifter = new Solenoid(config.shiftingSolenoidID);
+		highGearValue = config.highGearValue;
+
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
 		leftVictor1 = MotorUtils.makeVictor(config.leftFollower1, config.drivetrainConfig);
 		leftVictor2 = MotorUtils.makeVictor(config.leftFollower2, config.drivetrainConfig);
@@ -98,6 +105,7 @@ public class Drivetrain extends Subsystem {
 		rightEncoder.setPhase(config.reverseRightSensor);
 		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
+		shiftHigh();
 	}
 
 	@Override
@@ -163,5 +171,13 @@ public class Drivetrain extends Subsystem {
 
 	public void selectGains(ClosedLoopProfile gains) {
 		gains.selectGains(leftMaster, rightMaster);
+	}
+
+	public void shiftHigh() {
+		shifter.set(highGearValue);
+	}
+
+	public void shiftLow() {
+		shifter.set(!highGearValue);
 	}
 }
