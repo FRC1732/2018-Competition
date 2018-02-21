@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Subsystem to control the intakes
  * 
- * Manages 2 TalonSPX (right, left)
+ * Manages 2 VictorSPX (right, left)
  */
 public class Manip extends Subsystem {
 
+	public static final double STOP_TIME = 0.25;
+
 	public final VictorSPX master;
-	// Put methods for controlling this subsystem
-	// here. Call these from Commands.
 
 	public final double stopCurrent;
 
@@ -32,7 +32,7 @@ public class Manip extends Subsystem {
 	}
 
 	// might end up using a sensor for this
-	public boolean hasCube() {
+	public boolean aboveStopCurrent() {
 		return master.getOutputCurrent() > stopCurrent;
 	}
 
