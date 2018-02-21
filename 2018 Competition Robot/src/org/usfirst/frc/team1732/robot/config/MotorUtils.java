@@ -67,7 +67,7 @@ public class MotorUtils {
 
 		printError(motor.configVelocityMeasurementPeriod(config.velocityMeasurementPeriod, CTREConfig.CONFIG_TIMEOUT));
 		printError(motor.configVelocityMeasurementWindow(config.velocityMeasurementWindow, CTREConfig.CONFIG_TIMEOUT));
-
+		printError(motor.changeMotionControlFramePeriod(config.motionControlFramePeriod));
 		return motor;
 	}
 
