@@ -62,6 +62,7 @@ public class RobotConfig {
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public double armDegreesPerPulse = 0;
+	public double safeElevatorArmPosition = 0; // position the arm must be less than for elevator to go down safely
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -80,7 +81,7 @@ public class RobotConfig {
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public double elevatorInchesPerPulse = 0;
-	public double safeArmElevatorPosition;
+	public double safeArmElevatorPosition; // position the elevator must be above for the arm to go out safely
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();

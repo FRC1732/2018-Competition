@@ -30,6 +30,9 @@ public class Arm extends Subsystem {
 
 	public final double degreesPerPulse;
 
+	private int desiredPosition;
+	private boolean desiredIsSet;
+
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.armDownPID;
@@ -64,10 +67,13 @@ public class Arm extends Subsystem {
 	public void periodic() {
 		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
 		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
-		if (Robot.elevator.isArmSafe()) {
-			motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
-		} else {
-			motor.configForwardSoftLimitThreshold(Positions.TUCK.value, 0);
+		if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafe() && desiredIsSet) {
+			motor.set(ControlMode.Position, Positions.TUCK.value);
+			desiredIsSet = false;
+		}
+		if (Robot.elevator.isArmSafe() && !desiredIsSet) {
+			motor.set(ControlMode.Position, desiredPosition);
+			desiredIsSet = true;
 		}
 	}
 
@@ -87,6 +93,8 @@ public class Arm extends Subsystem {
 		if (position > Positions.MAX.value) {
 			position = Positions.MAX.value;
 		}
+		desiredPosition = position;
+		desiredIsSet = true;
 		motor.set(ControlMode.Position, position);
 	}
 
