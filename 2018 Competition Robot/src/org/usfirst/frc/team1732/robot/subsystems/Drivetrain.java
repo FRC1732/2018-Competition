@@ -94,8 +94,8 @@ public class Drivetrain extends Subsystem {
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
 		leftEncoder.zero();
 		rightEncoder.zero();
-		leftEncoder.setPhase(true);
-		rightEncoder.setPhase(true);
+		leftEncoder.setPhase(config.reverseLeftSensor);
+		rightEncoder.setPhase(config.reverseRightSensor);
 		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 	}
@@ -108,11 +108,13 @@ public class Drivetrain extends Subsystem {
 	@Override
 	public void periodic() {
 		SmartDashboard.putNumber("Left Pos", leftEncoder.getPosition());
-		SmartDashboard.putNumber("Left Pulses", leftEncoder.getPosition());
-		SmartDashboard.putNumber("Left Vel", leftEncoder.getPosition());
+		SmartDashboard.putNumber("Left Pulses", leftEncoder.getPulses());
+		SmartDashboard.putNumber("Left Vel", leftEncoder.getRate());
+		SmartDashboard.putNumber("Left Rate", leftMaster.getSelectedSensorVelocity(0));
 		SmartDashboard.putNumber("Right Pos", rightEncoder.getPosition());
-		SmartDashboard.putNumber("Right Pulses", rightEncoder.getPosition());
-		SmartDashboard.putNumber("Right Vel", rightEncoder.getPosition());
+		SmartDashboard.putNumber("Right Pulses", rightEncoder.getPulses());
+		SmartDashboard.putNumber("Right Vel", rightEncoder.getRate());
+		SmartDashboard.putNumber("Right Rate", rightMaster.getSelectedSensorVelocity(0));
 	}
 
 	public EncoderReader getRightEncoderReader() {

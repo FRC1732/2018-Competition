@@ -30,12 +30,14 @@ public class RobotConfig {
 
 	private final int leftMasterID = 15;
 	private final boolean reverseLeft = true;
+	public final boolean reverseLeftSensor = false;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
 	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
 	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
 
 	private final int rightMasterID = 0;
 	private final boolean reverseRight = false;
+	public final boolean reverseRightSensor = false;
 	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
 	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);

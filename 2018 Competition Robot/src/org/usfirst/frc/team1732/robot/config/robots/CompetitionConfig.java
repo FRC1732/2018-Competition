@@ -8,7 +8,7 @@ public class CompetitionConfig extends RobotConfig {
 	{
 		// drivetrain
 		effectiveRobotWidth = 25; // calculate
-		drivetrainInchesPerPulse = 0; // calculate
+		drivetrainInchesPerPulse = 100.0 / ((51310 - (12) + 51034 - (117)) / 2.0); // = 0.001957
 		maxInPerSec = 0; // calculate
 		maxInPerSecSq = 0; // calculate
 		// drivetrainConfig. Change stuff like this:
@@ -22,8 +22,11 @@ public class CompetitionConfig extends RobotConfig {
 		drivetrainMotionPID.allowableError = 0;
 		drivetrainMotionPID.maxIntegralAccumulated = 0;
 		drivetrainMotionPID.secondsFromNeutralToFull = 0;
-		leftFF = new Feedforward(0, 0, 0, 0, 0, 0);
-		rightFF = new Feedforward(0, 0, 0, 0, 0, 0);
+		// FFs are from robot chassis 1. Only gets used for TurnAngle
+		leftFF = new Feedforward(0.0574657, 0.0089855, 1.6010019, 0.0574657, 0.0089855,
+				-1.6010019);
+		rightFF = new Feedforward(0.0560625, 0.0071341, 1.7711541, 0.0560625, 0.0071341,
+				-1.7711541);
 
 		// arm
 		armConfig.enableVoltageCompensation = true;

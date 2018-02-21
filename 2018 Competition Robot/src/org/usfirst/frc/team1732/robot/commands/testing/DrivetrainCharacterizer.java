@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.CircularBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveTrainCharacterizer extends Command {
+public class DrivetrainCharacterizer extends Command {
 
 	public static enum TestMode {
 		QUASI_STATIC, STEP_VOLTAGE;
@@ -26,7 +26,7 @@ public class DriveTrainCharacterizer extends Command {
 	private final EncoderReader leftEncoder;
 	private final EncoderReader rightEncoder;
 
-	public DriveTrainCharacterizer(TestMode mode, Direction direction) {
+	public DrivetrainCharacterizer(TestMode mode, Direction direction) {
 		requires(Robot.drivetrain);
 		this.mode = mode;
 		this.direction = direction;

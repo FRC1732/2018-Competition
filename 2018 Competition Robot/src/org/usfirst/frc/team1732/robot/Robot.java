@@ -8,9 +8,9 @@
 package org.usfirst.frc.team1732.robot;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
-import org.usfirst.frc.team1732.robot.commands.testing.DriveTrainCharacterizer;
-import org.usfirst.frc.team1732.robot.commands.testing.DriveTrainCharacterizer.Direction;
-import org.usfirst.frc.team1732.robot.commands.testing.DriveTrainCharacterizer.TestMode;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.Direction;
+import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.TestMode;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
 		if (!autoStarted) {
 			autoStarted = gameDataWaiter.checkIfDone();
 			if (autoStarted) {
-				Command auto = new DriveTrainCharacterizer(TestMode.STEP_VOLTAGE, Direction.Forward);
+				Command auto = new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
 				if (gameDataWaiter.isTimedOut()) {// start default auto
 					System.out.println("ERROR: Game data not received");
 					auto.start();
