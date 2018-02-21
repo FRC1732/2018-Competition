@@ -126,25 +126,11 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public EncoderReader getRightEncoderReader() {
-		return getRightEncoderReader(false);
-	}
-
-	public EncoderReader getRightEncoderReader(boolean zero) {
-		EncoderReader r = rightEncoder.makeReader();
-		if (zero)
-			r.zero();
-		return r;
+		return rightEncoder.makeReader();
 	}
 
 	public EncoderReader getLeftEncoderReader() {
-		return getLeftEncoderReader(false);
-	}
-
-	public EncoderReader getLeftEncoderReader(boolean zero) {
-		EncoderReader r = leftEncoder.makeReader();
-		if (zero)
-			r.zero();
-		return r;
+		return leftEncoder.makeReader();
 	}
 
 	public void setStop() {
@@ -161,12 +147,19 @@ public class Drivetrain extends Subsystem {
 		rightVictor2.setNeutralMode(mode);
 	}
 
+	public void setBrake() {
+		setNeutralMode(NeutralMode.Brake);
+	}
+	public void setCoast() {
+		setNeutralMode(NeutralMode.Coast);
+	}
+
 	public void setLeft(double percentVolt) {
-		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -1, 1));
+		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
 	public void setRight(double percentVolt) {
-		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -1, 1));
+		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
 	public void selectGains(ClosedLoopProfile gains) {

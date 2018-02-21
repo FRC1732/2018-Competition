@@ -2,34 +2,33 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.PERIOD_S;
 import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
-import static org.usfirst.frc.team1732.robot.Robot.sensors;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
+import org.usfirst.frc.team1732.robot.util.Util;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Drives a distance in inches using the encoders
+ *
  */
-public class DriveDistance extends Command {
-	private PIDController trans, rot;
-	EncoderReader l = drivetrain.getLeftEncoderReader(), r = drivetrain.getRightEncoderReader();
-	GyroReader g = sensors.navx.makeReader();
+public class DriveDistanceNoStop extends Command {
+	private final PIDController rot;
+	private final EncoderReader l = drivetrain.getLeftEncoderReader(), r = drivetrain.getRightEncoderReader();
+	private final GyroReader g = Robot.sensors.navx.makeReader();
+	private final double distance, endSpeed;
 
-	public DriveDistance(double dist) {
+	public DriveDistanceNoStop(double dist, double endSpeed) {
 		requires(drivetrain);
-		// need to tune PIDs
-		trans = new PIDController(0.1, 0, 0.8, new DisplacementPIDSource() {
-			public double pidGet() {
-				return (l.getPosition() + r.getPosition()) / 2;
-			}
-		}, d -> {}, PERIOD_S);
-		trans.setSetpoint(dist);
-		trans.setAbsoluteTolerance(1);
+		distance = dist;
+		this.endSpeed = endSpeed;
 		rot = new PIDController(0.05, 0, 0, new DisplacementPIDSource() {
+			@Override
 			public double pidGet() {
 				return g.getTotalAngle();
 			}
@@ -37,27 +36,18 @@ public class DriveDistance extends Command {
 		rot.setSetpoint(0);
 		rot.setAbsoluteTolerance(1);
 	}
-
 	protected void initialize() {
 		l.zero();
 		r.zero();
-		trans.enable();
 		g.zero();
 		rot.enable();
-		drivetrain.setBrake();
+		drivetrain.setNeutralMode(NeutralMode.Brake);
 	}
-
 	protected void execute() {
-		drivetrain.drive.arcadeDrive(trans.get(), rot.get(), false);
+		double percentDone = ((l.getPosition() + r.getPosition()) / 2) / distance;
+		drivetrain.drive.arcadeDrive(Util.cerp(1, endSpeed, percentDone), rot.get(), false);
 	}
-
 	protected boolean isFinished() {
-		return trans.onTarget() && rot.onTarget();
-	}
-
-	protected void end() {
-		trans.disable();
-		rot.disable();
-		drivetrain.setStop();
+		return ((l.getPosition() + r.getPosition()) / 2) > distance;
 	}
 }
