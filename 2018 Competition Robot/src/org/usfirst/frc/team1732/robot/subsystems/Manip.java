@@ -20,13 +20,11 @@ public class Manip extends Subsystem {
 	// here. Call these from Commands.
 
 	public final double stopCurrent;
-	public final double holdCurrent;
 
 	public Manip(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
 		MotorUtils.makeVictor(config.manipFollower, config.manipConfig);
 		stopCurrent = config.manipStopCurrent;
-		holdCurrent = config.manipHoldCurrent;
 	}
 
 	@Override
@@ -35,10 +33,6 @@ public class Manip extends Subsystem {
 
 	public void setIn() {
 		master.set(ControlMode.PercentOutput, -0.5);
-	}
-
-	public void setHold() {
-		// use current control to hold it (current is proportional to torque)
 	}
 
 	public void setOut() {
