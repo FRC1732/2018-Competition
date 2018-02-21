@@ -19,7 +19,7 @@ public abstract class EncoderBase {
 	 */
 	public abstract double getRate();
 
-	public abstract double getPulses();
+	public abstract int getPulses();
 
 	/**
 	 * @param distancePerPulse
