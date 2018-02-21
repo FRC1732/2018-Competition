@@ -8,6 +8,8 @@ import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -26,31 +28,37 @@ public class DriveDistance extends Command {
 			public double pidGet() {
 				return (l.getPosition() + r.getPosition()) / 2;
 			}
-		}, d -> {}, PERIOD_S);
+		}, d -> {
+		}, PERIOD_S);
 		trans.setSetpoint(dist);
 		trans.setAbsoluteTolerance(1);
 		rot = new PIDController(0.05, 0, 0, new DisplacementPIDSource() {
 			public double pidGet() {
 				return g.getTotalAngle();
 			}
-		}, d -> {}, PERIOD_S);
+		}, d -> {
+		}, PERIOD_S);
 		rot.setSetpoint(0);
 		rot.setAbsoluteTolerance(1);
 	}
+
 	protected void initialize() {
 		l.zero();
 		r.zero();
 		trans.enable();
 		g.zero();
 		rot.enable();
-		drivetrain.setBrakeMode(true);
+		drivetrain.setNeutralMode(NeutralMode.Brake);
 	}
+
 	protected void execute() {
 		drivetrain.drive.arcadeDrive(trans.get(), rot.get(), false);
 	}
+
 	protected boolean isFinished() {
 		return trans.onTarget() && rot.onTarget();
 	}
+
 	protected void end() {
 		trans.disable();
 		rot.disable();

@@ -6,8 +6,7 @@ public class NavX extends GyroBase {
 
 	private final AHRS navx;
 
-	public NavX(boolean zeroAtStart, AHRS navx) {
-		super(zeroAtStart);
+	public NavX(AHRS navx) {
 		this.navx = navx;
 	}
 
@@ -22,7 +21,7 @@ public class NavX extends GyroBase {
 	}
 
 	@Override
-	protected void zero() {
+	public void zero() {
 		navx.zeroYaw();
 	}
 

@@ -2,9 +2,7 @@ package org.usfirst.frc.team1732.robot.sensors.encoders;
 
 public abstract class EncoderBase {
 
-	public EncoderBase(boolean zeroAtStart) {
-		if (zeroAtStart)
-			zero();
+	public EncoderBase() {
 	}
 
 	public EncoderReader makeReader() {
@@ -29,5 +27,5 @@ public abstract class EncoderBase {
 	 */
 	public abstract void setDistancePerPulse(double distancePerPulse);
 
-	protected abstract void zero();
+	public abstract void zero();
 }

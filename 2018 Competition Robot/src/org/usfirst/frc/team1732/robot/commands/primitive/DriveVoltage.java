@@ -24,6 +24,6 @@ public class DriveVoltage extends InstantCommand {
 	protected void initialize() {
 		Robot.drivetrain.setNeutralMode(mode);
 		Robot.drivetrain.setLeft(leftVolt);
-		Robot.drivetrain.setLeft(rightVolt);
+		Robot.drivetrain.setRight(rightVolt);
 	}
 }

@@ -4,9 +4,7 @@ public abstract class GyroBase {
 
 	public static final double ANGLE_EPSILON = 0.01;
 
-	public GyroBase(boolean zeroAtStart) {
-		if (zeroAtStart)
-			zero();
+	public GyroBase() {
 	}
 
 	public GyroReader makeReader() {
@@ -23,7 +21,7 @@ public abstract class GyroBase {
 	 */
 	public abstract double getTotalAngle();
 
-	protected abstract void zero();
+	public abstract void zero();
 
 	public boolean atZero() {
 		return getAngle() < ANGLE_EPSILON;

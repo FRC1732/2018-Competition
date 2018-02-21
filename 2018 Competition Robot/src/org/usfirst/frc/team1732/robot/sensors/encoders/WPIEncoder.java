@@ -6,8 +6,7 @@ public class WPIEncoder extends EncoderBase {
 
 	private final Encoder wpiEncoder;
 
-	public WPIEncoder(int channelA, int channelB, boolean zeroAtStart) {
-		super(zeroAtStart);
+	public WPIEncoder(int channelA, int channelB) {
 		wpiEncoder = new Encoder(channelA, channelB);
 		wpiEncoder.setSamplesToAverage(4);
 	}
@@ -37,7 +36,7 @@ public class WPIEncoder extends EncoderBase {
 	}
 
 	@Override
-	protected void zero() {
+	public void zero() {
 		wpiEncoder.reset();
 	}
 

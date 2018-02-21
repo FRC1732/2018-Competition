@@ -29,7 +29,7 @@ public class RobotConfig {
 	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
 	private final int leftMasterID = 15;
-	private final boolean reverseLeft = false;
+	private final boolean reverseLeft = true;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
 	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
 	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
@@ -110,6 +110,7 @@ public class RobotConfig {
 
 	public static RobotConfig getConfig() {
 		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
+		Preferences.getInstance().putString(PREF_KEY, robot);
 		System.out.println("Loaded robot: " + robot);
 		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}

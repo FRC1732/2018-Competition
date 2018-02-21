@@ -35,9 +35,12 @@ public class Elevator extends Subsystem {
 		downGains = config.elevatorDownPID;
 		upGains.applyToTalon(motor);
 		downGains.applyToTalon(motor);
-		ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1, motor);
-		ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx, 1, motor);
-		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute, false);
+		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
+		// motor);
+		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
+		// 1, motor);
+		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
+		encoder.zero();
 		degreesPerPulse = config.elevatorDegreesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorDegreesPerPulse);
 	}

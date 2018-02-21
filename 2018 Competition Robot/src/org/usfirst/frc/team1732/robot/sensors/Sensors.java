@@ -10,7 +10,8 @@ public class Sensors {
 	public final NavX navx;
 
 	public Sensors(RobotConfig robotConfig) {
-		navx = new NavX(true, new AHRS(robotConfig.navxPort));
+		navx = new NavX(new AHRS(robotConfig.navxPort));
+		navx.zero();
 	}
 
 	public static double convertTotalAngle(double angle) {

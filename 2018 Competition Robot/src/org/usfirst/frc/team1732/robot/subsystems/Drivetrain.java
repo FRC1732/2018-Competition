@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -30,10 +31,10 @@ public class Drivetrain extends Subsystem {
 	public final TalonSRX leftMaster;
 	public final TalonSRX rightMaster;
 
-	private final TalonSRX leftTalon1;
-	private final TalonSRX leftTalon2;
-	private final TalonSRX rightTalon1;
-	private final TalonSRX rightTalon2;
+	private final VictorSPX leftVictor1;
+	private final VictorSPX leftVictor2;
+	private final VictorSPX rightVictor1;
+	private final VictorSPX rightVictor2;
 
 	private final TalonEncoder leftEncoder;
 	private final TalonEncoder rightEncoder;
@@ -56,12 +57,12 @@ public class Drivetrain extends Subsystem {
 
 	public Drivetrain(RobotConfig config) {
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		leftTalon1 = MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
-		leftTalon2 = MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictor(config.leftFollower1, config.drivetrainConfig);
+		leftVictor2 = MotorUtils.makeVictor(config.leftFollower2, config.drivetrainConfig);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		rightTalon1 = MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
-		rightTalon2 = MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
+		rightVictor1 = MotorUtils.makeVictor(config.rightFollower1, config.drivetrainConfig);
+		rightVictor2 = MotorUtils.makeVictor(config.rightFollower2, config.drivetrainConfig);
 
 		leftFF = config.leftFF;
 		rightFF = config.rightFF;
@@ -73,10 +74,12 @@ public class Drivetrain extends Subsystem {
 		maxInPerSec = config.maxInPerSec;
 		maxInPerSecSq = config.maxInPerSecSq;
 
-		ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder, motionGains.slotIdx, 1, leftMaster,
-				rightMaster);
-		ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder, velocityGains.slotIdx, 1, leftMaster,
-				rightMaster);
+		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
+		// motionGains.slotIdx, 1, leftMaster,
+		// rightMaster);
+		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
+		// velocityGains.slotIdx, 1, leftMaster,
+		// rightMaster);
 
 		inchesPerPulse = config.drivetrainInchesPerPulse;
 		robotLength = config.robotLength;
@@ -86,8 +89,10 @@ public class Drivetrain extends Subsystem {
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				config.inputDeadband);
 
-		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder, true);
-		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder, true);
+		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
+		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
+		leftEncoder.zero();
+		rightEncoder.zero();
 		leftEncoder.setPhase(true);
 		rightEncoder.setPhase(true);
 		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
@@ -100,7 +105,8 @@ public class Drivetrain extends Subsystem {
 	}
 
 	@Override
-	public void periodic() {}
+	public void periodic() {
+	}
 
 	public EncoderReader getRightEncoderReader() {
 		return getRightEncoderReader(false);
@@ -132,10 +138,10 @@ public class Drivetrain extends Subsystem {
 	public void setNeutralMode(NeutralMode mode) {
 		leftMaster.setNeutralMode(mode);
 		rightMaster.setNeutralMode(mode);
-		leftTalon1.setNeutralMode(mode);
-		leftTalon2.setNeutralMode(mode);
-		rightTalon1.setNeutralMode(mode);
-		rightTalon2.setNeutralMode(mode);
+		leftVictor1.setNeutralMode(mode);
+		leftVictor2.setNeutralMode(mode);
+		rightVictor1.setNeutralMode(mode);
+		rightVictor2.setNeutralMode(mode);
 	}
 
 	public void setLeft(double percentVolt) {
@@ -148,15 +154,5 @@ public class Drivetrain extends Subsystem {
 
 	public void selectGains(ClosedLoopProfile gains) {
 		gains.selectGains(leftMaster, rightMaster);
-	}
-
-	public void setBrakeMode(boolean enabled) {
-		NeutralMode mode = enabled ? NeutralMode.Brake : NeutralMode.Coast;
-		leftMaster.setNeutralMode(mode);
-		leftTalon1.setNeutralMode(mode);
-		leftTalon2.setNeutralMode(mode);
-		rightMaster.setNeutralMode(mode);
-		rightTalon1.setNeutralMode(mode);
-		rightTalon2.setNeutralMode(mode);
 	}
 }
