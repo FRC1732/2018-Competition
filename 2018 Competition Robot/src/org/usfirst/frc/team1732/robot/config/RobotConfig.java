@@ -33,15 +33,15 @@ public class RobotConfig {
 												// go in high gear
 
 	private final int leftMasterID = 15;
-	private final boolean reverseLeft = true;
-	public final boolean reverseLeftSensor = false;
+	private final boolean reverseLeft = false;
+	public final boolean reverseLeftSensor = true;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
 	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
 	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
 
 	private final int rightMasterID = 0;
-	private final boolean reverseRight = false;
-	public final boolean reverseRightSensor = false;
+	private final boolean reverseRight = true;
+	public final boolean reverseRightSensor = true;
 	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
 	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);
@@ -73,7 +73,8 @@ public class RobotConfig {
 
 	// elevator
 	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
-	private final boolean reverseElevator = false;
+	private final boolean reverseElevator = true;
+	public final boolean reverseElevatorEncoder = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);

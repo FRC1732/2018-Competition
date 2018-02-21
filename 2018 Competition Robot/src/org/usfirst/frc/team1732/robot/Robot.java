@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 	private static BooleanTimer gameDataWaiter;
 
-	private Command defaultAuto = new DriveDistance(140);
+	private Command defaultAuto;
 	private Supplier<Command> chosenAuto;
 
 	/**
@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
 		joysticks = new Input(robotConfig);
 
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
+		defaultAuto = new DriveDistance(140);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
 	}
@@ -94,10 +95,12 @@ public class Robot extends TimedRobot {
 	 * robot is disabled.
 	 */
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
@@ -152,14 +155,17 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during operator control.
 	 */
 	@Override
-	public void teleopPeriodic() {}
+	public void teleopPeriodic() {
+	}
 
 	@Override
-	public void testInit() {}
+	public void testInit() {
+	}
 
 	/**
 	 * This function is called periodically during test mode.
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
 }
