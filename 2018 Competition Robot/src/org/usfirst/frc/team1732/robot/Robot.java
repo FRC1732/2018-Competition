@@ -10,10 +10,8 @@ package org.usfirst.frc.team1732.robot;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.autos.Dance;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
-import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer;
-import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.Direction;
-import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.TestMode;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -118,8 +116,9 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		gameDataWaiter.start();
 		// in the below line we would get our chosen auto through whatever means
-		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
+//		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
 		autoStarted = false;
+		new Dance(100).start();
 	}
 
 	private boolean autoStarted = false;
