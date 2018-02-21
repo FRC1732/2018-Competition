@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -42,12 +43,13 @@ public class Arm extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
+		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
 	}
 
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), SCALE(0), MAX(0);
+		MIN(0), INTAKE(0), SWITCH(0), TUCK(0), SCALE(0), MAX(0);
 
 		public final int value;
 
@@ -62,6 +64,11 @@ public class Arm extends Subsystem {
 	public void periodic() {
 		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
 		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
+		if (Robot.elevator.isArmSafe()) {
+			motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
+		} else {
+			motor.configForwardSoftLimitThreshold(Positions.TUCK.value, 0);
+		}
 	}
 
 	@Override

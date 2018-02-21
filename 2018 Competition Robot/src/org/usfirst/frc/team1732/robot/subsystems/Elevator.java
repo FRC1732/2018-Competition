@@ -28,6 +28,7 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile downGains;
 
 	public final double inchesPerPulse;
+	public final double safeArmElevatorPosition;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -42,6 +43,7 @@ public class Elevator extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
+		safeArmElevatorPosition = config.safeArmElevatorPosition;
 	}
 
 	public static enum Positions {
@@ -102,5 +104,9 @@ public class Elevator extends Subsystem {
 
 	public boolean atSetpoint(double allowableError) {
 		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
+	}
+
+	public boolean isArmSafe() {
+		return encoder.getPosition() > safeArmElevatorPosition;
 	}
 }
