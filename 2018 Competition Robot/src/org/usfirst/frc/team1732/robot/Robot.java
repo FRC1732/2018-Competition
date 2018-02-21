@@ -7,7 +7,10 @@
 
 package org.usfirst.frc.team1732.robot;
 
+import java.util.function.Supplier;
+
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer;
 import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.Direction;
 import org.usfirst.frc.team1732.robot.commands.testing.DrivetrainCharacterizer.TestMode;
@@ -53,6 +56,9 @@ public class Robot extends TimedRobot {
 	public static final double PERIOD_S = PERIOD_MS / 1000.0;
 	public static final int CONFIG_TIMEOUT = 10; // recommended timeout by CTRE
 	private static BooleanTimer gameDataWaiter;
+
+	private Command defaultAuto = new DriveDistance(140);
+	private Supplier<Command> chosenAuto;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -108,6 +114,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		gameDataWaiter.start();
+		// in the below line we would get our chosen auto through whatever means
+		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
 		autoStarted = false;
 	}
 
@@ -121,13 +129,12 @@ public class Robot extends TimedRobot {
 		if (!autoStarted) {
 			autoStarted = gameDataWaiter.checkIfDone();
 			if (autoStarted) {
-				Command auto = new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
 				if (gameDataWaiter.isTimedOut()) {// start default auto
-					System.out.println("ERROR: Game data not received");
-					auto.start();
+					System.out.println("ERROR: Game data not received. Starting default auto.");
+					defaultAuto.start();
 				} else {
-					System.out.println("Game data received");
-					auto.start();
+					System.out.println("Game data received. Starting chosen auto.");
+					chosenAuto.get().start();
 				}
 			} else {
 				System.out.println("Game data not yet received");

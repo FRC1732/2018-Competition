@@ -32,6 +32,7 @@ public class Arm extends Subsystem {
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
+	private boolean autoControl = false;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -67,13 +68,15 @@ public class Arm extends Subsystem {
 	public void periodic() {
 		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
 		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
-		if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafe() && desiredIsSet) {
-			motor.set(ControlMode.Position, Positions.TUCK.value);
-			desiredIsSet = false;
-		}
-		if (Robot.elevator.isArmSafe() && !desiredIsSet) {
-			motor.set(ControlMode.Position, desiredPosition);
-			desiredIsSet = true;
+		if (autoControl) {
+			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
+				motor.set(ControlMode.Position, Positions.TUCK.value);
+				desiredIsSet = false;
+			}
+			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
+				motor.set(ControlMode.Position, desiredPosition);
+				desiredIsSet = true;
+			}
 		}
 	}
 
@@ -95,27 +98,40 @@ public class Arm extends Subsystem {
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
-		motor.set(ControlMode.Position, position);
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void set(Positions position) {
-		motor.set(ControlMode.Position, position.value);
+		desiredPosition = position.value;
+		desiredIsSet = true;
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void setManual(double percentVolt) {
 		motor.set(ControlMode.PercentOutput, percentVolt);
+		autoControl = false;
 	}
 
 	public void holdPosition() {
-		motor.set(ControlMode.Position, encoder.getPulses());
+		desiredPosition = encoder.getPulses();
+		desiredIsSet = true;
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void setStop() {
 		motor.neutralOutput();
+		autoControl = false;
 	}
 
 	public boolean atSetpoint(int allowableError) {
 		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
+	}
+
+	public boolean isElevatorSafeToGoDown() {
+		return encoder.getPosition() < Positions.TUCK.value;
 	}
 
 }

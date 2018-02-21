@@ -47,7 +47,6 @@ public class CompetitionConfig extends RobotConfig {
 		armDownPID.maxIntegralAccumulated = 0;
 		armDownPID.secondsFromNeutralToFull = 0;
 		armDegreesPerPulse = 0;
-		safeElevatorArmPosition = 0;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
@@ -68,7 +67,6 @@ public class CompetitionConfig extends RobotConfig {
 		elevatorDownPID.maxIntegralAccumulated = 0;
 		elevatorDownPID.secondsFromNeutralToFull = 0;
 		elevatorInchesPerPulse = 0;
-		safeArmElevatorPosition = 0;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -28,7 +29,10 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile downGains;
 
 	public final double inchesPerPulse;
-	public final double safeArmElevatorPosition;
+
+	private int desiredPosition;
+	private boolean desiredIsSet;
+	private boolean autoControl = false;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -43,13 +47,12 @@ public class Elevator extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
-		safeArmElevatorPosition = config.safeArmElevatorPosition;
 	}
 
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), SCALE(0), MAX(0);
+		MIN(0), INTAKE(0), SWITCH(0), RADIO(0), SCALE(0), MAX(0);
 
 		public final int value;
 
@@ -65,6 +68,16 @@ public class Elevator extends Subsystem {
 		SmartDashboard.putNumber("Elevator Encoder Position", encoder.getPosition());
 		SmartDashboard.putNumber("Elevator Encoder Pulses", encoder.getPulses());
 		SmartDashboard.putNumber("Elevator Encoder Talon Pulses", motor.getSelectedSensorPosition(0));
+		if (autoControl) {
+			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
+				motor.set(ControlMode.Position, Positions.RADIO.value);
+				desiredIsSet = false;
+			}
+			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
+				motor.set(ControlMode.Position, desiredPosition);
+				desiredIsSet = true;
+			}
+		}
 	}
 
 	@Override
@@ -83,30 +96,41 @@ public class Elevator extends Subsystem {
 		if (position > Positions.MAX.value) {
 			position = Positions.MAX.value;
 		}
-		motor.set(ControlMode.Position, position);
+		desiredPosition = position;
+		desiredIsSet = true;
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void set(Positions position) {
-		motor.set(ControlMode.Position, position.value);
+		desiredPosition = position.value;
+		desiredIsSet = true;
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void setManual(double percentVolt) {
 		motor.set(ControlMode.PercentOutput, percentVolt);
+		autoControl = false;
 	}
 
 	public void holdPosition() {
-		motor.set(ControlMode.Position, encoder.getPulses());
+		desiredPosition = encoder.getPulses();
+		desiredIsSet = true;
+		motor.set(ControlMode.Position, desiredPosition);
+		autoControl = true;
 	}
 
 	public void setStop() {
 		motor.neutralOutput();
+		autoControl = false;
 	}
 
 	public boolean atSetpoint(double allowableError) {
 		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
 	}
 
-	public boolean isArmSafe() {
-		return encoder.getPosition() > safeArmElevatorPosition;
+	public boolean isArmSafeToGoUp() {
+		return encoder.getPosition() > Positions.RADIO.value;
 	}
 }
