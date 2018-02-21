@@ -72,7 +72,6 @@ public class PracticeConfig extends RobotConfig {
 		manipConfig.enableVoltageCompensation = true;
 		manipConfig.continousCurrentLimit = 0; // figure out how talon current limiting works
 		manipStopCurrent = 0;
-		manipHoldCurrent = 0;
 	}
 
 }
