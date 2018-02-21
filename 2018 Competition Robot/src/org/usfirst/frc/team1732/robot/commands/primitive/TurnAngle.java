@@ -4,8 +4,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.Util;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -63,7 +61,7 @@ public class TurnAngle extends Command {
 		radius = Robot.drivetrain.effectiveRobotWidth / 2.0 * 1.2;
 		double distance = radius * Math.toRadians(Math.abs(angle));
 		k = 2 * maxVel / distance;
-		Robot.drivetrain.setNeutralMode(NeutralMode.Brake);
+		Robot.drivetrain.setBrake();
 		endTime = Math.PI / k;
 	}
 

@@ -126,5 +126,10 @@ public class Util {
 		double modifiedPD = (1 - Math.cos(percentDone * Math.PI)) / 2;
 		return startOut * (1 - modifiedPD) + endOut * modifiedPD;
 	}
+	// should do the same thing as above, but less complicated
+	public static double cerp(double y1, double y2, double mu) {
+		double mu2 = (1 - Math.cos(mu * Math.PI)) / 2;
+		return (y1 * (1 - mu2)) + (y2 * mu2);
+	}
 
 }
