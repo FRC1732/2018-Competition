@@ -31,6 +31,11 @@ public class Manip extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
+	// might end up using a sensor for this
+	public boolean hasCube() {
+		return master.getOutputCurrent() > stopCurrent;
+	}
+
 	public void setIn() {
 		master.set(ControlMode.PercentOutput, -0.5);
 	}
