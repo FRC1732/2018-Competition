@@ -89,7 +89,6 @@ public class RobotConfig {
 	public final CTREParam manipMaster = new CTREParam(manipMasterID, reverseManipMaster);
 	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
 	public double manipStopCurrent = 0;
-	public double manipHoldCurrent = 0;
 
 	// ramp
 	public final int rampSolenoidID = 1;
