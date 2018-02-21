@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		gameDataWaiter.start();
+		// in the below line we would get our chosen auto through whatever means
 		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
 		autoStarted = false;
 	}
