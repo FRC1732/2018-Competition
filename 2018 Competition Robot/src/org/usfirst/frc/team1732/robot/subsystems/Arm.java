@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the arm
@@ -68,9 +67,9 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
-//		System.out.println("Arm Encoder: " +
-//				motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		
+		// System.out.println("Arm Encoder: " +
+		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.TUCK.value);

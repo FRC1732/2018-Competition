@@ -19,7 +19,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the drivetrain
@@ -107,7 +106,7 @@ public class Drivetrain extends Subsystem {
 		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		shiftHigh();
-		
+
 		Robot.dash.add("Left Pos", leftEncoder::getPosition);
 		Robot.dash.add("Left Pulses", leftEncoder::getPulses);
 		Robot.dash.add("Left Vel", leftEncoder::getRate);
@@ -117,10 +116,11 @@ public class Drivetrain extends Subsystem {
 		Robot.dash.add("Right Vel", rightEncoder::getRate);
 		Robot.dash.add("Right Rate", this::getRightSensorVelocity);
 	}
-	
+
 	private double getLeftSensorVelocity() {
 		return leftMaster.getSelectedSensorVelocity(0);
 	}
+
 	private double getRightSensorVelocity() {
 		return rightMaster.getSelectedSensorVelocity(0);
 	}
@@ -155,6 +155,7 @@ public class Drivetrain extends Subsystem {
 	public void setBrake() {
 		setNeutralMode(NeutralMode.Brake);
 	}
+
 	public void setCoast() {
 		setNeutralMode(NeutralMode.Coast);
 	}

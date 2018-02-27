@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the elevator
@@ -47,12 +46,12 @@ public class Elevator extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
-		
+
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Elevator Encoder Talon Pulses", this::getSensorPosition);
 	}
-	
+
 	private double getSensorPosition() {
 		return motor.getSelectedSensorPosition(0);
 	}
@@ -75,7 +74,7 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		
+
 		if (autoControl) {
 			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.RADIO.value);

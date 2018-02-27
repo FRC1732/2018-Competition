@@ -4,8 +4,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.util.ThreadCommand;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 /**
  *
  */
