@@ -44,7 +44,7 @@ public class Arm extends Subsystem {
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
-		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
+		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
@@ -66,8 +66,6 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
-		System.out.println("Arm Encoder: " +
-				motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
 		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
 		if (autoControl) {

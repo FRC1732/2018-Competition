@@ -33,10 +33,10 @@ public class Input {
 		// new JoystickButton(buttons, 6)
 		// .whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
 		// Elevator.Positions.SCALE));
-		new JoystickButton(buttons, 9).whileHeld(new ArmTest(0.2));
-		new JoystickButton(buttons, 8).whileHeld(new ArmTest(-0.2));
-		new JoystickButton(buttons, 7).whileHeld(new ElevatorTest(0.2));
-		new JoystickButton(buttons, 6).whileHeld(new ElevatorTest(-0.2));
+		new JoystickButton(buttons, 9).whileHeld(new ArmTest(0.5));
+		new JoystickButton(buttons, 8).whileHeld(new ArmTest(-0.5));
+		new JoystickButton(buttons, 7).whileHeld(new ElevatorTest(0.5));
+		new JoystickButton(buttons, 6).whileHeld(new ElevatorTest(-0.5));
 		new JoystickButton(left, 1).whenPressed(new ManipSetIn());
 		new JoystickButton(left, 1).whenReleased(new ManipSetStop());
 		new JoystickButton(right, 1).whenPressed(new ManipSetOut());
