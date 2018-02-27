@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the arm
@@ -48,6 +47,8 @@ public class Arm extends Subsystem {
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
+		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
+		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 	}
 
 	public static enum Positions {
@@ -66,8 +67,8 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
-		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
+		// System.out.println("Arm Encoder: " +
+		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.TUCK.value);

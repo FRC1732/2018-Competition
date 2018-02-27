@@ -2,46 +2,39 @@ package org.usfirst.frc.team1732.robot.commands.teleop;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
-
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1732.robot.util.NotifierCommand;
 
 /**
  *
  */
-public class DriveWithJoysticks extends Command {
+public class DriveWithJoysticks extends NotifierCommand {
 
 	private final DifferentialDrive drive;
 
 	public DriveWithJoysticks(DifferentialDrive drive) {
+		super(20);
 		requires(Robot.drivetrain);
 		this.drive = drive;
 	}
 
 	// Called just before this Command runs the first time
 	@Override
-	protected void initialize() {
+	protected void init() {
+		Robot.drivetrain.setCoast();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
-	protected void execute() {
+	protected void exec() {
 		drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(), false);
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
 	@Override
-	protected boolean isFinished() {
+	protected boolean isDone() {
 		return false;
 	}
 
-	// Called once after isFinished returns true
 	@Override
-	protected void end() {
-	}
-
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	@Override
-	protected void interrupted() {
+	protected void whenEnded() {
 	}
 }
