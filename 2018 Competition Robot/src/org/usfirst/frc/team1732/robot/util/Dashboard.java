@@ -3,30 +3,20 @@ package org.usfirst.frc.team1732.robot.util;
 import java.util.LinkedList;
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Dashboard {
 
 	public Dashboard() {
-		Thread thread = new Thread(this::loop);
-		thread.setDaemon(true);
-		thread.start();
-	}
-
-	private void sleep() {
-		try {
-			Thread.sleep(40);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Notifier notifier = new Notifier(this::loop);
+		int loopTimeMs = 40;
+		notifier.startPeriodic(loopTimeMs / 1000.0);
 	}
 
 	private void loop() {
-		while (!Thread.interrupted()) {
-			entries.forEach(this::call);
-			sleep();
-		}
+		entries.forEach(this::call);
 	}
 
 	private void call(Entry e) {
