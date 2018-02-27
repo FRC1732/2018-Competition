@@ -48,6 +48,8 @@ public class Arm extends Subsystem {
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
+		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
+		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 	}
 
 	public static enum Positions {
@@ -66,10 +68,9 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
-		System.out.println("Arm Encoder: " +
-				motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		SmartDashboard.putNumber("Arm Encoder Position", encoder.getPosition());
-		SmartDashboard.putNumber("Arm Encoder Pulses", encoder.getPulses());
+//		System.out.println("Arm Encoder: " +
+//				motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+		
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.TUCK.value);

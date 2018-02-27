@@ -47,6 +47,14 @@ public class Elevator extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
+		
+		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
+		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
+		Robot.dash.add("Elevator Encoder Talon Pulses", this::getSensorPosition);
+	}
+	
+	private double getSensorPosition() {
+		return motor.getSelectedSensorPosition(0);
 	}
 
 	public static enum Positions {
@@ -67,9 +75,7 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		SmartDashboard.putNumber("Elevator Encoder Position", encoder.getPosition());
-		SmartDashboard.putNumber("Elevator Encoder Pulses", encoder.getPulses());
-		SmartDashboard.putNumber("Elevator Encoder Talon Pulses", motor.getSelectedSensorPosition(0));
+		
 		if (autoControl) {
 			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.RADIO.value);

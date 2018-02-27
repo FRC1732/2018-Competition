@@ -21,6 +21,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
+import org.usfirst.frc.team1732.robot.util.Dashboard;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
 
 	// RobotConfig
 	public static RobotConfig robotConfig;
+	public static Dashboard dash;
 
 	// subsystems
 	public static Drivetrain drivetrain;
@@ -66,6 +68,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		setPeriod(PERIOD_S); // periodic methods will loop every 10 ms (1/100 sec)
 		robotConfig = RobotConfig.getConfig();
+		dash = new Dashboard();
 
 		drivetrain = new Drivetrain(robotConfig);
 		manip = new Manip(robotConfig);
