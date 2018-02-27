@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -96,6 +97,7 @@ public class Drivetrain extends Subsystem {
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				config.inputDeadband);
+		defaultCommand = new DriveWithJoysticks(drive);
 
 		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
@@ -125,9 +127,11 @@ public class Drivetrain extends Subsystem {
 		return rightMaster.getSelectedSensorVelocity(0);
 	}
 
+	private Command defaultCommand;
+
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveWithJoysticks(drive));
+		setDefaultCommand(defaultCommand);
 	}
 
 	public EncoderReader getRightEncoderReader() {
