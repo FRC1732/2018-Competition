@@ -34,7 +34,7 @@ public class Elevator extends Subsystem {
 	private boolean autoControl = false;
 
 	public Elevator(RobotConfig config) {
-		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
+		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.elevatorUpPID;
 		downGains = config.elevatorDownPID;
 		upGains.applyToTalon(motor);
@@ -74,7 +74,6 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-
 		if (autoControl) {
 			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.RADIO.value);
