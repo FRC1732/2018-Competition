@@ -5,6 +5,7 @@ import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
+import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
@@ -17,8 +18,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the drivetrain
@@ -50,8 +51,14 @@ public class Drivetrain extends Subsystem {
 	public final double robotLength;
 	public final double robotWidth;
 	public final double effectiveRobotWidth;
-	public final double maxUnitsPer100Ms;
+	public final double maxInPerSec;
+	public final double maxInPerSecSq;
 
+	// Feedforward
+	public final Feedforward leftFF;
+	public final Feedforward rightFF;
+
+	public final ClosedLoopProfile motionGains;
 	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
@@ -66,9 +73,15 @@ public class Drivetrain extends Subsystem {
 		rightVictor1 = MotorUtils.makeVictor(config.rightFollower1, config.drivetrainConfig);
 		rightVictor2 = MotorUtils.makeVictor(config.rightFollower2, config.drivetrainConfig);
 
+		leftFF = config.leftFF;
+		rightFF = config.rightFF;
+
+		motionGains = config.drivetrainMotionPID;
+		motionGains.applyToTalon(leftMaster, rightMaster);
 		velocityGains = config.drivetrainVelocityPID;
 		velocityGains.applyToTalon(leftMaster, rightMaster);
-		maxUnitsPer100Ms = config.maxUnitsPer100Ms;
+		maxInPerSec = config.maxInPerSec;
+		maxInPerSecSq = config.maxInPerSecSq;
 
 		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
 		// motionGains.slotIdx, 1, leftMaster,
@@ -84,7 +97,6 @@ public class Drivetrain extends Subsystem {
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				config.inputDeadband);
-		defaultCommand = new DriveWithJoysticks(drive);
 
 		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
@@ -95,7 +107,7 @@ public class Drivetrain extends Subsystem {
 		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
 		shiftHigh();
-
+		
 		Robot.dash.add("Left Pos", leftEncoder::getPosition);
 		Robot.dash.add("Left Pulses", leftEncoder::getPulses);
 		Robot.dash.add("Left Vel", leftEncoder::getRate);
@@ -105,20 +117,17 @@ public class Drivetrain extends Subsystem {
 		Robot.dash.add("Right Vel", rightEncoder::getRate);
 		Robot.dash.add("Right Rate", this::getRightSensorVelocity);
 	}
-
+	
 	private double getLeftSensorVelocity() {
 		return leftMaster.getSelectedSensorVelocity(0);
 	}
-
 	private double getRightSensorVelocity() {
 		return rightMaster.getSelectedSensorVelocity(0);
 	}
 
-	private Command defaultCommand;
-
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(defaultCommand);
+		setDefaultCommand(new DriveWithJoysticks(drive));
 	}
 
 	public EncoderReader getRightEncoderReader() {
@@ -146,7 +155,6 @@ public class Drivetrain extends Subsystem {
 	public void setBrake() {
 		setNeutralMode(NeutralMode.Brake);
 	}
-
 	public void setCoast() {
 		setNeutralMode(NeutralMode.Coast);
 	}
@@ -169,9 +177,5 @@ public class Drivetrain extends Subsystem {
 
 	public void shiftLow() {
 		shifter.set(!highGearValue);
-	}
-
-	public double convertVelocitySetpoint(double desiredInPerSec) {
-		return desiredInPerSec / 10 / inchesPerPulse;
 	}
 }

@@ -4,15 +4,16 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
+import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderBase;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the arm
@@ -22,7 +23,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Arm extends Subsystem {
 
 	public final TalonSRX motor;
-	public final TalonEncoder encoder;
+	public final EncoderBase encoder;
 
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
@@ -32,8 +33,6 @@ public class Arm extends Subsystem {
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
-
-	private final int allowedError;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -45,13 +44,10 @@ public class Arm extends Subsystem {
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
-		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
+		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
-		encoder.setPhase(config.reverseArmSensor);
-
-		allowedError = config.armAllowedErrorCount;
-
+		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 	}
@@ -72,8 +68,9 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
-		// System.out.println("Arm Encoder: " +
-		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+//		System.out.println("Arm Encoder: " +
+//				motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+		
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.TUCK.value);
@@ -132,12 +129,12 @@ public class Arm extends Subsystem {
 		autoControl = false;
 	}
 
-	public boolean atSetpoint() {
-		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
+	public boolean atSetpoint(int allowableError) {
+		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPosition() + allowedError < Positions.TUCK.value;
+		return encoder.getPosition() < Positions.TUCK.value;
 	}
 
 }

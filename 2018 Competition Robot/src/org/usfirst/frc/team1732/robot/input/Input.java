@@ -21,40 +21,26 @@ public class Input {
 		right = new Joystick(robotConfig.rightJoystickPort);
 		buttons = new Joystick(robotConfig.buttonJoystickPort);
 
-		// Define all the buttons here
-		JoystickButton posIntake = new JoystickButton(buttons, 9);
-		JoystickButton posTuck = new JoystickButton(buttons, 5);
-		JoystickButton posSwitch = new JoystickButton(buttons, 8);
-		JoystickButton posScaleLow = new JoystickButton(buttons, 7);
-		JoystickButton posScaleHigh = new JoystickButton(buttons, 6);
-		JoystickButton rockerUp = new JoystickButton(buttons, 1);
-		JoystickButton rockerDown = new JoystickButton(buttons, 2);
-		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
-		JoystickButton leftTrigger = new JoystickButton(left, 1);
-		JoystickButton rightTrigger = new JoystickButton(right, 1);
-
-		// Add commands here
-		// posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
+		// new JoystickButton(buttons, 9)
+		// .whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
 		// Elevator.Positions.INTAKE));
-		// posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK,
-		// Elevator.Positions.INTAKE));
-		// posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH,
+		// new JoystickButton(buttons, 8)
+		// .whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
 		// Elevator.Positions.SWITCH));
-		// posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
-		// Elevator.Positions.SCALE_LOW));
-		// posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
-		// Elevator.Positions.SCALE_HIGH));
-		// rocker.whenActive(new ElevatorRockerControl(rocker));
-		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop());
-		rightTrigger.whenPressed(new ManipSetOut());
-		rightTrigger.whenReleased(new ManipSetStop());
-
-		// temporary testing
-		posIntake.whileHeld(new ArmTest(0.5));
-		posSwitch.whileHeld(new ArmTest(-0.5));
-		posScaleLow.whileHeld(new ElevatorTest(0.5));
-		posScaleHigh.whileHeld(new ElevatorTest(-0.5));
+		// new JoystickButton(buttons, 7)
+		// .whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+		// Elevator.Positions.INTAKE));
+		// new JoystickButton(buttons, 6)
+		// .whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+		// Elevator.Positions.SCALE));
+		new JoystickButton(buttons, 9).whileHeld(new ArmTest(0.2));
+		new JoystickButton(buttons, 8).whileHeld(new ArmTest(-0.2));
+		new JoystickButton(buttons, 7).whileHeld(new ElevatorTest(0.2));
+		new JoystickButton(buttons, 6).whileHeld(new ElevatorTest(-0.2));
+		new JoystickButton(left, 1).whenPressed(new ManipSetIn());
+		new JoystickButton(left, 1).whenReleased(new ManipSetStop());
+		new JoystickButton(right, 1).whenPressed(new ManipSetOut());
+		new JoystickButton(right, 1).whenReleased(new ManipSetStop());
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

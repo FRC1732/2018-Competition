@@ -20,11 +20,11 @@ public class SwitchCenterFront extends CommandGroup {
 			System.out.println("ForwardDistance: " + forwardDistance);
 
 			addSequential(new DriveDistance(forwardDistance));
-			addSequential(new TurnAngle(-90));
+			addSequential(new TurnAngle(-90, 80));
 			double sideDistance = startingX - Field.Zones.POWER_CUBE_ZONE.getX() + Robot.drivetrain.robotLength / 2.0
 					+ 15.0;
 			addSequential(new DriveDistance(sideDistance));
-			addSequential(new TurnAngle(90));
+			addSequential(new TurnAngle(90, 80));
 			double secondForward = Field.Switch.BOUNDARY.getY() - forwardDistance + 2.0 - Robot.drivetrain.robotLength;
 			System.out.println("seconds forward distance: " + secondForward);
 			addSequential(new DriveDistance(secondForward));
