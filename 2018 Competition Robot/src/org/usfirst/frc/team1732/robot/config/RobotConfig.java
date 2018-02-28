@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import org.usfirst.frc.team1732.robot.config.robots.CompetitionConfig;
 import org.usfirst.frc.team1732.robot.config.robots.PracticeConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -23,8 +22,7 @@ public class RobotConfig {
 
 	public double effectiveRobotWidth = 0;
 	public double drivetrainInchesPerPulse = 0;
-	public double maxInPerSec = 0;
-	public double maxInPerSecSq = 0;
+	public double maxUnitsPer100Ms = 0;
 
 	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
@@ -33,35 +31,33 @@ public class RobotConfig {
 												// go in high gear
 
 	private final int leftMasterID = 15;
-	private final boolean reverseLeft = false;
-	public final boolean reverseLeftSensor = true;
+	private final boolean reverseLeft = true;
+	public final boolean reverseLeftSensor = false;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
 	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
 	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
 
 	private final int rightMasterID = 0;
-	private final boolean reverseRight = true;
-	public final boolean reverseRightSensor = true;
+	private final boolean reverseRight = false;
+	public final boolean reverseRightSensor = false;
 	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
 	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);
 
-	public final ClosedLoopProfile drivetrainMotionPID = new ClosedLoopProfile("Drivetrain Motion PID",
-			FeedbackDevice.QuadEncoder, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
 			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public Feedforward leftFF;
-	public Feedforward rightFF;
 
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
 	private final boolean reverseArm = false;
+	public final boolean reverseArmSensor = false;
 	public final CTREParam arm = new CTREParam(12, reverseArm);
 	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public double armDegreesPerPulse = 0;
+	public final int armAllowedErrorCount = 30;
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -73,14 +69,15 @@ public class RobotConfig {
 
 	// elevator
 	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
-	private final boolean reverseElevator = true;
-	public final boolean reverseElevatorEncoder = true;
+	private final boolean reverseElevator = false;
+	public final boolean reverseElevatorSensor = false;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public double elevatorInchesPerPulse = 0;
+	public final int elevatorAllowedErrorCount = 30;
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();

@@ -1,145 +1,153 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
+import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
+
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.NotifierCommand;
 import org.usfirst.frc.team1732.robot.util.Util;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Turns the robot an angle using NavX
+ *
  */
-public class TurnAngle extends Command {
-	private static final double OUTER_DEADBAND = 20;
-	private static final double DEADBAND_TIME = 0.25;
-	private static final double ANGLE_DEADBAND = 3;
-	private static final double ERROR_P = 0.025;
+public class TurnAngle extends NotifierCommand {
 
-	private final GyroReader navx;
-	private final Timer timer;
+	private static final double DEADBAND_TIME = 0.5;
+	private static final double ANGLE_DEADBAND = 1;
+	private static final double HEADING_P = 2;
+	private static final double startMinVel = 20;
+	private static final double endMinVel = 8;
+	private static final double endMaxVel = 30;
+
 	private final Timer deadbandTimer;
 	private boolean inDeadband = false;
-	private final double sign;
 	private final double goalAngle;
 	private final double maxVel;
 	private final double k;
-	private final double radius;
-	private final double endTime;
+	private GyroReader navx;
+	private double endZone = 20;
 
-	// private final PIDController pid = new PIDController(0.1, 0, 0, new
-	// PIDSource() {
-	//
-	// @Override
-	// public void setPIDSourceType(PIDSourceType pidSource) {
-	// }
-	//
-	// @Override
-	// public PIDSourceType getPIDSourceType() {
-	// return PIDSourceType.kDisplacement;
-	// }
-	//
-	// @Override
-	// public double pidGet() {
-	// return Robot.sensors.navX.getAngle();
-	// }
-	//
-	// }, d -> {
-	// });
-
-	public TurnAngle(double angle, double maxVel) {
-		navx = Robot.sensors.navx.makeReader();
-		timer = new Timer();
+	public TurnAngle(double angle) {
+		super(5);
+		requires(Robot.drivetrain);
 		deadbandTimer = new Timer();
-		timer.reset();
-		timer.stop();
 		deadbandTimer.reset();
 		deadbandTimer.stop();
 		this.goalAngle = angle;
-		this.sign = Math.signum(angle);
-		this.maxVel = maxVel;
-		radius = Robot.drivetrain.effectiveRobotWidth / 2.0 * 1.2;
-		double distance = radius * Math.toRadians(Math.abs(angle));
-		k = 2 * maxVel / distance;
-		Robot.drivetrain.setBrake();
-		endTime = Math.PI / k;
+		drivetrain.setNeutralMode(NeutralMode.Brake);
+		navx = Robot.sensors.navx.makeReader();
+		this.maxVel = Math.abs(angle) * 2.5 / 3.0;
+		this.k = Math.PI * 2 / (Math.abs(angle));
+		endZone = (25 * 90) / (60) * (maxVel / angle);
+		System.out.println("Endzone : " + endZone);
 	}
 
-	// private double getPosition(double t) {
-	// return -maxVel / k * Math.cos(k * t) + maxVel / k;
-	// }
-
-	private double getVelocity(double t) {
-		return maxVel * Math.sin(k * t);
+	private double getVelocity(double angle) {
+		return maxVel * (-0.5 * Math.cos(angle * k) + 0.5);
 	}
-
-	private double getAcceleration(double t) {
-		return maxVel * k * Math.cos(k * t);
-	}
-
-	// private double getAngle(double t) {
-	// return getPosition(t) / (Math.PI * 2) * Math.signum(goalAngle);
-	// }
 
 	@Override
-	protected void initialize() {
+	protected void init() {
 		navx.zero();
-		timer.start();
 		System.out.println("Turn to angle started");
 		// pid.setSetpoint(goalAngle);
+		Robot.drivetrain.setNeutralMode(NeutralMode.Brake);
+		ClosedLoopProfile gains = Robot.drivetrain.velocityGains.clone();
+		gains.kP = 0.3;
+		gains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
 	}
 
 	@Override
-	protected void execute() {
-		double time = timer.get();
+	protected void exec() {
+		double currentHeading = navx.getTotalAngle();
+		double headingError = goalAngle - currentHeading;
+		double headingAdjustment = headingError * HEADING_P;
 
-		double currentAngle = navx.getTotalAngle();
-		double error = goalAngle - currentAngle;
+		double vel = getVelocity(currentHeading) * Math.signum(headingError);
 
-		if (time >= endTime) {
-			System.out.println("Passed max time");
-			double errorSign = Math.signum(error);
-			Robot.drivetrain.setLeft(Util.limit(error * ERROR_P, 0.1 * errorSign, 0.2 * errorSign));
-			Robot.drivetrain
-					.setRight(Util.limit(error * ERROR_P * -1.0, 0.1 * errorSign * -1.0, 0.2 * errorSign * -1.0));
-		} else {
-			double leftVel = getVelocity(time) * sign;
-			double leftAcc = (getAcceleration(time)) * sign;
-			double rightVel = -getVelocity(time) * sign;
-			double rightAcc = -(getAcceleration(time)) * sign;
-
-			double adjust = 1.0;
-			double leftVolt = Robot.drivetrain.leftFF.getAppliedVoltage(leftVel, leftAcc * adjust, 1.1);
-			double rightVolt = Robot.drivetrain.rightFF.getAppliedVoltage(rightVel, rightAcc * adjust, 1.1);
-
-			if (Math.abs(error) < OUTER_DEADBAND) {
-				Robot.drivetrain.setLeft(leftVolt / 12.0 * 0.75);
-				Robot.drivetrain.setRight(rightVolt / 12 * 0.75);
-				System.out.println("inside outer deadband");
-			} else {
-				Robot.drivetrain.setLeft(leftVolt / 12.0);
-				Robot.drivetrain.setRight(rightVolt / 12.0);
-			}
+		// bump start vel
+		if (Math.abs(currentHeading) < Math.abs(goalAngle / 2) && Math.abs(vel) < startMinVel) {
+			System.out.println("bumping start velocity");
+			vel = startMinVel * Math.signum(headingError);
 		}
-		if (!inDeadband && Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND) {
+
+		if (Math.abs(currentHeading) > Math.abs(goalAngle / 2) && Math.abs(vel) < endMinVel) {
+			vel = endMinVel * Math.signum(headingError);
+			System.out.println("bumping end velocity");
+		}
+
+		if (Math.abs(currentHeading) > Math.abs(goalAngle - endZone * Math.signum(goalAngle))
+				&& Math.abs(vel) > endMaxVel) {
+			System.out.println("capping end velocity");
+			vel = endMaxVel * Math.signum(headingError);
+		}
+
+		// stuff during second half of turn (after maxVel has been reached
+		// theoeretically)
+		// if (Math.abs(currentHeading) > Math.abs(goalAngle / 2)) {
+		// // if we're towards the end, cap velocity so we start slowing down
+		// if (Math.abs(currentHeading) > Math.abs(goalAngle - endZone *
+		// Math.signum(goalAngle))
+		// && Math.abs(vel) > endMaxVel) {
+		// System.out.println("capping end velocity");
+		// vel = endMaxVel * Math.signum(headingError);
+		// }
+		// // // if we've past the setpoint, agressivly go back with PID
+		// // if (Math.abs(currentHeading) > Math.abs(goalAngle)) {
+		// // System.out.println("Using heading P");
+		// // vel = headingAdjustment;
+		// // }
+		// // make sure we don't go too slow at the end
+		// if (Math.abs(vel) < endMinVel) {
+		// vel = endMinVel * Math.signum(headingError);
+		// System.out.println("bumping end velocity");
+		// }
+		// }
+
+		if (Util.epsilonEquals(goalAngle, currentHeading, ANGLE_DEADBAND + 0.5)) {
+			System.out.println("trying to stop robot");
+			drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(0));
+			drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(0));
+		} else {
+			drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(vel));
+			drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(-vel));
+		}
+		// drivetrain.leftTalon1.set(ControlMode.Velocity,
+		// Robot.drivetrain.convertVelocitySetpoint(headingAdjustment));
+		// drivetrain.rightTalon1.set(ControlMode.Velocity,
+		// Robot.drivetrain.convertVelocitySetpoint(-headingAdjustment));
+
+		if (!inDeadband && Math.abs(goalAngle - currentHeading) < ANGLE_DEADBAND) {
 			deadbandTimer.start();
 			inDeadband = true;
-		} else if (inDeadband && !(Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND)) {
+		} else if (inDeadband && !(Math.abs(goalAngle - currentHeading) < ANGLE_DEADBAND)) {
 			inDeadband = false;
 			deadbandTimer.reset();
 			deadbandTimer.stop();
 		}
-		System.out.println("ANGLE ERROR: " + error + " should finish: " + (Math.abs(error) < ANGLE_DEADBAND));
+		System.out.println("angle: " + currentHeading + " " + headingError + " "
+				+ (Math.abs(headingError) < ANGLE_DEADBAND) + " " + headingAdjustment);
+		System.out.println("left: " + Robot.drivetrain.leftMaster.getClosedLoopError(0) + " "
+				+ Robot.drivetrain.leftMaster.getClosedLoopTarget(0) + " " + vel);
+		System.out.println("right: " + Robot.drivetrain.rightMaster.getClosedLoopError(0) + " "
+				+ Robot.drivetrain.rightMaster.getClosedLoopTarget(0) + " " + -vel);
+		System.out.println();
 	}
 
 	@Override
-	protected boolean isFinished() {
+	protected boolean isDone() {
 		return Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND && deadbandTimer.get() > DEADBAND_TIME;
 	}
 
 	@Override
-	protected void end() {
-		System.out.println("Turn to angle finsished");
-		Robot.drivetrain.setStop();
+	protected void whenEnded() {
+		System.out.println("Turn to angle finished");
+		drivetrain.setStop();
 	}
 }
