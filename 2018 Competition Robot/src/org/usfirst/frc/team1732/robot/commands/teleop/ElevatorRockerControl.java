@@ -42,7 +42,8 @@ public class ElevatorRockerControl extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return false; // the Trigger we use to control this will automatically stop the command
+		// we don't want to stop this command unless something else needs the elevator
+		return false;
 	}
 
 	@Override
