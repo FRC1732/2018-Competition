@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.input;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
+import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRockerControl;
 import org.usfirst.frc.team1732.robot.commands.testing.ArmTest;
 import org.usfirst.frc.team1732.robot.commands.testing.ElevatorTest;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
@@ -41,6 +42,11 @@ public class Input {
 		new JoystickButton(left, 1).whenReleased(new ManipSetStop());
 		new JoystickButton(right, 1).whenPressed(new ManipSetOut());
 		new JoystickButton(right, 1).whenReleased(new ManipSetStop());
+
+		JoystickButton rockerUp = new JoystickButton(buttons, 1); // figure these out
+		JoystickButton rockerDown = new JoystickButton(buttons, 2);
+		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
+		rocker.whenActive(new ElevatorRockerControl(rocker));
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

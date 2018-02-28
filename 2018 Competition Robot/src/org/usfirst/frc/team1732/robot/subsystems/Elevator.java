@@ -29,12 +29,11 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile downGains;
 
 	public final double inchesPerPulse;
+	private final int allowedError;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
-
-	private final int allowedError;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -125,6 +124,10 @@ public class Elevator extends Subsystem {
 		desiredIsSet = true;
 		motor.set(ControlMode.Position, desiredPosition);
 		autoControl = true;
+	}
+
+	public int getDesiredPosition() {
+		return desiredPosition;
 	}
 
 	public void setStop() {
