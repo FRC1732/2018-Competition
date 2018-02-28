@@ -58,7 +58,7 @@ public class Elevator extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), RADIO(0), SCALE(0), MAX(0);
+		MIN(0), INTAKE(0), SWITCH(0), RADIO(0), SCALE_LOW(0), SCALE_HIGH(0), MAX(0);
 
 		public final int value;
 
