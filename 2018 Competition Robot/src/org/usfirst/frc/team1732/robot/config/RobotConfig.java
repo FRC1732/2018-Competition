@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import org.usfirst.frc.team1732.robot.config.robots.CompetitionConfig;
 import org.usfirst.frc.team1732.robot.config.robots.PracticeConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -23,8 +22,7 @@ public class RobotConfig {
 
 	public double effectiveRobotWidth = 0;
 	public double drivetrainInchesPerPulse = 0;
-	public double maxInPerSec = 0;
-	public double maxInPerSecSq = 0;
+	public double maxUnitsPer100Ms = 0;
 
 	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
@@ -46,12 +44,8 @@ public class RobotConfig {
 	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);
 
-	public final ClosedLoopProfile drivetrainMotionPID = new ClosedLoopProfile("Drivetrain Motion PID",
-			FeedbackDevice.QuadEncoder, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
 			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public Feedforward leftFF;
-	public Feedforward rightFF;
 
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();

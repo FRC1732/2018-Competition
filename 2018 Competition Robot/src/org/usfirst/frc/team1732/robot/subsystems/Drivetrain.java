@@ -5,7 +5,6 @@ import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
@@ -51,14 +50,8 @@ public class Drivetrain extends Subsystem {
 	public final double robotLength;
 	public final double robotWidth;
 	public final double effectiveRobotWidth;
-	public final double maxInPerSec;
-	public final double maxInPerSecSq;
+	public final double maxUnitsPer100Ms;
 
-	// Feedforward
-	public final Feedforward leftFF;
-	public final Feedforward rightFF;
-
-	public final ClosedLoopProfile motionGains;
 	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
@@ -73,15 +66,9 @@ public class Drivetrain extends Subsystem {
 		rightVictor1 = MotorUtils.makeVictor(config.rightFollower1, config.drivetrainConfig);
 		rightVictor2 = MotorUtils.makeVictor(config.rightFollower2, config.drivetrainConfig);
 
-		leftFF = config.leftFF;
-		rightFF = config.rightFF;
-
-		motionGains = config.drivetrainMotionPID;
-		motionGains.applyToTalon(leftMaster, rightMaster);
 		velocityGains = config.drivetrainVelocityPID;
 		velocityGains.applyToTalon(leftMaster, rightMaster);
-		maxInPerSec = config.maxInPerSec;
-		maxInPerSecSq = config.maxInPerSecSq;
+		maxUnitsPer100Ms = config.maxUnitsPer100Ms;
 
 		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
 		// motionGains.slotIdx, 1, leftMaster,
@@ -182,5 +169,9 @@ public class Drivetrain extends Subsystem {
 
 	public void shiftLow() {
 		shifter.set(!highGearValue);
+	}
+
+	public double convertVelocitySetpoint(double desiredInPerSec) {
+		return desiredInPerSec / 10 / inchesPerPulse;
 	}
 }

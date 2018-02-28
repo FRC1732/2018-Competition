@@ -9,24 +9,18 @@ public class CompetitionConfig extends RobotConfig {
 		// drivetrain
 		effectiveRobotWidth = 25; // calculate
 		drivetrainInchesPerPulse = 100.0 / ((51310 - (12) + 51034 - (117)) / 2.0); // = 0.001957
-		maxInPerSec = 0; // calculate
-		maxInPerSecSq = 0; // calculate
+		maxUnitsPer100Ms = 0; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		// change PID values like this:
-		drivetrainMotionPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		drivetrainMotionPID.kP = 0;
-		drivetrainMotionPID.kI = 0;
-		drivetrainMotionPID.kD = 0;
-		drivetrainMotionPID.integralZone = 0;
-		drivetrainMotionPID.allowableError = 0;
-		drivetrainMotionPID.maxIntegralAccumulated = 0;
-		drivetrainMotionPID.secondsFromNeutralToFull = 0;
-		// FFs are from robot chassis 1. Only gets used for TurnAngle
-		leftFF = new Feedforward(0.0574657, 0.0089855, 1.6010019, 0.0574657, 0.0089855,
-				-1.6010019);
-		rightFF = new Feedforward(0.0560625, 0.0071341, 1.7711541, 0.0560625, 0.0071341,
-				-1.7711541);
+		drivetrainVelocityPID.kF = 0;
+		drivetrainVelocityPID.kP = 0;
+		drivetrainVelocityPID.kI = 0;
+		drivetrainVelocityPID.kD = 0;
+		drivetrainVelocityPID.integralZone = 0;
+		drivetrainVelocityPID.allowableError = 0;
+		drivetrainVelocityPID.maxIntegralAccumulated = 0;
+		drivetrainVelocityPID.secondsFromNeutralToFull = 0;
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
