@@ -13,7 +13,6 @@ public class PracticeConfig extends RobotConfig {
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		// change PID values like this:
-		drivetrainVelocityPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		drivetrainVelocityPID.kP = 0;
 		drivetrainVelocityPID.kI = 0;
 		drivetrainVelocityPID.kD = 0;
@@ -24,7 +23,6 @@ public class PracticeConfig extends RobotConfig {
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
-		armUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		armUpPID.kP = 0;
 		armUpPID.kI = 0;
 		armUpPID.kD = 0;
@@ -44,7 +42,6 @@ public class PracticeConfig extends RobotConfig {
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-		elevatorUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		elevatorUpPID.kP = 0;
 		elevatorUpPID.kI = 0;
 		elevatorUpPID.kD = 0;
@@ -52,7 +49,6 @@ public class PracticeConfig extends RobotConfig {
 		elevatorUpPID.allowableError = 0;
 		elevatorUpPID.maxIntegralAccumulated = 0;
 		elevatorUpPID.secondsFromNeutralToFull = 0;
-		elevatorDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		elevatorDownPID.kP = 0;
 		elevatorDownPID.kI = 0;
 		elevatorDownPID.kD = 0;

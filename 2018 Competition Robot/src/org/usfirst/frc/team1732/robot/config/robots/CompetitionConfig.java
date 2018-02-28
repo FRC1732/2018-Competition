@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1732.robot.config.robots;
 
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 
 public class CompetitionConfig extends RobotConfig {
 
@@ -13,7 +12,6 @@ public class CompetitionConfig extends RobotConfig {
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		// change PID values like this:
-		drivetrainVelocityPID.kF = 0;
 		drivetrainVelocityPID.kP = 0;
 		drivetrainVelocityPID.kI = 0;
 		drivetrainVelocityPID.kD = 0;
@@ -24,7 +22,6 @@ public class CompetitionConfig extends RobotConfig {
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
-		armUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		armUpPID.kP = 0;
 		armUpPID.kI = 0;
 		armUpPID.kD = 0;
@@ -32,7 +29,6 @@ public class CompetitionConfig extends RobotConfig {
 		armUpPID.allowableError = 0;
 		armUpPID.maxIntegralAccumulated = 0;
 		armUpPID.secondsFromNeutralToFull = 0;
-		armDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		armDownPID.kP = 0;
 		armDownPID.kI = 0;
 		armDownPID.kD = 0;
@@ -44,7 +40,6 @@ public class CompetitionConfig extends RobotConfig {
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-		elevatorUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		elevatorUpPID.kP = 0;
 		elevatorUpPID.kI = 0;
 		elevatorUpPID.kD = 0;
@@ -52,7 +47,6 @@ public class CompetitionConfig extends RobotConfig {
 		elevatorUpPID.allowableError = 0;
 		elevatorUpPID.maxIntegralAccumulated = 0;
 		elevatorUpPID.secondsFromNeutralToFull = 0;
-		elevatorDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
 		elevatorDownPID.kP = 0;
 		elevatorDownPID.kI = 0;
 		elevatorDownPID.kD = 0;
