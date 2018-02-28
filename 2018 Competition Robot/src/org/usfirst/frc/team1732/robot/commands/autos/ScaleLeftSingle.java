@@ -18,7 +18,7 @@ public class ScaleLeftSingle extends CommandGroup {
 		if (scaleIsLeft) {
 			double forwardDistance = Field.Scale.LEFT_NULL_ZONE.getY() - Robot.drivetrain.robotLength;
 			addSequential(new DriveDistance(forwardDistance));
-			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE));
+			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 			addSequential(new TurnAngle(35));
 			addSequential(new ManipSetOut());
 		} else {
@@ -31,7 +31,7 @@ public class ScaleLeftSingle extends CommandGroup {
 			addSequential(new TurnAngle(-90));
 			double forward3 = Field.Scale.RIGHT_NULL_ZONE.getMinY() - middlePartY;
 			addSequential(new DriveDistance(forward3));
-			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE));
+			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 			addSequential(new TurnAngle(-30));
 			addSequential(new ManipSetOut());
 		}
