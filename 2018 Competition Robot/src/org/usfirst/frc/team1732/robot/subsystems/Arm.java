@@ -4,7 +4,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderBase;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
 import org.usfirst.frc.team1732.robot.util.Util;
@@ -23,7 +22,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Arm extends Subsystem {
 
 	public final TalonSRX motor;
-	public final EncoderBase encoder;
+	public final TalonEncoder encoder;
 
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
@@ -49,7 +48,7 @@ public class Arm extends Subsystem {
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
-		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
+		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
 
