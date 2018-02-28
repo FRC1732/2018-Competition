@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -23,17 +22,13 @@ public class ElevatorSetPosition extends Command {
 		this.position = position;
 	}
 
-	private ClosedLoopProfile gains;
-
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		double currentPosition = Robot.elevator.encoder.getPosition();
 		if (currentPosition < position) {
-			gains = Robot.elevator.upGains;
 			Robot.elevator.upGains.selectGains(Robot.elevator.motor);
 		} else {
-			gains = Robot.elevator.downGains;
 			Robot.elevator.downGains.selectGains(Robot.elevator.motor);
 		}
 		Robot.elevator.set(position);
@@ -48,7 +43,7 @@ public class ElevatorSetPosition extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return Robot.elevator.atSetpoint(gains.allowableError);
+		return Robot.elevator.atSetpoint();
 	}
 
 	// Called once after isFinished returns true

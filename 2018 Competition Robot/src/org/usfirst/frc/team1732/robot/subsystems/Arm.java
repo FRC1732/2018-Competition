@@ -133,7 +133,7 @@ public class Arm extends Subsystem {
 		autoControl = false;
 	}
 
-	public boolean atSetpoint(int allowableError) {
+	public boolean atSetpoint() {
 		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
 	}
 
