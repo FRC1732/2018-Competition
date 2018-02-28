@@ -33,7 +33,6 @@ public class CompetitionConfig extends RobotConfig {
 		armDownPID.kI = 0;
 		armDownPID.kD = 0;
 		armDownPID.integralZone = 0;
-		armDownPID.allowableError = 0;
 		armDownPID.maxIntegralAccumulated = 0;
 		armDownPID.secondsFromNeutralToFull = 0;
 		armDegreesPerPulse = 0;
@@ -51,7 +50,6 @@ public class CompetitionConfig extends RobotConfig {
 		elevatorDownPID.kI = 0;
 		elevatorDownPID.kD = 0;
 		elevatorDownPID.integralZone = 0;
-		elevatorDownPID.allowableError = 0;
 		elevatorDownPID.maxIntegralAccumulated = 0;
 		elevatorDownPID.secondsFromNeutralToFull = 0;
 		elevatorInchesPerPulse = 0;

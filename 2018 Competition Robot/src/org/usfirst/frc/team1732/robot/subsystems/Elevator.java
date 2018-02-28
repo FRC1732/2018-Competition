@@ -7,6 +7,7 @@ import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderBase;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -33,6 +34,8 @@ public class Elevator extends Subsystem {
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
 
+	private final int allowedError;
+
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.elevatorUpPID;
@@ -47,13 +50,10 @@ public class Elevator extends Subsystem {
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
 
+		allowedError = config.elevatorAllowedErrorCount;
+
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
-		Robot.dash.add("Elevator Encoder Talon Pulses", this::getSensorPosition);
-	}
-
-	private double getSensorPosition() {
-		return motor.getSelectedSensorPosition(0);
 	}
 
 	public static enum Positions {
@@ -94,8 +94,8 @@ public class Elevator extends Subsystem {
 		return encoder.makeReader();
 	}
 
-	public void set(double pos) {
-		int position = (int) (pos / inchesPerPulse);
+	public void set(double posInches) {
+		int position = (int) (posInches / inchesPerPulse);
 		if (position < Positions.MIN.value) {
 			position = Positions.MIN.value;
 		}
@@ -132,11 +132,11 @@ public class Elevator extends Subsystem {
 		autoControl = false;
 	}
 
-	public boolean atSetpoint(double allowableError) {
-		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
+	public boolean atSetpoint() {
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPosition() > Positions.RADIO.value;
+		return encoder.getPosition() - allowedError > Positions.RADIO.value;
 	}
 }

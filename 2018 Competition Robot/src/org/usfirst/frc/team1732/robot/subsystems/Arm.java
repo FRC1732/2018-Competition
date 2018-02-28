@@ -7,6 +7,7 @@ import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderBase;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -33,6 +34,8 @@ public class Arm extends Subsystem {
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
 
+	private final int allowedError;
+
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.armDownPID;
@@ -47,6 +50,9 @@ public class Arm extends Subsystem {
 		degreesPerPulse = config.armDegreesPerPulse;
 		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 		motor.configForwardSoftLimitThreshold(Positions.MAX.value, 0);
+
+		allowedError = config.armAllowedErrorCount;
+
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 	}
@@ -128,11 +134,11 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean atSetpoint(int allowableError) {
-		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPosition() < Positions.TUCK.value;
+		return encoder.getPosition() + allowedError < Positions.TUCK.value;
 	}
 
 }
