@@ -83,7 +83,7 @@ public class RobotConfig {
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
 	private final int manipMasterID = 10;
 	private final boolean reverseManipMaster = false;
-	private final boolean reverseManipFollower = false;
+	private final boolean reverseManipFollower = true;
 	public final CTREParam manipMaster = new CTREParam(manipMasterID, reverseManipMaster);
 	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
 	public double manipStopCurrent = 0;
@@ -122,7 +122,6 @@ public class RobotConfig {
 		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}
 
-	protected RobotConfig() {
-	}
+	protected RobotConfig() {}
 
 }
