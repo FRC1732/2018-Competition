@@ -35,7 +35,7 @@ public class Elevator extends Subsystem {
 	private boolean autoControl = false;
 
 	public Elevator(RobotConfig config) {
-		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
+		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
 		upGains = config.elevatorUpPID;
 		downGains = config.elevatorDownPID;
 		upGains.applyToTalon(motor);
@@ -44,7 +44,7 @@ public class Elevator extends Subsystem {
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
-		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
+		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		inchesPerPulse = config.elevatorInchesPerPulse;
 		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
 		encoder.setPhase(config.reverseElevatorSensor);

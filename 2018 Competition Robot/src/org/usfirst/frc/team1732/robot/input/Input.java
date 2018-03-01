@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.input;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
+import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
 import org.usfirst.frc.team1732.robot.commands.testing.ArmTest;
 import org.usfirst.frc.team1732.robot.commands.testing.ElevatorTest;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
@@ -32,6 +33,7 @@ public class Input {
 		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
+		JoystickButton limelightToggle = new JoystickButton(left, 2);
 
 		// Add commands here
 		// posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
@@ -49,6 +51,8 @@ public class Input {
 		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
 		rightTrigger.whenReleased(new ManipSetStop());
+
+		limelightToggle.whenPressed(new ToggleLED());
 
 		// temporary testing
 		posIntake.whileHeld(new ArmTest(0.5));

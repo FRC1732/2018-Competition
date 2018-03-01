@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Manip extends Subsystem {
 
 	public static final double STOP_TIME = 0.25;
+	public static final double ABS_IN_SPEED = 0.7;
+	public static final double ABS_OUT_SPEED = 0.7;
 
 	public final VictorSPX master;
 
@@ -28,8 +30,7 @@ public class Manip extends Subsystem {
 	}
 
 	@Override
-	public void initDefaultCommand() {
-	}
+	public void initDefaultCommand() {}
 
 	// might end up using a sensor for this
 	public boolean aboveStopCurrent() {
@@ -37,11 +38,11 @@ public class Manip extends Subsystem {
 	}
 
 	public void setIn() {
-		master.set(ControlMode.PercentOutput, -0.5);
+		master.set(ControlMode.PercentOutput, -ABS_IN_SPEED);
 	}
 
 	public void setOut() {
-		master.set(ControlMode.PercentOutput, 0.5);
+		master.set(ControlMode.PercentOutput, ABS_OUT_SPEED);
 	}
 
 	public void setStop() {

@@ -17,5 +17,6 @@ public class ManipSetIn extends InstantCommand {
 	@Override
 	protected void initialize() {
 		Robot.manip.setIn();
+		System.out.println("ManipSetIn: Ran");
 	}
 }

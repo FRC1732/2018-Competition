@@ -17,5 +17,6 @@ public class ManipSetStop extends InstantCommand {
 	@Override
 	protected void initialize() {
 		Robot.manip.setStop();
+		System.out.println("ManipSetStop: Ran");
 	}
 }
