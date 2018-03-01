@@ -90,7 +90,9 @@ public class Robot extends TimedRobot {
 	 * robot is disabled.
 	 */
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+		protectRobot();
+	}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
