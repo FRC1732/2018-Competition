@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
+import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -114,7 +114,7 @@ public class Drivetrain extends Subsystem {
 
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveDistance(140));
+		setDefaultCommand(new DriveWithJoysticks(drive));
 	}
 
 	public EncoderReader getRightEncoderReader() {

@@ -95,12 +95,10 @@ public class Robot extends TimedRobot {
 	 * robot is disabled.
 	 */
 	@Override
-	public void disabledInit() {
-	}
+	public void disabledInit() {}
 
 	@Override
-	public void disabledPeriodic() {
-	}
+	public void disabledPeriodic() {}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
@@ -156,17 +154,14 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during operator control.
 	 */
 	@Override
-	public void teleopPeriodic() {
-	}
+	public void teleopPeriodic() {}
 
 	@Override
-	public void testInit() {
-	}
+	public void testInit() {}
 
 	/**
 	 * This function is called periodically during test mode.
 	 */
 	@Override
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 }
