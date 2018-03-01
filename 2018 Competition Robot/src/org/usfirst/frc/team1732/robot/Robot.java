@@ -84,11 +84,6 @@ public class Robot extends TimedRobot {
 		// seconds, or it will drive across the auto line after 10 seconds
 	}
 
-	@Override
-	public void robotPeriodic() {
-		Scheduler.getInstance().run();
-	}
-
 	/**
 	 * This function is called once each time the robot enters Disabled mode. You
 	 * can use it to reset any subsystem information you want to clear when the
@@ -96,9 +91,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {}
-
-	@Override
-	public void disabledPeriodic() {}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
@@ -114,6 +106,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		protectRobot();
 		gameDataWaiter.start();
 		// in the below line we would get our chosen auto through whatever means
 //		chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC, Direction.Forward);
@@ -122,6 +115,25 @@ public class Robot extends TimedRobot {
 	}
 
 	private boolean autoStarted = false;
+
+	@Override
+	public void teleopInit() {
+		protectRobot();
+		// cancel auto command here
+		drivetrain.setCoast();
+	}
+
+	@Override
+	public void testInit() {
+		protectRobot();
+	}
+	
+	/**
+	 * Safety functions to prevent auto and teleop commands from interfering with each other
+	 */
+	private void protectRobot() {
+		Scheduler.getInstance().removeAll();
+	}
 
 	/**
 	 * This function is called periodically during autonomous.
@@ -145,23 +157,17 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void teleopInit() {
-		// cancel auto command here
-		drivetrain.setCoast();
+	public void robotPeriodic() {
+		Scheduler.getInstance().run();
 	}
-
+	
 	/**
-	 * This function is called periodically during operator control.
-	 */
-	@Override
-	public void teleopPeriodic() {}
-
-	@Override
-	public void testInit() {}
-
-	/**
-	 * This function is called periodically during test mode.
+	 * This function is called periodically during the robot mode.
 	 */
 	@Override
 	public void testPeriodic() {}
+	@Override
+	public void disabledPeriodic() {}
+	@Override
+	public void teleopPeriodic() {}
 }
