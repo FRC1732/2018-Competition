@@ -116,17 +116,10 @@ public class Util {
 		return true;
 	}
 
-	public static double interpolate(double low, double high, double mu) {
+	public static double lerp(double low, double high, double mu) {
 		return (high - low) * mu + low;
 	}
 
-	public static double cosineInterpolate(double startOut, double startPos, double endOut, double endPos,
-			double currentPos) {
-		double percentDone = (currentPos - startPos) / (endPos - startPos);
-		double modifiedPD = (1 - Math.cos(percentDone * Math.PI)) / 2;
-		return startOut * (1 - modifiedPD) + endOut * modifiedPD;
-	}
-	// should do the same thing as above, but less complicated
 	public static double cerp(double y1, double y2, double mu) {
 		double mu2 = (1 - Math.cos(mu * Math.PI)) / 2;
 		return (y1 * (1 - mu2)) + (y2 * mu2);
