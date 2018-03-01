@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -84,7 +83,6 @@ public class Drivetrain extends Subsystem {
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				config.inputDeadband);
-		defaultCommand = new DriveWithJoysticks(drive);
 
 		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
@@ -114,11 +112,9 @@ public class Drivetrain extends Subsystem {
 		return rightMaster.getSelectedSensorVelocity(0);
 	}
 
-	private Command defaultCommand;
-
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(defaultCommand);
+		setDefaultCommand(new DriveDistance(140));
 	}
 
 	public EncoderReader getRightEncoderReader() {

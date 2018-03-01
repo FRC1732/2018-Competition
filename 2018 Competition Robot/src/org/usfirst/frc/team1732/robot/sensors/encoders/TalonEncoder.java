@@ -35,6 +35,7 @@ public class TalonEncoder extends EncoderBase {
 
 	@Override
 	public int getPulses() {
+		// System.out.println("getting pulses");
 		return talon.getSelectedSensorPosition(0);
 	}
 
