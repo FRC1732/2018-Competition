@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -28,7 +29,7 @@ public class DriveDistance extends Command {
 		l = left;
 		r = right;
 		// need to tune PIDs
-		trans = new PIDController(0.1, 0, 1, new DisplacementPIDSource() {
+		trans = new PIDController(1.0 / 20, 0, 0.74, new DisplacementPIDSource() {
 			@Override
 			public double pidGet() {
 				return (l.getPosition() + r.getPosition()) * 0.5;
@@ -64,7 +65,7 @@ public class DriveDistance extends Command {
 		rot.setAbsoluteTolerance(1);
 		rot.enable();
 		drivetrain.setBrake();
-		System.out.println("DriveDistance: Starting " + trans.getSetpoint() + " inches");
+		Debugger.logStart(this, trans.getSetpoint() + " inches");
 	}
 
 	@Override
@@ -82,6 +83,6 @@ public class DriveDistance extends Command {
 		trans.disable();
 		rot.disable();
 		drivetrain.setStop();
-		System.out.println("DriveDistance: Ended");
+		Debugger.logEnd(this, "%.2f inches", (l.getPosition() + r.getPosition()) * 0.5);
 	}
 }

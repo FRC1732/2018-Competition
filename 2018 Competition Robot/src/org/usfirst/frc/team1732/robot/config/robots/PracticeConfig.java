@@ -11,6 +11,7 @@ public class PracticeConfig extends RobotConfig {
 		maxUnitsPer100Ms = 0; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
+		drivetrainConfig.openLoopRamp = 0.5;
 		// change PID values like this:
 		drivetrainVelocityPID.kP = 0;
 		drivetrainVelocityPID.kI = 0;

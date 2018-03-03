@@ -12,9 +12,8 @@ import java.util.function.BiFunction;
 
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -52,11 +51,11 @@ public class ArcTurn extends Command {
 	}
 
 	protected void initialize() {
-		System.out.println("ArcTurn: Starting R = " + R + ", T = " + T);
 		g.zero();
 		l.zero();
 		r.zero();
-		drivetrain.setNeutralMode(NeutralMode.Brake);
+		drivetrain.setBrake();
+		Debugger.logStart(this, "R = %.3f, T = %.3f", R, T);
 	}
 	protected void execute() {
 		double innerDist = left ? l.getPosition() : r.getPosition();
@@ -77,6 +76,6 @@ public class ArcTurn extends Command {
 	}
 	protected void end() {
 		drivetrain.setStop();
-		System.out.println("ArcTurn: Ended");
+		Debugger.logEnd(this);
 	}
 }
