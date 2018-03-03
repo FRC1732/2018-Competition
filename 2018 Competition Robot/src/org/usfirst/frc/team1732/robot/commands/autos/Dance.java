@@ -22,7 +22,7 @@ public class Dance extends CommandGroup {
 				addSequential(new DriveDistance(DISTANCE));
 				addSequential(new DriveDistance(-DISTANCE));
 			} else {
-				addSequential(new TurnAngle((int) (Math.random() * 360)));
+				addSequential(new TurnAngle((int) (Math.random() * 20)));
 			}
 		}
 	}
