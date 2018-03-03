@@ -22,7 +22,7 @@ public class PracticeConfig extends RobotConfig {
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
-		armUpPID.kP = 0.0001;
+		armUpPID.kP = 0.0001;// should be Double.MIN_VALUE;
 		armUpPID.kI = 0;
 		armUpPID.kD = 0;
 		armUpPID.integralZone = 0;
