@@ -150,8 +150,6 @@ public class Robot extends TimedRobot {
 	 */
 	private void protectRobot() {
 		Scheduler.getInstance().removeAll();
-		fps = Timer.getFPGATimestamp() - last;
-		last = Timer.getFPGATimestamp();
 	}
 
 	/**
@@ -179,6 +177,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		Scheduler.getInstance().run();
+		fps = Timer.getFPGATimestamp() - last;
+		last = Timer.getFPGATimestamp();
 	}
 
 	/**
