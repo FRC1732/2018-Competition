@@ -58,12 +58,12 @@ public class Drivetrain extends Subsystem {
 		highGearValue = config.highGearValue;
 
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		leftVictor1 = MotorUtils.makeVictor(config.leftFollower1, config.drivetrainConfig);
-		leftVictor2 = MotorUtils.makeVictor(config.leftFollower2, config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1, config.drivetrainConfig, leftMaster);
+		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2, config.drivetrainConfig, leftMaster);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		rightVictor1 = MotorUtils.makeVictor(config.rightFollower1, config.drivetrainConfig);
-		rightVictor2 = MotorUtils.makeVictor(config.rightFollower2, config.drivetrainConfig);
+		rightVictor1 = MotorUtils.makeVictorFollower(config.rightFollower1, config.drivetrainConfig, rightMaster);
+		rightVictor2 = MotorUtils.makeVictorFollower(config.rightFollower2, config.drivetrainConfig, rightMaster);
 
 		velocityGains = config.drivetrainVelocityPID;
 		velocityGains.applyToTalon(leftMaster, rightMaster);
