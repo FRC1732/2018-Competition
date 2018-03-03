@@ -26,7 +26,7 @@ public class ArmSetPosition extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("setting position: " + position);
-		int currentPosition = Robot.arm.encoder.getPulses();
+		int currentPosition = Robot.arm.getEncoderPulses();
 		if (currentPosition < position) {
 			Robot.arm.upGains.selectGains(Robot.arm.motor);
 			System.out.println("using up gains");

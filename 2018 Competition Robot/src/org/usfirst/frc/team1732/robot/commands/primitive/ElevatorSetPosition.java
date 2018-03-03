@@ -25,7 +25,7 @@ public class ElevatorSetPosition extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		double currentPosition = Robot.elevator.encoder.getPosition();
+		double currentPosition = Robot.elevator.getEncoderPulses();
 		if (currentPosition < position) {
 			Robot.elevator.upGains.selectGains(Robot.elevator.motor);
 		} else {

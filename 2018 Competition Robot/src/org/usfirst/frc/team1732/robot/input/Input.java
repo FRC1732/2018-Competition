@@ -55,6 +55,7 @@ public class Input {
 		posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
 		posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
 		posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
+		posScaleHigh.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
 
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());

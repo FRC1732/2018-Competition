@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Arm extends Subsystem {
 
 	public final TalonSRX motor;
-	public final TalonEncoder encoder;
+	private final TalonEncoder encoder;
 
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
@@ -50,11 +50,12 @@ public class Arm extends Subsystem {
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
-		if(encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
-			distanceFromStartup = encoder.getPulses() - Positions.START.value;
-		}else {
-			distanceFromStartup = 0;
-		}
+		distanceFromStartup = 0;
+		// if (encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
+		// distanceFromStartup = encoder.getPulses() - Positions.START.value;
+		// } else {
+		// distanceFromStartup = 0;
+		// }
 	}
 
 	public int getValue(Positions position) {
@@ -64,7 +65,7 @@ public class Arm extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(-10207), INTAKE(-9990), SWITCH(-9990), TUCK(-6297), MAX_LOW(-3625), START(-3988), SCALE(-2083), MAX(-2083);
+		MIN(-8551), INTAKE(-8334), SWITCH(-8334), TUCK(-4641), MAX_LOW(-1969), START(-2332), SCALE(-427), MAX(-427);
 
 		private final int value;
 
@@ -138,6 +139,10 @@ public class Arm extends Subsystem {
 
 	public boolean isElevatorSafeToGoDown() {
 		return encoder.getPulses() + allowedError < getValue(Positions.TUCK);
+	}
+
+	public int getEncoderPulses() {
+		return encoder.getPulses();
 	}
 
 }
