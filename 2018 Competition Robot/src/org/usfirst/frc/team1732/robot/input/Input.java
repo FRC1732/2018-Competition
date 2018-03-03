@@ -1,9 +1,11 @@
 package org.usfirst.frc.team1732.robot.input;
 
-import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
+import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRockerControl;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
+import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -21,7 +23,7 @@ public class Input {
 
 		// Define all the buttons here
 		JoystickButton posIntake = new JoystickButton(buttons, 9);
-		JoystickButton posTuck = new JoystickButton(buttons, 5);
+		JoystickButton posTuck = new JoystickButton(buttons, 4);
 		JoystickButton posSwitch = new JoystickButton(buttons, 8);
 		JoystickButton posScaleLow = new JoystickButton(buttons, 7);
 		JoystickButton posScaleHigh = new JoystickButton(buttons, 6);
@@ -48,10 +50,17 @@ public class Input {
 		// Elevator.Positions.SCALE_HIGH));
 		// rocker.whenActive(new ElevatorRockerControl(rocker));
 
-		posIntake.whenPressed(new ArmSetPosition(Robot.arm.getValue(-5000)));
+		posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+		posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SWITCH));
+		posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
+		posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
+		rocker.whenActive(new ElevatorRockerControl(rocker));
+
+		// posIntake.whenPressed(new ElevaSetPosition(Robot.arm.getValue(-5000)));
 		// posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
 		// posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
-		// posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
+		// posIntake.whenPressed(new ElevatorSetPosition(12000));
 		// posScaleHigh.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
 
 		// leftTrigger.whenPressed(new ManipSetIn());
@@ -63,7 +72,6 @@ public class Input {
 
 		// temporary testing
 		// posIntake.whileHeld(new ArmTest(1));
-		// posIntake.whenPressed(new ArmSimpleControl(-4000));
 		// posSwitch.whileHeld(new ArmTest(-1));
 		// posScaleLow.whileHeld(new ElevatorTest(1));
 		// posScaleHigh.whileHeld(new ElevatorTest(-1));

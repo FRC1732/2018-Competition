@@ -33,8 +33,6 @@ public class Arm extends Subsystem {
 	private final int allowedError;
 	private final int distanceFromStartup;
 
-	private final double rampTime;
-
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.armUpPID;
@@ -53,8 +51,6 @@ public class Arm extends Subsystem {
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
-
-		rampTime = config.armRampTime;
 
 		setManual(0);
 	}
@@ -90,17 +86,16 @@ public class Arm extends Subsystem {
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 
-		// if (autoControl) {
-		// if (desiredPosition > getValue(Positions.MAX_LOW) &&
-		// !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
-		// motor.set(ControlMode.Position, getValue(Positions.TUCK));
-		// desiredIsSet = false;
-		// }
-		// if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
-		// motor.set(ControlMode.Position, desiredPosition);
-		// desiredIsSet = true;
-		// }
-		// }
+		if (autoControl) {
+			if (desiredPosition > getValue(Positions.MAX_LOW) && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
+				motor.set(ControlMode.Position, getValue(Positions.TUCK));
+				desiredIsSet = false;
+			}
+			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
+				motor.set(ControlMode.Position, desiredPosition);
+				desiredIsSet = true;
+			}
+		}
 	}
 
 	@Override
@@ -164,11 +159,4 @@ public class Arm extends Subsystem {
 		return desiredPosition;
 	}
 
-	public void enableRamping() {
-		motor.configClosedloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
-	}
-
-	public void disableRamping() {
-		motor.configClosedloopRamp(0, Robot.CONFIG_TIMEOUT);
-	}
 }

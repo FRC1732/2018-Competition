@@ -2,6 +2,7 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -25,11 +26,14 @@ public class ElevatorSetPosition extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
+		System.out.println("Running eleavtor set command");
 		double currentPosition = Robot.elevator.getEncoderPulses();
 		if (currentPosition < position) {
 			Robot.elevator.upGains.selectGains(Robot.elevator.motor);
+			System.out.println("using up elevator gains");
 		} else {
 			Robot.elevator.downGains.selectGains(Robot.elevator.motor);
+			System.out.println("using down elevator gains");
 		}
 		Robot.elevator.set(position);
 	}
@@ -43,12 +47,15 @@ public class ElevatorSetPosition extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
+		Util.logForGraphing(Robot.elevator.getEncoderPulses(), Robot.elevator.getDesiredPosition(),
+				Robot.elevator.motor.getClosedLoopError(0), Robot.elevator.motor.getMotorOutputPercent());
 		return Robot.elevator.atSetpoint();
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+		System.out.println("ending elevator set command");
 		// shouldn't need to do anything
 	}
 

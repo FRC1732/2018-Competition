@@ -49,11 +49,11 @@ public class RobotConfig {
 
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
-	public final double armRampTime = 1;
+	public final double armRampTime = 0.2;
 	{
 		armConfig.openLoopRamp = armRampTime;
-		armConfig.peakOutputForward = 0.6;
-		armConfig.peakOutputReverse = -0.6;
+		armConfig.peakOutputForward = 0.4;
+		armConfig.peakOutputReverse = -0.4;
 	}
 	private final boolean reverseArm = true;
 	public final boolean reverseArmSensor = false;
@@ -62,7 +62,7 @@ public class RobotConfig {
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, armRampTime);
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, armRampTime);
-	public final int armAllowedErrorCount = 30;
+	public final int armAllowedErrorCount = 80;
 	public int armStartingCount = 0;
 
 	// climber
@@ -75,18 +75,20 @@ public class RobotConfig {
 
 	// elevator
 	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
+	public final double elevatorRampTime = 0.80;
 	{
-		elevatorConfig.peakOutputForward = 0.05;
-		elevatorConfig.peakOutputReverse = -0.05;
+		elevatorConfig.openLoopRamp = elevatorRampTime;
+		elevatorConfig.peakOutputForward = 0.6;
+		elevatorConfig.peakOutputReverse = -0.6;
 	}
 	private final boolean reverseElevator = true;
 	public final boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, elevatorRampTime);
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public final int elevatorAllowedErrorCount = 30;
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, elevatorRampTime);
+	public final int elevatorAllowedErrorCount = 50;
 	public int elevatorStartingCount = 0;
 
 	// cube manip (intake)

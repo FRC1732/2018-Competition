@@ -33,24 +33,22 @@ public class PracticeConfig extends RobotConfig {
 		armDownPID.kD = 0;
 		armDownPID.integralZone = 0;
 		armDownPID.maxIntegralAccumulated = 0;
-		armStartingCount = 334;
+		armStartingCount = 3844;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-		elevatorUpPID.kP = 0;
+		elevatorUpPID.kP = 0.6;
 		elevatorUpPID.kI = 0;
-		elevatorUpPID.kD = 0;
+		elevatorUpPID.kD = 100;
 		elevatorUpPID.integralZone = 0;
 		elevatorUpPID.allowableError = 0;
 		elevatorUpPID.maxIntegralAccumulated = 0;
-		elevatorUpPID.secondsFromNeutralToFull = 0;
-		elevatorDownPID.kP = 0;
+		elevatorDownPID.kP = 0.1;
 		elevatorDownPID.kI = 0;
-		elevatorDownPID.kD = 0;
+		elevatorDownPID.kD = 100;
 		elevatorDownPID.integralZone = 0;
 		elevatorDownPID.maxIntegralAccumulated = 0;
-		elevatorDownPID.secondsFromNeutralToFull = 0;
-		elevatorStartingCount = 0;
+		elevatorStartingCount = 3162;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;
