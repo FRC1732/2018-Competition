@@ -31,7 +31,7 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
-	private final int distanceFromStartup;
+	private final int distanceFromStartup = 0;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -50,12 +50,11 @@ public class Arm extends Subsystem {
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
-		distanceFromStartup = 0;
-		// if (encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
-		// distanceFromStartup = encoder.getPulses() - Positions.START.value;
-		// } else {
-		// distanceFromStartup = 0;
-		// }
+//		 if (encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
+//			distanceFromStartup = encoder.getPulses() - Positions.START.value;
+//		 } else {
+//		 	distanceFromStartup = 0;
+//		 }
 	}
 
 	public int getValue(Positions position) {
