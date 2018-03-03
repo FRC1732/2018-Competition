@@ -30,19 +30,19 @@ public class RobotConfig {
 	public final boolean highGearValue = true; // setting the shifter solenoid to this value should make the drivetrain
 												// go in high gear
 
-	private final int leftMasterID = 15;
+	private final int leftMasterID = 0;
 	private final boolean reverseLeft = true;
 	public final boolean reverseLeftSensor = false;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
-	public final CTREParam leftFollower1 = new CTREParam(14, reverseLeft, leftMasterID);
-	public final CTREParam leftFollower2 = new CTREParam(13, reverseLeft, leftMasterID);
+	public final CTREParam leftFollower1 = new CTREParam(1, reverseLeft, leftMasterID);
+	public final CTREParam leftFollower2 = new CTREParam(2, reverseLeft, leftMasterID);
 
-	private final int rightMasterID = 0;
+	private final int rightMasterID = 15;
 	private final boolean reverseRight = false;
 	public final boolean reverseRightSensor = false;
 	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
-	public final CTREParam rightFollower1 = new CTREParam(1, reverseRight, rightMasterID);
-	public final CTREParam rightFollower2 = new CTREParam(2, reverseRight, rightMasterID);
+	public final CTREParam rightFollower1 = new CTREParam(14, reverseRight, rightMasterID);
+	public final CTREParam rightFollower2 = new CTREParam(13, reverseRight, rightMasterID);
 
 	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
 			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
