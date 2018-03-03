@@ -50,13 +50,12 @@ public class RobotConfig {
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
 	private final boolean reverseArm = false;
-	public final boolean reverseArmSensor = false;
+	public final boolean reverseArmSensor = true;
 	public final CTREParam arm = new CTREParam(12, reverseArm);
 	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public double armDegreesPerPulse = 0;
 	public final int armAllowedErrorCount = 30;
 
 	// climber
@@ -69,14 +68,13 @@ public class RobotConfig {
 
 	// elevator
 	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
-	private final boolean reverseElevator = false;
-	public final boolean reverseElevatorSensor = false;
+	private final boolean reverseElevator = true;
+	public final boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	public double elevatorInchesPerPulse = 0;
 	public final int elevatorAllowedErrorCount = 30;
 
 	// cube manip (intake)
@@ -122,6 +120,7 @@ public class RobotConfig {
 		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
 	}
 
-	protected RobotConfig() {}
+	protected RobotConfig() {
+	}
 
 }
