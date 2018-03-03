@@ -50,7 +50,11 @@ public class Arm extends Subsystem {
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
-		distanceFromStartup = encoder.getPulses() - Positions.START.value;
+		if(encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
+			distanceFromStartup = encoder.getPulses() - Positions.START.value;
+		}else {
+			distanceFromStartup = 0;
+		}
 	}
 
 	public int getValue(Positions position) {
