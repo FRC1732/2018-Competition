@@ -59,6 +59,19 @@ public class ClosedLoopProfile {
 	}
 
 	public void applyToTalon(TalonSRX... talons) {
+		System.out.println(name);
+		System.out.println(feedback.name());
+		System.out.println(slotIdx);
+		System.out.println(pidIdx);
+		System.out.println(kP);
+		System.out.println(kI);
+		System.out.println(kD);
+		System.out.println(kF);
+		System.out.println(integralZone);
+		System.out.println(allowableError);
+		System.out.println(maxIntegralAccumulated);
+		System.out.println(secondsFromNeutralToFull);
+		System.out.println();
 		for (TalonSRX talon : talons) {
 			talon.selectProfileSlot(slotIdx, pidIdx);
 			talon.configSelectedFeedbackSensor(feedback, pidIdx, Robot.CONFIG_TIMEOUT);
@@ -66,7 +79,7 @@ public class ClosedLoopProfile {
 			talon.config_kP(slotIdx, kP, Robot.CONFIG_TIMEOUT);
 			talon.config_kI(slotIdx, kI, Robot.CONFIG_TIMEOUT);
 			talon.config_kD(slotIdx, kD, Robot.CONFIG_TIMEOUT);
-			talon.config_kF(slotIdx, Feedforward.TALON_SRX_FF_GAIN, Robot.CONFIG_TIMEOUT);
+			talon.config_kF(slotIdx, kF, Robot.CONFIG_TIMEOUT);
 			talon.configAllowableClosedloopError(slotIdx, allowableError, Robot.CONFIG_TIMEOUT);
 			talon.configMaxIntegralAccumulator(slotIdx, maxIntegralAccumulated, Robot.CONFIG_TIMEOUT);
 			talon.configClosedloopRamp(secondsFromNeutralToFull, Robot.CONFIG_TIMEOUT);

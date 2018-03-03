@@ -11,9 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -34,10 +31,9 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
-	private final int distanceFromStartup = 0;
+	private final int distanceFromStartup;
 
-	public final PIDController upPID;;
-	public final PIDController downPID;
+	private final double rampTime;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -53,54 +49,18 @@ public class Arm extends Subsystem {
 		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
+		distanceFromStartup = config.armStartingCount - Positions.START.value;
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
-		// if (encoder.getPulses() > 4092 || encoder.getPulses() < 0) {
-		// distanceFromStartup = encoder.getPulses() - Positions.START.value;
-		// } else {
-		// distanceFromStartup = 0;
-		// }
-		// holdPosition();
-		upPID = new PIDController(upGains.kP, upGains.kI, upGains.kD, upGains.kF, new PIDSource() {
 
-			@Override
-			public void setPIDSourceType(PIDSourceType pidSource) {
-			}
+		rampTime = config.armRampTime;
 
-			@Override
-			public PIDSourceType getPIDSourceType() {
-				return PIDSourceType.kDisplacement;
-			}
-
-			@Override
-			public double pidGet() {
-				return encoder.getPulses();
-			}
-		}, d -> {
-			System.out.println(d);
-			motor.set(ControlMode.PercentOutput, d);
-		}, 5);
-		downPID = new PIDController(downGains.kP, downGains.kI, downGains.kD, downGains.kF, new PIDSource() {
-
-			@Override
-			public void setPIDSourceType(PIDSourceType pidSource) {
-			}
-
-			@Override
-			public PIDSourceType getPIDSourceType() {
-				return PIDSourceType.kDisplacement;
-			}
-
-			@Override
-			public double pidGet() {
-				return encoder.getPulses();
-			}
-		}, d -> {
-			System.out.println(d);
-			motor.set(ControlMode.PercentOutput, d);
-		}, 5);
 		setManual(0);
+	}
+
+	public int getValue(int oldPos) {
+		return oldPos + distanceFromStartup;
 	}
 
 	public int getValue(Positions position) {
@@ -123,6 +83,10 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void periodic() {
+		// Util.logForGraphing(Robot.arm.getEncoderPulses(),
+		// Robot.arm.motor.getSensorCollection().getPulseWidthPosition(),
+		// Robot.arm.getDesiredPosition(), Robot.arm.motor.getClosedLoopError(0),
+		// Robot.arm.motor.getMotorOutputPercent());
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 
@@ -200,18 +164,11 @@ public class Arm extends Subsystem {
 		return desiredPosition;
 	}
 
-	public void enableUpWpiPID() {
-		downPID.disable();
-		upPID.enable();
+	public void enableRamping() {
+		motor.configClosedloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 	}
 
-	public void enableDownWpiPID() {
-		upPID.disable();
-		downPID.enable();
-	}
-
-	public void disableWpiPID() {
-		downPID.disable();
-		upPID.disable();
+	public void disableRamping() {
+		motor.configClosedloopRamp(0, Robot.CONFIG_TIMEOUT);
 	}
 }

@@ -47,12 +47,16 @@ public class Elevator extends Subsystem {
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
-		distanceFromStartup = 0;// encoder.getPulses() - Positions.START.value;
+		distanceFromStartup = config.elevatorStartingCount - Positions.START.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
 		// holdPosition();
 		setManual(0);
+	}
+
+	public int getValue(int oldValue) {
+		return oldValue + distanceFromStartup;
 	}
 
 	public int getValue(Positions position) {

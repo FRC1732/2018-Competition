@@ -14,7 +14,7 @@ public class ArmSetPosition extends Command {
 	private int position;
 
 	public ArmSetPosition(Arm.Positions position) {
-		super(5);
+		// super(5);
 		requires(Robot.arm);
 		this.position = Robot.arm.getValue(position);
 	}
@@ -37,6 +37,7 @@ public class ArmSetPosition extends Command {
 			Robot.arm.downGains.selectGains(Robot.arm.motor);
 			System.out.println("using down gains");
 		}
+		Robot.arm.enableRamping();
 		Robot.arm.set(position);
 	}
 
@@ -51,14 +52,15 @@ public class ArmSetPosition extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return false;//Robot.arm.atSetpoint();
+		return false;// Robot.arm.atSetpoint();
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
 		System.out.println("ending arm set command");
-//		Robot.arm.setManual(0);
+		Robot.arm.disableRamping();
+		// Robot.arm.setManual(0);
 		// shouldn't need to do anything
 	}
 
