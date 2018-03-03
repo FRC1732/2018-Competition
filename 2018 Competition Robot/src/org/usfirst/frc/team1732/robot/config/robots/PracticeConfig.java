@@ -7,7 +7,7 @@ public class PracticeConfig extends RobotConfig {
 	{
 		// drivetrain
 		effectiveRobotWidth = robotWidth; // calculate
-		drivetrainInchesPerPulse = 0; // calculate
+		drivetrainInchesPerPulse = 136 / 70679.5; // calculate
 		maxUnitsPer100Ms = 0; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
