@@ -9,18 +9,18 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ArmSetPosition extends Command {
+public class ArmMagicPosition extends Command {
 
 	private int position;
 	// private boolean goingUp;
 
-	public ArmSetPosition(Arm.Positions position) {
+	public ArmMagicPosition(Arm.Positions position) {
 		// super(5);
 		requires(Robot.arm);
 		this.position = Robot.arm.getValue(position);
 	}
 
-	public ArmSetPosition(int position) {
+	public ArmMagicPosition(int position) {
 		// super(5);
 		requires(Robot.arm);
 		this.position = position;
@@ -30,18 +30,7 @@ public class ArmSetPosition extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("Running arm set command");
-		int currentPosition = Robot.arm.getEncoderPulses();
-		// Robot.arm.magicGains.selectGains(Robot.arm.motor);
-		if (currentPosition < position) {
-			Robot.arm.upGains.selectGains(Robot.arm.motor);
-			// goingUp = true;
-			System.out.println("using up arm gains");
-		} else {
-			Robot.arm.downGains.selectGains(Robot.arm.motor);
-			// goingUp = false;
-			System.out.println("using down arm gains");
-		}
-		Robot.arm.usePositionControl();
+		Robot.arm.useMagicControl();
 		Robot.arm.set(position);
 	}
 
@@ -52,12 +41,6 @@ public class ArmSetPosition extends Command {
 		// int currentPosition = Robot.arm.getEncoderPulses();
 		Util.logForGraphing(Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
 				Robot.arm.motor.getClosedLoopError(0), Robot.arm.motor.getMotorOutputPercent());
-		// if (goingUp && currentPosition > position) {
-		// Robot.arm.disableRamping();
-		// }
-		// if (!goingUp && currentPosition < position) {
-		// Robot.arm.disableRamping();
-		// }
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

@@ -24,22 +24,33 @@ public class Elevator extends Subsystem {
 	public final TalonSRX motor;
 	private final TalonEncoder encoder;
 
+	public final ClosedLoopProfile magicGains;
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
 
 	private final int allowedError;
-	private final int distanceFromStartup;
+	private int distanceFromStartup;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
+	private static final String key = "Elevator Starting Count";
+
+	private ControlMode controlMode = ControlMode.Position;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
 		upGains = config.elevatorUpPID;
 		downGains = config.elevatorDownPID;
+		magicGains = config.armMagicPID;
+
 		upGains.applyToTalon(motor);
 		downGains.applyToTalon(motor);
+		magicGains.applyToTalon(motor);
+
+		motor.configMotionCruiseVelocity(config.elevatorMagicVel, Robot.CONFIG_TIMEOUT);
+		motor.configMotionAcceleration(config.elevatorMagicAccel, Robot.CONFIG_TIMEOUT);
+
 		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
@@ -48,13 +59,14 @@ public class Elevator extends Subsystem {
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
-		String key = "Elevator Starting Count";
+
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
 		distanceFromStartup = startingCount - Positions.START.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
+		Robot.dash.add("Elevator Encoder Rate", encoder::getRate);
 		// holdPosition();
 		setManual(0);
 	}
@@ -85,15 +97,18 @@ public class Elevator extends Subsystem {
 
 	@Override
 	public void periodic() {
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
+		distanceFromStartup = startingCount - Positions.START.value;
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
 			if (desiredPosition < getValue(Positions.RADIO) && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-				motor.set(ControlMode.Position, getValue(Positions.RADIO));
+				motor.set(controlMode, getValue(Positions.RADIO));
 				desiredIsSet = false;
 			}
 			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
-				motor.set(ControlMode.Position, desiredPosition);
+				motor.set(controlMode, desiredPosition);
 				desiredIsSet = true;
 			}
 		}
@@ -104,6 +119,11 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(int position) {
+		position = getValue(position);
+		setRawPosition(position);
+	}
+
+	private void setRawPosition(int position) {
 		if (position < getValue(Positions.MIN)) {
 			position = getValue(Positions.MIN);
 		}
@@ -112,15 +132,13 @@ public class Elevator extends Subsystem {
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
+		motor.set(controlMode, desiredPosition);
+		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
 
 	public void set(Positions position) {
-		desiredPosition = position.value;
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		autoControl = true;
+		set(position.value);
 	}
 
 	public void setManual(double percentVolt) {
@@ -129,10 +147,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void holdPosition() {
-		desiredPosition = encoder.getPulses();
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		autoControl = true;
+		setRawPosition(encoder.getPulses());
 	}
 
 	public int getDesiredPosition() {
@@ -154,5 +169,13 @@ public class Elevator extends Subsystem {
 
 	public int getEncoderPulses() {
 		return encoder.getPulses();
+	}
+
+	public void usePositionControl() {
+		controlMode = ControlMode.Position;
+	}
+
+	public void useMagicControl() {
+		controlMode = ControlMode.MotionMagic;
 	}
 }

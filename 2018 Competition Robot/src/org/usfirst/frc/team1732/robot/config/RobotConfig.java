@@ -62,6 +62,10 @@ public class RobotConfig {
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, armRampTime);
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, armRampTime);
+	public final ClosedLoopProfile armMagicPID = new ClosedLoopProfile("Arm Magic PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public int armMagicVel = 0;
+	public int armMagicAccel = 0;
 	public final int armAllowedErrorCount = 80;
 
 	// climber
@@ -87,6 +91,10 @@ public class RobotConfig {
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, elevatorRampTime);
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, elevatorRampTime);
+	public final ClosedLoopProfile elevatorMagicPID = new ClosedLoopProfile("Elevator Magic PID",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	public int elevatorMagicVel = 0;
+	public int elevatorMagicAccel = 0;
 	public final int elevatorAllowedErrorCount = 50;
 
 	// cube manip (intake)

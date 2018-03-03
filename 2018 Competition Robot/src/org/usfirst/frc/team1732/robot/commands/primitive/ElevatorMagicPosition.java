@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ElevatorSetPosition extends Command {
+public class ElevatorMagicPosition extends Command {
 
 	private int position;
 
-	public ElevatorSetPosition(Elevator.Positions position) {
+	public ElevatorMagicPosition(Elevator.Positions position) {
 		requires(Robot.elevator);
 		this.position = Robot.elevator.getValue(position);
 	}
 
-	public ElevatorSetPosition(int position) {
+	public ElevatorMagicPosition(int position) {
 		requires(Robot.elevator);
 		this.position = position;
 	}
@@ -27,16 +27,7 @@ public class ElevatorSetPosition extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("Running eleavtor set command");
-		double currentPosition = Robot.elevator.getEncoderPulses();
-		// Robot.arm.magicGains.selectGains(Robot.arm.motor);
-		if (currentPosition < position) {
-			Robot.elevator.upGains.selectGains(Robot.elevator.motor);
-			System.out.println("using up elevator gains");
-		} else {
-			Robot.elevator.downGains.selectGains(Robot.elevator.motor);
-			System.out.println("using down elevator gains");
-		}
-		Robot.elevator.usePositionControl();
+		Robot.elevator.useMagicControl();
 		Robot.elevator.set(position);
 	}
 

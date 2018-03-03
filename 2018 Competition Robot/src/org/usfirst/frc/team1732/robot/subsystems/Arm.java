@@ -24,6 +24,7 @@ public class Arm extends Subsystem {
 	public final TalonSRX motor;
 	private final TalonEncoder encoder;
 
+	public final ClosedLoopProfile magicGains;
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
 
@@ -32,14 +33,25 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
-	private final int distanceFromStartup;
+	private int distanceFromStartup;
+
+	private static final String key = "Arm Starting Count";
+
+	private ControlMode controlMode = ControlMode.Position;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.armUpPID;
 		downGains = config.armDownPID;
+		magicGains = config.armMagicPID;
+
 		upGains.applyToTalon(motor);
 		downGains.applyToTalon(motor);
+		magicGains.applyToTalon(motor);
+
+		motor.configMotionCruiseVelocity(config.armMagicVel, Robot.CONFIG_TIMEOUT);
+		motor.configMotionAcceleration(config.armMagicAccel, Robot.CONFIG_TIMEOUT);
+
 		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
 		// motor);
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
@@ -49,13 +61,13 @@ public class Arm extends Subsystem {
 
 		allowedError = config.armAllowedErrorCount;
 
-		String key = "Arm Starting Count";
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
 		distanceFromStartup = startingCount - Positions.START.value;
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
+		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
 
 		setManual(0);
 	}
@@ -90,14 +102,16 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getMotorOutputPercent());
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
+		distanceFromStartup = startingCount - Positions.START.value;
 		if (autoControl) {
 			if (desiredPosition > getValue(Positions.MAX_LOW) && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
-				motor.set(ControlMode.Position, getValue(Positions.TUCK));
+				motor.set(controlMode, getValue(Positions.TUCK));
 				desiredIsSet = false;
 			}
 			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
-				motor.set(ControlMode.Position, desiredPosition);
+				motor.set(controlMode, desiredPosition);
 				desiredIsSet = true;
 			}
 		}
@@ -108,6 +122,11 @@ public class Arm extends Subsystem {
 	}
 
 	public void set(int position) {
+		position = getValue(position);
+		setRawPosition(position);
+	}
+
+	private void setRawPosition(int position) {
 		if (position < getValue(Positions.MIN)) {
 			position = getValue(Positions.MIN);
 		}
@@ -116,17 +135,13 @@ public class Arm extends Subsystem {
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
+		motor.set(controlMode, position);
 		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
 
 	public void set(Positions position) {
-		desiredPosition = position.value;
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		System.out.println("setting position: " + desiredPosition);
-		autoControl = true;
+		set(position.value);
 	}
 
 	public void setManual(double percentVolt) {
@@ -136,11 +151,7 @@ public class Arm extends Subsystem {
 	}
 
 	public void holdPosition() {
-		desiredPosition = encoder.getPulses();
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		System.out.println("setting position: " + desiredPosition);
-		autoControl = true;
+		setRawPosition(encoder.getPulses());
 	}
 
 	public void setStop() {
@@ -164,4 +175,11 @@ public class Arm extends Subsystem {
 		return desiredPosition;
 	}
 
+	public void usePositionControl() {
+		controlMode = ControlMode.Position;
+	}
+
+	public void useMagicControl() {
+		controlMode = ControlMode.MotionMagic;
+	}
 }
