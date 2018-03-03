@@ -49,8 +49,12 @@ public class RobotConfig {
 
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
+	{
+		armConfig.peakOutputForward = 0.05;
+		armConfig.peakOutputReverse = -0.05;
+	}
 	private final boolean reverseArm = true;
-	public final boolean reverseArmSensor = true;
+	public final boolean reverseArmSensor = false;
 	public final CTREParam arm = new CTREParam(12, reverseArm);
 	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);

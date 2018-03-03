@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Elevator extends Subsystem {
 
 	public final TalonSRX motor;
-	public final TalonEncoder encoder;
+	private final TalonEncoder encoder;
 
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
@@ -47,7 +47,7 @@ public class Elevator extends Subsystem {
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
-		distanceFromStartup = encoder.getPulses() - Positions.START.value;
+		distanceFromStartup = 0;// encoder.getPulses() - Positions.START.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
@@ -59,9 +59,10 @@ public class Elevator extends Subsystem {
 
 	public static enum Positions {
 
+		// 3311
 		// set these in pulses
-		MIN(2208), START(2208), INTAKE(3485), SWITCH(23610), RADIO(13801), SCALE_LOW(13801), SCALE_HIGH(21034), MAX(
-				32360);
+		MIN(3311), START(3311), INTAKE(4588), SWITCH(24713), RADIO(14904), SCALE_LOW(14904), SCALE_HIGH(22137), MAX(
+				33463);
 
 		private final int value;
 
@@ -141,4 +142,7 @@ public class Elevator extends Subsystem {
 		return encoder.getPulses() - allowedError > getValue(Positions.RADIO);
 	}
 
+	public int getEncoderPulses() {
+		return encoder.getPulses();
+	}
 }
