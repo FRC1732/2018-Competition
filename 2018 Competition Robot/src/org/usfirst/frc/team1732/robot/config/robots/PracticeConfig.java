@@ -37,7 +37,6 @@ public class PracticeConfig extends RobotConfig {
 		armDownPID.integralZone = 0;
 		armDownPID.maxIntegralAccumulated = 0;
 		armDownPID.secondsFromNeutralToFull = 0;
-		armDegreesPerPulse = 0;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
@@ -54,7 +53,6 @@ public class PracticeConfig extends RobotConfig {
 		elevatorDownPID.integralZone = 0;
 		elevatorDownPID.maxIntegralAccumulated = 0;
 		elevatorDownPID.secondsFromNeutralToFull = 0;
-		elevatorInchesPerPulse = 0;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

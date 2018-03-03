@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorSetPosition extends Command {
 
-	private double position;
+	private int position;
 
 	public ElevatorSetPosition(Elevator.Positions position) {
 		requires(Robot.elevator);
 		this.position = position.value;
 	}
 
-	public ElevatorSetPosition(double position) {
+	public ElevatorSetPosition(int position) {
 		requires(Robot.elevator);
 		this.position = position;
 	}

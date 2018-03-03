@@ -4,7 +4,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
 import org.usfirst.frc.team1732.robot.util.Util;
 
@@ -27,7 +26,6 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
 
-	public final double inchesPerPulse;
 	private final int allowedError;
 
 	private int desiredPosition;
@@ -45,8 +43,6 @@ public class Elevator extends Subsystem {
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
-		inchesPerPulse = config.elevatorInchesPerPulse;
-		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
@@ -58,7 +54,8 @@ public class Elevator extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), RADIO(0), SCALE_LOW(0), SCALE_HIGH(0), MAX(0);
+		MIN(2208), START(2208), INTAKE(3485), SWITCH(23610), RADIO(13801), SCALE_LOW(13801), SCALE_HIGH(21034), MAX(
+				32360);
 
 		public final int value;
 
@@ -89,12 +86,7 @@ public class Elevator extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
-	public EncoderReader getEncoderReader() {
-		return encoder.makeReader();
-	}
-
-	public void set(double posInches) {
-		int position = (int) (posInches / inchesPerPulse);
+	public void set(int position) {
 		if (position < Positions.MIN.value) {
 			position = Positions.MIN.value;
 		}
@@ -140,6 +132,6 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPosition() - allowedError > Positions.RADIO.value;
+		return encoder.getPulses() - allowedError > Positions.RADIO.value;
 	}
 }

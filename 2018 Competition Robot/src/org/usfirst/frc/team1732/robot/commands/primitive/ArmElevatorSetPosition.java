@@ -14,7 +14,7 @@ public class ArmElevatorSetPosition extends CommandGroup {
 		this(armPosition.value, elevatorPosition.value);
 	}
 
-	public ArmElevatorSetPosition(double armPosition, double elevatorPosition) {
+	public ArmElevatorSetPosition(int armPosition, int elevatorPosition) {
 		addParallel(new ArmSetPosition(armPosition));
 		addParallel(new ElevatorSetPosition(elevatorPosition));
 	}

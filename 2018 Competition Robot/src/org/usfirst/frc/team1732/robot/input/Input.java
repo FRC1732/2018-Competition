@@ -55,10 +55,10 @@ public class Input {
 		limelightToggle.whenPressed(new ToggleLED());
 
 		// temporary testing
-		posIntake.whileHeld(new ArmTest(0.5));
-		posSwitch.whileHeld(new ArmTest(-0.5));
-		posScaleLow.whileHeld(new ElevatorTest(0.5));
-		posScaleHigh.whileHeld(new ElevatorTest(-0.5));
+		posIntake.whileHeld(new ArmTest(0.2));
+		posSwitch.whileHeld(new ArmTest(-0.2));
+		posScaleLow.whileHeld(new ElevatorTest(0.2));
+		posScaleHigh.whileHeld(new ElevatorTest(-0.2));
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

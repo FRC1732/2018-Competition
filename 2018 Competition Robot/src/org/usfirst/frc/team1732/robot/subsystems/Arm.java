@@ -4,7 +4,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
 import org.usfirst.frc.team1732.robot.util.Util;
 
@@ -27,8 +26,6 @@ public class Arm extends Subsystem {
 	public final ClosedLoopProfile upGains;
 	public final ClosedLoopProfile downGains;
 
-	public final double degreesPerPulse;
-
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
@@ -46,8 +43,6 @@ public class Arm extends Subsystem {
 		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
 		// 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
-		degreesPerPulse = config.armDegreesPerPulse;
-		encoder.setDistancePerPulse(config.armDegreesPerPulse);
 		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
@@ -59,7 +54,7 @@ public class Arm extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), TUCK(0), SCALE(0), MAX(0);
+		MIN(-10207), INTAKE(-9990), SWITCH(-9990), TUCK(-6297), MAX_LOW(-3625), START(-3988), SCALE(-2083), MAX(-2083);
 
 		public final int value;
 
@@ -75,7 +70,7 @@ public class Arm extends Subsystem {
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
-			if (desiredPosition > Positions.TUCK.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
+			if (desiredPosition > Positions.MAX_LOW.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 				motor.set(ControlMode.Position, Positions.TUCK.value);
 				desiredIsSet = false;
 			}
@@ -90,12 +85,7 @@ public class Arm extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
-	public EncoderReader getEncoderReader() {
-		return encoder.makeReader();
-	}
-
-	public void set(double pos) {
-		int position = (int) (pos / degreesPerPulse);
+	public void set(int position) {
 		if (position < Positions.MIN.value) {
 			position = Positions.MIN.value;
 		}
@@ -137,7 +127,7 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPosition() + allowedError < Positions.TUCK.value;
+		return encoder.getPulses() + allowedError < Positions.TUCK.value;
 	}
 
 }

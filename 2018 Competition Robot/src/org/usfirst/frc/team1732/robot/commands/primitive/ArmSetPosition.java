@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ArmSetPosition extends Command {
 
-	private double position;
+	private int position;
 
 	public ArmSetPosition(Arm.Positions position) {
 		requires(Robot.arm);
 		this.position = position.value;
 	}
 
-	public ArmSetPosition(double position) {
+	public ArmSetPosition(int position) {
 		requires(Robot.arm);
 		this.position = position;
 	}
@@ -25,7 +25,7 @@ public class ArmSetPosition extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		double currentPosition = Robot.arm.encoder.getPosition();
+		int currentPosition = Robot.arm.encoder.getPulses();
 		if (currentPosition < position) {
 			Robot.arm.upGains.selectGains(Robot.arm.motor);
 		} else {
