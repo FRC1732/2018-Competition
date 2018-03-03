@@ -1,12 +1,12 @@
 package org.usfirst.frc.team1732.robot.input;
 
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
-import org.usfirst.frc.team1732.robot.commands.testing.ArmTest;
-import org.usfirst.frc.team1732.robot.commands.testing.ElevatorTest;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -35,6 +35,9 @@ public class Input {
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
 		JoystickButton limelightToggle = new JoystickButton(left, 2);
 
+		JoystickButton resetArmEncoder = new JoystickButton(left, 6);
+		JoystickButton resetElevatorEncoder = new JoystickButton(right, 11);
+
 		// Add commands here
 		// posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
 		// Elevator.Positions.INTAKE));
@@ -47,6 +50,12 @@ public class Input {
 		// posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE,
 		// Elevator.Positions.SCALE_HIGH));
 		// rocker.whenActive(new ElevatorRockerControl(rocker));
+
+		posIntake.whenPressed(new ArmSetPosition(Arm.Positions.INTAKE));
+		posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
+		posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
+		posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
+
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
@@ -54,11 +63,13 @@ public class Input {
 
 		limelightToggle.whenPressed(new ToggleLED());
 
+		// resetArmEncoder.whenPressed(new ArmResetEncoder());
+		// resetElevatorEncoder.whenPressed(new ElevatorResetEncoder());
 		// temporary testing
-		posIntake.whileHeld(new ArmTest(0.2));
-		posSwitch.whileHeld(new ArmTest(-0.2));
-		posScaleLow.whileHeld(new ElevatorTest(0.2));
-		posScaleHigh.whileHeld(new ElevatorTest(-0.2));
+		// posIntake.whileHeld(new ArmTest(0.2));
+		// posSwitch.whileHeld(new ArmTest(-0.2));
+		// posScaleLow.whileHeld(new ElevatorTest(0.2));
+		// posScaleHigh.whileHeld(new ElevatorTest(-0.2));
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

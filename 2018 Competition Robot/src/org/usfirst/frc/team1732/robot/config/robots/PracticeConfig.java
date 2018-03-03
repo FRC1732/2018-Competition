@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1732.robot.config.robots;
 
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 
 public class PracticeConfig extends RobotConfig {
 
@@ -23,15 +22,14 @@ public class PracticeConfig extends RobotConfig {
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
-		armUpPID.kP = 0;
+		armUpPID.kP = 0.001;
 		armUpPID.kI = 0;
 		armUpPID.kD = 0;
 		armUpPID.integralZone = 0;
 		armUpPID.allowableError = 0;
 		armUpPID.maxIntegralAccumulated = 0;
 		armUpPID.secondsFromNeutralToFull = 0;
-		armDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		armDownPID.kP = 0;
+		armDownPID.kP = 0.001;
 		armDownPID.kI = 0;
 		armDownPID.kD = 0;
 		armDownPID.integralZone = 0;

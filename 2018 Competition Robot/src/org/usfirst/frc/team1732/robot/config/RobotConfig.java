@@ -49,7 +49,7 @@ public class RobotConfig {
 
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
-	private final boolean reverseArm = false;
+	private final boolean reverseArm = true;
 	public final boolean reverseArmSensor = true;
 	public final CTREParam arm = new CTREParam(12, reverseArm);
 	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
