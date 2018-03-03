@@ -50,7 +50,7 @@ public class Input {
 		// Elevator.Positions.SCALE_HIGH));
 		// rocker.whenActive(new ElevatorRockerControl(rocker));
 
-		posIntake.whenPressed(new ArmSetPosition(-4000));
+		posIntake.whenPressed(new ArmSetPosition(-5000));
 		// posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
 		// posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
 		// posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));

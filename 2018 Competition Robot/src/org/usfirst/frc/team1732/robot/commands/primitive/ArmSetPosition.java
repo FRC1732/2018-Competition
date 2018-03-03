@@ -44,21 +44,21 @@ public class ArmSetPosition extends Command {
 	@Override
 	protected void execute() {
 		// shouldn't need to do anything
-		Util.logForGraphing("Arm Set Pos", Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
+		Util.logForGraphing(Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
 				Robot.arm.motor.getClosedLoopError(0), Robot.arm.motor.getMotorOutputPercent());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return Robot.arm.atSetpoint();
+		return false;//Robot.arm.atSetpoint();
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
 		System.out.println("ending arm set command");
-		Robot.arm.setManual(0);
+//		Robot.arm.setManual(0);
 		// shouldn't need to do anything
 	}
 
