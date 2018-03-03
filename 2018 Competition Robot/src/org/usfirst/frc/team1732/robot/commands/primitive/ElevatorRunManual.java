@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
@@ -20,5 +21,6 @@ public class ElevatorRunManual extends InstantCommand {
 	@Override
 	protected void initialize() {
 		Robot.elevator.setManual(percentVolt);
+		Debugger.logStart(this, percentVolt);
 	}
 }
