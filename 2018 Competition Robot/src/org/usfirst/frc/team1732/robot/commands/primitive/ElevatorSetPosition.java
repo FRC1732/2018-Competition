@@ -14,7 +14,7 @@ public class ElevatorSetPosition extends Command {
 
 	public ElevatorSetPosition(Elevator.Positions position) {
 		requires(Robot.elevator);
-		this.position = position.value;
+		this.position = Robot.elevator.getValue(position);
 	}
 
 	public ElevatorSetPosition(int position) {

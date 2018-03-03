@@ -31,6 +31,7 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
+	private final int distanceFromStartup;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -49,6 +50,11 @@ public class Arm extends Subsystem {
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
+		distanceFromStartup = encoder.getPulses() - Positions.START.value;
+	}
+
+	public int getValue(Positions position) {
+		return position.value + distanceFromStartup;
 	}
 
 	public static enum Positions {
@@ -56,7 +62,7 @@ public class Arm extends Subsystem {
 		// set these in pulses
 		MIN(-10207), INTAKE(-9990), SWITCH(-9990), TUCK(-6297), MAX_LOW(-3625), START(-3988), SCALE(-2083), MAX(-2083);
 
-		public final int value;
+		private final int value;
 
 		private Positions(int value) {
 			this.value = value;
@@ -70,8 +76,8 @@ public class Arm extends Subsystem {
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
-			if (desiredPosition > Positions.MAX_LOW.value && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
-				motor.set(ControlMode.Position, Positions.TUCK.value);
+			if (desiredPosition > getValue(Positions.MAX_LOW) && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
+				motor.set(ControlMode.Position, getValue(Positions.TUCK));
 				desiredIsSet = false;
 			}
 			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
@@ -86,11 +92,11 @@ public class Arm extends Subsystem {
 	}
 
 	public void set(int position) {
-		if (position < Positions.MIN.value) {
-			position = Positions.MIN.value;
+		if (position < getValue(Positions.MIN)) {
+			position = getValue(Positions.MIN);
 		}
-		if (position > Positions.MAX.value) {
-			position = Positions.MAX.value;
+		if (position > getValue(Positions.MAX)) {
+			position = getValue(Positions.MAX);
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
@@ -127,7 +133,7 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPulses() + allowedError < Positions.TUCK.value;
+		return encoder.getPulses() + allowedError < getValue(Positions.TUCK);
 	}
 
 }

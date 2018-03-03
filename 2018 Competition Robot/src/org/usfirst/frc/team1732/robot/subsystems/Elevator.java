@@ -27,6 +27,7 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile downGains;
 
 	private final int allowedError;
+	private final int distanceFromStartup;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
@@ -46,9 +47,14 @@ public class Elevator extends Subsystem {
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
+		distanceFromStartup = encoder.getPulses() - Positions.START.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
+	}
+
+	public int getValue(Positions position) {
+		return position.value + distanceFromStartup;
 	}
 
 	public static enum Positions {
@@ -57,7 +63,7 @@ public class Elevator extends Subsystem {
 		MIN(2208), START(2208), INTAKE(3485), SWITCH(23610), RADIO(13801), SCALE_LOW(13801), SCALE_HIGH(21034), MAX(
 				32360);
 
-		public final int value;
+		private final int value;
 
 		private Positions(int value) {
 			this.value = value;
@@ -71,8 +77,8 @@ public class Elevator extends Subsystem {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
-			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-				motor.set(ControlMode.Position, Positions.RADIO.value);
+			if (desiredPosition < getValue(Positions.RADIO) && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
+				motor.set(ControlMode.Position, getValue(Positions.RADIO));
 				desiredIsSet = false;
 			}
 			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
@@ -87,11 +93,11 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(int position) {
-		if (position < Positions.MIN.value) {
-			position = Positions.MIN.value;
+		if (position < getValue(Positions.MIN)) {
+			position = getValue(Positions.MIN);
 		}
-		if (position > Positions.MAX.value) {
-			position = Positions.MAX.value;
+		if (position > getValue(Positions.MAX)) {
+			position = getValue(Positions.MAX);
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
@@ -132,6 +138,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPulses() - allowedError > Positions.RADIO.value;
+		return encoder.getPulses() - allowedError > getValue(Positions.RADIO);
 	}
+
 }
