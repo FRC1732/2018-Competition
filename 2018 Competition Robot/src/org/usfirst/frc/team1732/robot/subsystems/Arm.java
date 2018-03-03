@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -32,6 +33,9 @@ public class Arm extends Subsystem {
 
 	private final int allowedError;
 	private final int distanceFromStartup = 0;
+
+	private final PIDController upPID;;
+	private final PIDController downPID;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -56,6 +60,7 @@ public class Arm extends Subsystem {
 		// distanceFromStartup = 0;
 		// }
 		// holdPosition();
+		upPID = new PIDController(upGains.kP, upGains.kI, upGains.kD, upGains.kF, new PIDSource, null, allowedError);
 		setManual(0);
 	}
 
@@ -122,7 +127,7 @@ public class Arm extends Subsystem {
 	}
 
 	public void setManual(double percentVolt) {
-		System.out.println("Manual control" + percentVolt);
+		// System.out.println("Manual control" + percentVolt);
 		motor.set(ControlMode.PercentOutput, percentVolt);
 		autoControl = false;
 	}

@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1732.robot.input;
 
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
-import org.usfirst.frc.team1732.robot.commands.testing.ArmTest;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -50,7 +50,7 @@ public class Input {
 		// Elevator.Positions.SCALE_HIGH));
 		// rocker.whenActive(new ElevatorRockerControl(rocker));
 
-		// posIntake.whenPressed(new ArmSetPosition(-4000));
+		posIntake.whenPressed(new ArmSetPosition(-4000));
 		// posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
 		// posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
 		// posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
@@ -64,7 +64,8 @@ public class Input {
 		limelightToggle.whenPressed(new ToggleLED());
 
 		// temporary testing
-		posIntake.whileHeld(new ArmTest(1));
+		// posIntake.whileHeld(new ArmTest(1));
+		// posIntake.whenPressed(new ArmSimpleControl(-4000));
 		// posSwitch.whileHeld(new ArmTest(-1));
 		// posScaleLow.whileHeld(new ElevatorTest(1));
 		// posScaleHigh.whileHeld(new ElevatorTest(-1));
