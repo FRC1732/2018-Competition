@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ArmElevatorSetPosition extends CommandGroup {
 
 	public ArmElevatorSetPosition(Arm.Positions armPosition, Elevator.Positions elevatorPosition) {
-		this(armPosition.value, elevatorPosition.value);
+		this(Robot.arm.getValue(armPosition), Robot.elevator.getValue(elevatorPosition));
 	}
 
 	public ArmElevatorSetPosition(int armPosition, int elevatorPosition) {
