@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -47,7 +48,10 @@ public class Elevator extends Subsystem {
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;
-		distanceFromStartup = config.elevatorStartingCount - Positions.START.value;
+		String key = "Elevator Starting Count";
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
+		distanceFromStartup = startingCount - Positions.START.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);

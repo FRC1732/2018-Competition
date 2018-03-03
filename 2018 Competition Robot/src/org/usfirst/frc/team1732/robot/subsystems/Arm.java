@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -47,7 +48,11 @@ public class Arm extends Subsystem {
 		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
-		distanceFromStartup = config.armStartingCount - Positions.START.value;
+
+		String key = "Arm Starting Count";
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
+		distanceFromStartup = startingCount - Positions.START.value;
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);

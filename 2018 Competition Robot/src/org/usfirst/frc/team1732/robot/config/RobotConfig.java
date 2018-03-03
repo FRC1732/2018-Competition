@@ -63,7 +63,6 @@ public class RobotConfig {
 	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, armRampTime);
 	public final int armAllowedErrorCount = 80;
-	public int armStartingCount = 0;
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -89,7 +88,6 @@ public class RobotConfig {
 	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, elevatorRampTime);
 	public final int elevatorAllowedErrorCount = 50;
-	public int elevatorStartingCount = 0;
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();

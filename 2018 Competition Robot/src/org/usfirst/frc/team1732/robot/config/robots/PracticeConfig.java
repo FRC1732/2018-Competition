@@ -33,7 +33,6 @@ public class PracticeConfig extends RobotConfig {
 		armDownPID.kD = 0;
 		armDownPID.integralZone = 0;
 		armDownPID.maxIntegralAccumulated = 0;
-		armStartingCount = 3844;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
@@ -48,7 +47,6 @@ public class PracticeConfig extends RobotConfig {
 		elevatorDownPID.kD = 100;
 		elevatorDownPID.integralZone = 0;
 		elevatorDownPID.maxIntegralAccumulated = 0;
-		elevatorStartingCount = 3162;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;
