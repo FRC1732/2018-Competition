@@ -51,6 +51,8 @@ public class Elevator extends Subsystem {
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
+		// holdPosition();
+		setManual(0);
 	}
 
 	public int getValue(Positions position) {
@@ -77,16 +79,17 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		if (autoControl) {
-			if (desiredPosition < getValue(Positions.RADIO) && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-				motor.set(ControlMode.Position, getValue(Positions.RADIO));
-				desiredIsSet = false;
-			}
-			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
-				motor.set(ControlMode.Position, desiredPosition);
-				desiredIsSet = true;
-			}
-		}
+		// if (autoControl) {
+		// if (desiredPosition < getValue(Positions.RADIO) &&
+		// !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
+		// motor.set(ControlMode.Position, getValue(Positions.RADIO));
+		// desiredIsSet = false;
+		// }
+		// if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
+		// motor.set(ControlMode.Position, desiredPosition);
+		// desiredIsSet = true;
+		// }
+		// }
 	}
 
 	@Override

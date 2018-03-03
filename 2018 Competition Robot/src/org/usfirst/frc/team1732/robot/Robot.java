@@ -22,9 +22,6 @@ import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -125,6 +122,10 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		protectRobot();
 		// cancel auto command here
+		// arm.holdPosition();
+		// elevator.holdPosition();
+		arm.setManual(0);
+		elevator.setManual(0);
 		drivetrain.setCoast();
 	}
 
@@ -132,9 +133,10 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 		protectRobot();
 	}
-	
+
 	/**
-	 * Safety functions to prevent auto and teleop commands from interfering with each other
+	 * Safety functions to prevent auto and teleop commands from interfering with
+	 * each other
 	 */
 	private void protectRobot() {
 		Scheduler.getInstance().removeAll();
@@ -165,14 +167,19 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		Scheduler.getInstance().run();
 	}
-	
+
 	/**
 	 * This function is called periodically during the robot mode.
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
+
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
+
 	@Override
-	public void teleopPeriodic() {}
+	public void teleopPeriodic() {
+	}
 }

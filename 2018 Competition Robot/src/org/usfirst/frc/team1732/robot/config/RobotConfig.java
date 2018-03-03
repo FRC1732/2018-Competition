@@ -50,8 +50,8 @@ public class RobotConfig {
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
 	{
-		armConfig.peakOutputForward = 0.05;
-		armConfig.peakOutputReverse = -0.05;
+		armConfig.peakOutputForward = 0.2;
+		armConfig.peakOutputReverse = -0.2;
 	}
 	private final boolean reverseArm = true;
 	public final boolean reverseArmSensor = false;
@@ -72,6 +72,10 @@ public class RobotConfig {
 
 	// elevator
 	public final CTREConfig elevatorConfig = CTREConfig.getDefaultConfig();
+	{
+		elevatorConfig.peakOutputForward = 0.05;
+		elevatorConfig.peakOutputReverse = -0.05;
+	}
 	private final boolean reverseElevator = true;
 	public final boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
@@ -120,8 +124,9 @@ public class RobotConfig {
 	public static RobotConfig getConfig() {
 		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
 		Preferences.getInstance().putString(PREF_KEY, robot);
-		System.out.println("Loaded robot: " + robot);
-		return ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
+		RobotConfig config = ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
+		System.out.println("Loaded robot: " + config.getClass().getName());
+		return config;
 	}
 
 	protected RobotConfig() {

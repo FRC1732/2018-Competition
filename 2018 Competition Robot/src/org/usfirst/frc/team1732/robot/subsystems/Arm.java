@@ -35,7 +35,7 @@ public class Arm extends Subsystem {
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
-		upGains = config.armDownPID;
+		upGains = config.armUpPID;
 		downGains = config.armDownPID;
 		upGains.applyToTalon(motor);
 		downGains.applyToTalon(motor);
@@ -56,6 +56,8 @@ public class Arm extends Subsystem {
 		// } else {
 		// distanceFromStartup = 0;
 		// }
+		// holdPosition();
+		setManual(0);
 	}
 
 	public int getValue(Positions position) {
@@ -80,16 +82,18 @@ public class Arm extends Subsystem {
 	public void periodic() {
 		// System.out.println("Arm Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
-		if (autoControl) {
-			if (desiredPosition > getValue(Positions.MAX_LOW) && !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
-				motor.set(ControlMode.Position, getValue(Positions.TUCK));
-				desiredIsSet = false;
-			}
-			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
-				motor.set(ControlMode.Position, desiredPosition);
-				desiredIsSet = true;
-			}
-		}
+
+		// if (autoControl) {
+		// if (desiredPosition > getValue(Positions.MAX_LOW) &&
+		// !Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
+		// motor.set(ControlMode.Position, getValue(Positions.TUCK));
+		// desiredIsSet = false;
+		// }
+		// if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
+		// motor.set(ControlMode.Position, desiredPosition);
+		// desiredIsSet = true;
+		// }
+		// }
 	}
 
 	@Override
@@ -106,6 +110,7 @@ public class Arm extends Subsystem {
 		desiredPosition = position;
 		desiredIsSet = true;
 		motor.set(ControlMode.Position, desiredPosition);
+		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
 
@@ -113,10 +118,12 @@ public class Arm extends Subsystem {
 		desiredPosition = position.value;
 		desiredIsSet = true;
 		motor.set(ControlMode.Position, desiredPosition);
+		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
 
 	public void setManual(double percentVolt) {
+		System.out.println("Manual control" + percentVolt);
 		motor.set(ControlMode.PercentOutput, percentVolt);
 		autoControl = false;
 	}
@@ -125,6 +132,7 @@ public class Arm extends Subsystem {
 		desiredPosition = encoder.getPulses();
 		desiredIsSet = true;
 		motor.set(ControlMode.Position, desiredPosition);
+		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
 
@@ -143,6 +151,10 @@ public class Arm extends Subsystem {
 
 	public int getEncoderPulses() {
 		return encoder.getPulses();
+	}
+
+	public int getDesiredPosition() {
+		return desiredPosition;
 	}
 
 }

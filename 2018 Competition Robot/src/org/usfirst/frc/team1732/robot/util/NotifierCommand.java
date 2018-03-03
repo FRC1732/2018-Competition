@@ -38,8 +38,7 @@ public abstract class NotifierCommand extends Command {
 
 	@Override
 	protected final void end() {
-		// stop(); don't need to call, stop should have been called when m_isRunning was
-		// set to false
+		stop();
 		whenEnded();
 	}
 
