@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -60,7 +62,42 @@ public class Arm extends Subsystem {
 		// distanceFromStartup = 0;
 		// }
 		// holdPosition();
-		upPID = new PIDController(upGains.kP, upGains.kI, upGains.kD, upGains.kF, new PIDSource, null, allowedError);
+		upPID = new PIDController(upGains.kP, upGains.kI, upGains.kD, upGains.kF, new PIDSource() {
+
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) {
+			}
+
+			@Override
+			public PIDSourceType getPIDSourceType() {
+				return PIDSourceType.kDisplacement;
+			}
+
+			@Override
+			public double pidGet() {
+				return encoder.getPulses();
+			}
+		}, d -> {
+			motor.set(ControlMode.PercentOutput, (int) (d / 1023));
+		}, 5);
+		downPID = new PIDController(downGains.kP, downGains.kI, downGains.kD, downGains.kF, new PIDSource() {
+
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) {
+			}
+
+			@Override
+			public PIDSourceType getPIDSourceType() {
+				return PIDSourceType.kDisplacement;
+			}
+
+			@Override
+			public double pidGet() {
+				return encoder.getPulses();
+			}
+		}, d -> {
+			motor.set(ControlMode.PercentOutput, (int) (d / 1023));
+		}, 5);
 		setManual(0);
 	}
 
@@ -161,4 +198,18 @@ public class Arm extends Subsystem {
 		return desiredPosition;
 	}
 
+	public void enableUpWpiPID() {
+		downPID.disable();
+		upPID.enable();
+	}
+
+	public void enableDownWpiPID() {
+		upPID.disable();
+		downPID.enable();
+	}
+
+	public void disableWpiPID() {
+		downPID.disable();
+		upPID.disable();
+	}
 }

@@ -7,11 +7,11 @@ import org.usfirst.frc.team1732.robot.util.Util;
 /**
  *
  */
-public class ArmSimpleControl extends NotifierCommand {
+public class ArmWPIControl extends NotifierCommand {
 
 	private final int position;
 
-	public ArmSimpleControl(int position) {
+	public ArmWPIControl(int position) {
 		super(5);
 		requires(Robot.arm);
 		this.position = position;
