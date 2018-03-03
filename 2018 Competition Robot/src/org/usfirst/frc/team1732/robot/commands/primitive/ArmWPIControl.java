@@ -21,15 +21,14 @@ public class ArmWPIControl extends NotifierCommand {
 	@Override
 	protected void init() {
 		System.out.println("Running arm simple control command");
-		Robot.arm.set(position);
 		int currentPosition = Robot.arm.getEncoderPulses();
 		if (currentPosition < position) {
 			Robot.arm.setManual(0.2);
-			Robot.arm.upGains.selectGains(Robot.arm.motor);
+			Robot.arm.enableUpWpiPID();
 			System.out.println("running up");
 		} else {
 			Robot.arm.setManual(-0.2);
-			Robot.arm.downGains.selectGains(Robot.arm.motor);
+			Robot.arm.enableDownWpiPID();
 			System.out.println("running down");
 		}
 		Robot.arm.set(position);
@@ -38,14 +37,14 @@ public class ArmWPIControl extends NotifierCommand {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void exec() {
-		int currentPosition = Robot.arm.getEncoderPulses();
+		// int currentPosition = Robot.arm.getEncoderPulses();
 		Util.logForGraphing("Arm Set Pos", Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
-				Robot.arm.motor.getClosedLoopError(0), Robot.arm.motor.getMotorOutputPercent());
-		if (currentPosition < position) {
-			Robot.arm.setManual(0.2);
-		} else {
-			Robot.arm.setManual(-0.2);
-		}
+				Robot.arm.upPID.getError(), Robot.arm.upPID.get(), Robot.arm.motor.getMotorOutputPercent());
+		// if (currentPosition < position) {
+		// Robot.arm.setManual(0.2);
+		// } else {
+		// Robot.arm.setManual(-0.2);
+		// }
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -58,7 +57,6 @@ public class ArmWPIControl extends NotifierCommand {
 	@Override
 	protected void whenEnded() {
 		System.out.println("Ending command");
-		Robot.arm.setManual(0);
 	}
 
 }

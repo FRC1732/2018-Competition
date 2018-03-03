@@ -36,8 +36,8 @@ public class Arm extends Subsystem {
 	private final int allowedError;
 	private final int distanceFromStartup = 0;
 
-	private final PIDController upPID;;
-	private final PIDController downPID;
+	public final PIDController upPID;;
+	public final PIDController downPID;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -78,7 +78,8 @@ public class Arm extends Subsystem {
 				return encoder.getPulses();
 			}
 		}, d -> {
-			motor.set(ControlMode.PercentOutput, (int) (d / 1023));
+			System.out.println(d);
+			motor.set(ControlMode.PercentOutput, d);
 		}, 5);
 		downPID = new PIDController(downGains.kP, downGains.kI, downGains.kD, downGains.kF, new PIDSource() {
 
@@ -96,7 +97,8 @@ public class Arm extends Subsystem {
 				return encoder.getPulses();
 			}
 		}, d -> {
-			motor.set(ControlMode.PercentOutput, (int) (d / 1023));
+			System.out.println(d);
+			motor.set(ControlMode.PercentOutput, d);
 		}, 5);
 		setManual(0);
 	}

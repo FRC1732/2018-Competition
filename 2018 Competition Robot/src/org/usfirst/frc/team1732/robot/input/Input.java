@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.input;
 
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmWPIControl;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -50,7 +50,7 @@ public class Input {
 		// Elevator.Positions.SCALE_HIGH));
 		// rocker.whenActive(new ElevatorRockerControl(rocker));
 
-		posIntake.whenPressed(new ArmSetPosition(-4000));
+		posIntake.whenPressed(new ArmWPIControl(-4000));
 		// posTuck.whenPressed(new ArmSetPosition(Arm.Positions.TUCK));
 		// posSwitch.whenPressed(new ArmSetPosition(Arm.Positions.SWITCH));
 		// posScaleLow.whenPressed(new ArmSetPosition(Arm.Positions.SCALE));
