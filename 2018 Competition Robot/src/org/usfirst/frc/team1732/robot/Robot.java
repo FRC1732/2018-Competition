@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
 		dash.add("Update Rate", this::getFps);
-		Debugger.enableDetailed();
+		Debugger.enableSimple();
 	}
 
 	/**
@@ -126,6 +126,7 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
+		chosenAuto = () -> new DriveDistance(70);
 		autoStarted = false;
 	}
 

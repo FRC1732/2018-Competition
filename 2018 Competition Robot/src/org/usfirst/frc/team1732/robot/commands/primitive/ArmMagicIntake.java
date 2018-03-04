@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
-import org.usfirst.frc.team1732.robot.Robot;
+import static org.usfirst.frc.team1732.robot.Robot.arm;
+
 import org.usfirst.frc.team1732.robot.subsystems.Arm.Positions;
 import org.usfirst.frc.team1732.robot.util.Util;
 
@@ -24,7 +25,7 @@ public class ArmMagicIntake extends CommandGroup {
 		private final ArmMagicIntake parentCommand;
 
 		public ArmMagicIntakeUntilButton(ArmMagicIntake parentCommand) {
-			requires(Robot.arm);
+			requires(arm);
 			this.parentCommand = parentCommand;
 		}
 
@@ -32,21 +33,21 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void initialize() {
 			System.out.println("Running arm intake command");
 			int position = Positions.INTAKE.value;
-			Robot.arm.useMagicControl(position);
-			Robot.arm.set(position);
+			arm.useMagicControl(position);
+			arm.set(position);
 		}
 
 		@Override
 		protected void execute() {
-			parentCommand.hitButton = Robot.arm.isButtonPressed();
-			Util.logForGraphing(Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
-					Robot.arm.motor.getClosedLoopTarget(0), Robot.arm.motor.getClosedLoopError(0),
-					Robot.arm.motor.getMotorOutputPercent());
+			parentCommand.hitButton = arm.isButtonPressed();
+			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
+					arm.motor.getClosedLoopTarget(0), arm.motor.getClosedLoopError(0),
+					arm.motor.getMotorOutputPercent());
 		}
 
 		@Override
 		protected boolean isFinished() {
-			return Robot.arm.atSetpoint(120) || parentCommand.hitButton;
+			return arm.atSetpoint(120) || parentCommand.hitButton;
 		}
 
 		@Override
@@ -65,7 +66,7 @@ public class ArmMagicIntake extends CommandGroup {
 		private int accumulatedPosition = 0;
 
 		public ArmUntilButton(ArmMagicIntake parentCommand) {
-			requires(Robot.arm);
+			requires(arm);
 			this.parentCommand = parentCommand;
 		}
 
@@ -73,19 +74,19 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void initialize() {
 			System.out.println("Running arm intake command 2");
 			accumulatedPosition = Positions.INTAKE.value;
-			Robot.arm.useMagicControl(accumulatedPosition);
-			Robot.arm.set(accumulatedPosition);
+			arm.useMagicControl(accumulatedPosition);
+			arm.set(accumulatedPosition);
 		}
 
 		@Override
 		protected void execute() {
-			Util.logForGraphing(Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
-					Robot.arm.motor.getClosedLoopTarget(0), Robot.arm.motor.getClosedLoopError(0),
-					Robot.arm.motor.getMotorOutputPercent());
-			Robot.arm.set(accumulatedPosition);
+			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
+					arm.motor.getClosedLoopTarget(0), arm.motor.getClosedLoopError(0),
+					arm.motor.getMotorOutputPercent());
+			arm.set(accumulatedPosition);
 			accumulatedPosition = accumulatedPosition - accumulationRate;
 			if (!parentCommand.hitButton) {
-				parentCommand.hitButton = Robot.arm.isButtonPressed();
+				parentCommand.hitButton = arm.isButtonPressed();
 			}
 		}
 
@@ -98,7 +99,7 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void end() {
 			System.out.println("ending arm intake command 2");
 			System.out.println("hit button: " + parentCommand.hitButton);
-			Robot.arm.set(Robot.arm.getEncoderPulses());
+			arm.set(arm.getEncoderPulses());
 		}
 
 	}

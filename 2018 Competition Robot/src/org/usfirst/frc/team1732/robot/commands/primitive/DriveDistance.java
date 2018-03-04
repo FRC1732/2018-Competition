@@ -29,7 +29,7 @@ public class DriveDistance extends Command {
 		l = left;
 		r = right;
 		// need to tune PIDs
-		trans = new PIDController(1.0 / 20, 0, 0.74, new DisplacementPIDSource() {
+		trans = new PIDController(1.0 / 10, 0, 0.74, new DisplacementPIDSource() {
 			@Override
 			public double pidGet() {
 				return (l.getPosition() + r.getPosition()) * 0.5;
