@@ -14,6 +14,7 @@ import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
+import org.usfirst.frc.team1732.robot.sensors.encoders.Tracking;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
@@ -48,6 +49,8 @@ public class Robot extends TimedRobot {
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
+	
+	public static Tracking traker;
 
 	// input
 	public static Input joysticks;
@@ -63,7 +66,7 @@ public class Robot extends TimedRobot {
 
 	private static double fps;
 
-	public double getFps() {
+	public static double getFps() {
 		return fps;
 	}
 
@@ -87,12 +90,17 @@ public class Robot extends TimedRobot {
 		sensors = new Sensors(robotConfig);
 
 		joysticks = new Input(robotConfig);
+		
+		traker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
 
 		defaultAuto = new DriveDistance(140);
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
-		dash.add("Update Rate", this::getFps);
+		dash.add("Update Rate", Robot::getFps);
+		dash.add("Robot x", traker::getX);
+		dash.add("Robot y", traker::getY);
+		dash.add("Robot heading", traker::getHeading);
 		Debugger.enableDetailed();
 	}
 
@@ -179,9 +187,10 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		Scheduler.getInstance().run();
 		fps = Timer.getFPGATimestamp() - last;
 		last = Timer.getFPGATimestamp();
+		Scheduler.getInstance().run();
+		traker.addPoint();
 	}
 
 	/**
