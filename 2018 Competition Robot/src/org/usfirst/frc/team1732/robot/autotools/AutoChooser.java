@@ -21,9 +21,7 @@ public final class AutoChooser {
 		}
 	}
 
-	private AutoChooser() {
-		Robot.joysticks.autoDial.addValueChangeListener(System.out::println);
-	}
+	private AutoChooser() {}
 
 	public static Command getSelectedAuto() {
 		return AutoModes.values()[Robot.joysticks.autoDial.get()].getCommand();

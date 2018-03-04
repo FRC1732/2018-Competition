@@ -19,7 +19,10 @@ public class Dial extends Joystick {
 			public void run() {
 				while (!this.isInterrupted()) {
 					int currentVal = get();
-					if (currentVal != prevVal) listeners.forEach(l -> l.valueChanged(currentVal));
+					if (currentVal != prevVal) {
+						listeners.forEach(l -> l.valueChanged(currentVal));
+						prevVal = currentVal;
+					}
 					synchronized (this) {
 						try {
 							Thread.sleep(Robot.PERIOD_MS);
