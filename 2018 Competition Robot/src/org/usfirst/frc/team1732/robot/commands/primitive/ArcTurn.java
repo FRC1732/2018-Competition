@@ -15,13 +15,15 @@ import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
 public class ArcTurn extends Command {
-	final double R, T, outerArcLength, innerArcLength, innerRatio, k = 0.1;
+	final double R, T, outerArcLength, innerArcLength, innerRatio, k = .2;// 0.13;
 	final int sign;
 	final boolean left;
 	EncoderReader l = drivetrain.getLeftEncoderReader(), r = drivetrain.getRightEncoderReader();
@@ -55,7 +57,7 @@ public class ArcTurn extends Command {
 		l.zero();
 		r.zero();
 		drivetrain.setBrake();
-		Debugger.logStart(this, "R = %.3f, T = %.3f", R, T);
+		Debugger.logStart(this, "R = %.3f, T = %.3f", R, Math.toDegrees(T));
 	}
 	protected void execute() {
 		double innerDist = left ? l.getPosition() : r.getPosition();
@@ -63,8 +65,8 @@ public class ArcTurn extends Command {
 		double percentDone = ((innerDist / innerArcLength) + (outerDist / outerArcLength)) / 2;
 		double expectedAngle = percentDone * T;
 		double angleError = g.getTotalAngle() - sign * toDegrees(expectedAngle);
-		double max = 0.6;
-		double speed = Util.limit(2 * (1 - percentDone), -1, 1);
+		double max = 0.8;
+		double speed = Util.limit(1.5 * (1 - percentDone), -1, 1);
 		double inner = max * (innerRatio * speed + sign * k * angleError), outer = max * speed;
 		if (left)
 			drivetrain.drive.tankDrive(inner, outer);
@@ -75,7 +77,9 @@ public class ArcTurn extends Command {
 		return abs(g.getTotalAngle() - sign * toDegrees(T)) <= 2;
 	}
 	protected void end() {
-		drivetrain.setStop();
-		Debugger.logEnd(this);
+		// drivetrain.setStop();
+		drivetrain.leftMaster.set(ControlMode.Velocity, 0);
+		drivetrain.rightMaster.set(ControlMode.Velocity, 0);
+		Debugger.logEnd(this, "T = %.3f", sign * g.getTotalAngle());
 	}
 }

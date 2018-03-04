@@ -13,7 +13,7 @@ public class PracticeConfig extends RobotConfig {
 		drivetrainConfig.enableVoltageCompensation = true;
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityPID.kP = 0;
+		drivetrainVelocityPID.kP = 0.2;
 		drivetrainVelocityPID.kI = 0;
 		drivetrainVelocityPID.kD = 0;
 		drivetrainVelocityPID.integralZone = 0;

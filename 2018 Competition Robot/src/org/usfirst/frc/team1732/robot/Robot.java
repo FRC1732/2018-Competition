@@ -10,6 +10,8 @@ package org.usfirst.frc.team1732.robot;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArcTurn;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArcTurn.ArcTurnCalculation;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
@@ -26,6 +28,7 @@ import org.usfirst.frc.team1732.robot.util.Debugger;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -126,7 +129,12 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-		chosenAuto = () -> new DriveDistance(70);
+		chosenAuto = () -> new CommandGroup() {
+			{
+				// addSequential(new DriveDistanceNoStop(280 - drivetrain.robotLength * 2, 0.5));
+				addSequential(new ArcTurn(drivetrain.robotLength, 30, ArcTurnCalculation.HEIGHT_THETA, true));
+			}
+		};
 		autoStarted = false;
 	}
 
