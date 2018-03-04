@@ -25,8 +25,8 @@ public class TestVelocityFollowing extends Command {
 	@Override
 	protected void initialize() {
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
-		Robot.drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(leftVel));
-		Robot.drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(rightVel));
+		Robot.drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpointToSensorUnits(leftVel));
+		Robot.drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpointToSensorUnits(rightVel));
 	}
 
 	// Called repeatedly when this Command is scheduled to run

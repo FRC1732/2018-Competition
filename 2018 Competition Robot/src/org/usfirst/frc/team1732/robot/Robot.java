@@ -11,8 +11,11 @@ import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
-import org.usfirst.frc.team1732.robot.commands.testing.TestMotors;
+import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
+import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
+import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.sensors.encoders.Tracking;
@@ -24,8 +27,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 import org.usfirst.frc.team1732.robot.util.Debugger;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -139,7 +141,14 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-		chosenAuto = () -> new TestMotors(1, 1, NeutralMode.Coast, 0.5);
+		Path path = new Path(new Waypoint(0, 0, Math.PI / 2, 0), true);
+		path.addWaypoint(new Waypoint(0, 100, Math.PI / 2, 0));
+		double maxVel = drivetrain.convertVelocitySensorUnitsToInSec(drivetrain.maxUnitsPer100Ms);
+		double maxAccel = maxVel * 2;
+		path.generateProfile(maxVel * 0.8, maxAccel * 0.3);
+		Util.logForGraphing("Profile param: ", maxVel * 0.8, maxAccel * 0.3);
+		PointProfile profile = path.getVelocityProfile(drivetrain.effectiveRobotWidth);
+		chosenAuto = () -> new FollowVelocityPath(profile);
 		autoStarted = false;
 	}
 

@@ -8,14 +8,15 @@ public class PracticeConfig extends RobotConfig {
 		// drivetrain
 		effectiveRobotWidth = 28.1877; // calculate
 		drivetrainInchesPerPulse = 136 / 70679.5; // calculate
-		maxUnitsPer100Ms = 0; // measure
+		maxUnitsPer100Ms = 7500; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityPID.kP = 0.2;
+		drivetrainVelocityPID.kP = 0.4;
 		drivetrainVelocityPID.kI = 0;
 		drivetrainVelocityPID.kD = 0;
+		drivetrainVelocityPID.kF = 1023 / 7500;
 		drivetrainVelocityPID.integralZone = 0;
 		drivetrainVelocityPID.allowableError = 0;
 		drivetrainVelocityPID.maxIntegralAccumulated = 0;

@@ -408,7 +408,8 @@ public final class Path {
 				double endCurvature = currentSegment.curve
 						.getCurvatureAtArcLength(Math.abs(currentEndState.pos()) - segmentLengthSum);
 				double endArcLength = Math.abs(currentEndState.pos()) - segmentLengthSum;
-				double endVel = profile.velocityByTimeClamped((i) * pointDurationSec);
+				double endVel = currentEndState.vel();
+				// double endVel = profile.velocityByTimeClamped((i) * pointDurationSec);
 				double endHeading = Math.toDegrees(currentSegment.curve.getHeadingAtArcLength(endArcLength));
 
 				leftPoint.headingDeg = endHeading;

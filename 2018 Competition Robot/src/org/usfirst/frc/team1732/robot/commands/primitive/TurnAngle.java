@@ -117,11 +117,11 @@ public class TurnAngle extends NotifierCommand {
 
 		if (Util.epsilonEquals(goalAngle, currentHeading, ANGLE_DEADBAND + 0.5)) {
 			Debugger.logDetailedInfo("trying to stop robot");
-			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(0));
-			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(0));
+			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpointToSensorUnits(0));
+			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpointToSensorUnits(0));
 		} else {
-			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(vel));
-			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(-vel));
+			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpointToSensorUnits(vel));
+			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpointToSensorUnits(-vel));
 		}
 		// drivetrain.leftTalon1.set(ControlMode.Velocity,
 		// drivetrain.convertVelocitySetpoint(headingAdjustment));
