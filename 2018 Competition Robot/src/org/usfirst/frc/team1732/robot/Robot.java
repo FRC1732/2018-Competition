@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
+import org.usfirst.frc.team1732.robot.commands.testing.TestMotors;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -23,6 +24,8 @@ import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 import org.usfirst.frc.team1732.robot.util.Debugger;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -97,10 +100,13 @@ public class Robot extends TimedRobot {
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
+		sensors.navx.addToDashboard();
+
 		dash.add("Update Rate", Robot::getFps);
 		dash.add("Robot x", traker::getX);
 		dash.add("Robot y", traker::getY);
 		dash.add("Robot heading", traker::getHeading);
+
 		Debugger.enableDetailed();
 	}
 
@@ -134,7 +140,7 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-
+		chosenAuto = () -> new TestMotors(1, 1, NeutralMode.Coast, 0.5);
 		autoStarted = false;
 	}
 

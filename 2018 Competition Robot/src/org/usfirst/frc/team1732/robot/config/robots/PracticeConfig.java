@@ -6,7 +6,7 @@ public class PracticeConfig extends RobotConfig {
 
 	{
 		// drivetrain
-		effectiveRobotWidth = robotWidth; // calculate
+		effectiveRobotWidth = 28.1877; // calculate
 		drivetrainInchesPerPulse = 136 / 70679.5; // calculate
 		maxUnitsPer100Ms = 0; // measure
 		// drivetrainConfig. Change stuff like this:
