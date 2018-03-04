@@ -38,9 +38,9 @@ public class Input {
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
 		JoystickButton limelightToggle = new JoystickButton(left, 2);
-
-		JoystickButton magicElevator = new JoystickButton(buttons, 1);
-		JoystickButton magicArm = new JoystickButton(buttons, 11);
+		//
+		// JoystickButton magicElevator = new JoystickButton(buttons, 1);
+		// JoystickButton magicArm = new JoystickButton(buttons, 11);
 
 		// magicArm.whenPressed(new ArmMagicPosition(-5000));
 		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));
@@ -52,7 +52,6 @@ public class Input {
 		posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
 		posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 		rocker.whenActive(new ElevatorRockerControl(rocker));
-
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
@@ -77,7 +76,7 @@ public class Input {
 		return -right.getRawAxis(1);
 	}
 
-	public boolean isReversed() {
-		return buttons.getRawButton(5);
-	}
+	// public boolean isReversed() {
+	// return buttons.getRawButton(5);
+	// }
 }
