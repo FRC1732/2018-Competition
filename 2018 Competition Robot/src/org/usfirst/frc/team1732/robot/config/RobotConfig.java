@@ -108,6 +108,7 @@ public class RobotConfig {
 	public final int leftJoystickPort = 0;
 	public final int rightJoystickPort = 1;
 	public final int buttonJoystickPort = 2;
+	public final int dialJoystickPort = 3;
 
 	public static enum ROBOTS {
 		DEFAULT(RobotConfig::new), COMPETITION(CompetitionConfig::new), PRACTICE(PracticeConfig::new);
