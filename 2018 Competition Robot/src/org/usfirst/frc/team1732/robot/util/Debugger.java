@@ -6,10 +6,10 @@ public class Debugger {
 	private static Mode mode = Mode.OFF;
 
 	// ----- SIMPLE INFO -----
-	public static void logSimpleInfo(Command c, String info) {
-		println(c, info, Mode.SIMPLE);
+	public static void logSimpleInfo(Command c, Object info) {
+		println(c, info.toString(), Mode.SIMPLE);
 	}
-	public static void logSimpleInfo(String info) {
+	public static void logSimpleInfo(Object info) {
 		logSimpleInfo(null, info);
 	}
 	public static void logSimpleInfo(Command c, String format, Object... args) {
@@ -19,8 +19,8 @@ public class Debugger {
 		logSimpleInfo(null, format, args);
 	}
 	// ----- LOG START -----
-	public static void logStart(Command c, String info) {
-		logSimpleInfo(c, "Starting " + info);
+	public static void logStart(Command c, Object info) {
+		logSimpleInfo(c, "Starting " + info.toString());
 	}
 	public static void logStart(Command c) {
 		logStart(c, "");
@@ -29,8 +29,8 @@ public class Debugger {
 		logStart(c, String.format(format, args));
 	}
 	// ----- LOG END -----
-	public static void logEnd(Command c, String info) {
-		logSimpleInfo(c, "Finished " + info);
+	public static void logEnd(Command c, Object info) {
+		logSimpleInfo(c, "Finished " + info.toString());
 	}
 	public static void logEnd(Command c) {
 		logEnd(c, "");
@@ -39,10 +39,10 @@ public class Debugger {
 		logEnd(c, String.format(format, args));
 	}
 	// ----- DETAILED INFO -----
-	public static void logDetailedInfo(Command c, String info) {
-		println(c, info, Mode.DETAILED);
+	public static void logDetailedInfo(Command c, Object info) {
+		println(c, info.toString(), Mode.DETAILED);
 	}
-	public static void logDetailedInfo(String info) {
+	public static void logDetailedInfo(Object info) {
 		logDetailedInfo(null, info);
 	}
 	public static void logDetailedInfo(Command c, String format, Object... args) {

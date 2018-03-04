@@ -21,6 +21,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -92,6 +93,7 @@ public class Robot extends TimedRobot {
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
 		dash.add("Update Rate", this::getFps);
+		Debugger.enableDetailed();
 	}
 
 	/**
@@ -186,14 +188,11 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during the robot mode.
 	 */
 	@Override
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 
 	@Override
-	public void disabledPeriodic() {
-	}
+	public void disabledPeriodic() {}
 
 	@Override
-	public void teleopPeriodic() {
-	}
+	public void teleopPeriodic() {}
 }

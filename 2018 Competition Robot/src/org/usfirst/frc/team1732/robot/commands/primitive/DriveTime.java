@@ -2,6 +2,8 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
 
+import org.usfirst.frc.team1732.robot.util.Debugger;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -19,6 +21,7 @@ public class DriveTime extends Command {
 	protected void initialize() {
 		drivetrain.drive.tankDrive(S, S);
 		drivetrain.setBrake();
+		Debugger.logStart(this, "S = %.2f, T = %.2f", S, T);
 		super.setTimeout(T);
 	}
 	protected boolean isFinished() {
@@ -26,5 +29,6 @@ public class DriveTime extends Command {
 	}
 	protected void end() {
 		drivetrain.setStop();
+		Debugger.logEnd(this);
 	}
 }

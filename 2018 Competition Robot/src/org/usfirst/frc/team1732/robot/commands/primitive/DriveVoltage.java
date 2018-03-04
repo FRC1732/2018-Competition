@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -25,5 +26,6 @@ public class DriveVoltage extends InstantCommand {
 		Robot.drivetrain.setNeutralMode(mode);
 		Robot.drivetrain.setLeft(leftVolt);
 		Robot.drivetrain.setRight(rightVolt);
+		Debugger.logStart(this, "Left: %.2f   Right: %.2f", leftVolt, rightVolt);
 	}
 }

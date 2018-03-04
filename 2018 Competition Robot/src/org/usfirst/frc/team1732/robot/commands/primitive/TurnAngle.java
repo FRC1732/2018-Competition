@@ -2,14 +2,16 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
 
+import java.util.function.Supplier;
+
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.NotifierCommand;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -25,27 +27,24 @@ public class TurnAngle extends NotifierCommand {
 	private static final double endMinVel = 8;
 	private static final double endMaxVel = 30;
 
+	private final Supplier<Double> angle;
 	private final Timer deadbandTimer;
 	private boolean inDeadband = false;
-	private final double goalAngle;
-	private final double maxVel;
-	private final double k;
+	private double goalAngle;
+	private double maxVel;
+	private double k;
 	private GyroReader navx;
 	private double endZone = 20;
 
-	public TurnAngle(double angle) {
+	public TurnAngle(Supplier<Double> a) {
 		super(5);
-		requires(Robot.drivetrain);
-		deadbandTimer = new Timer();
-		deadbandTimer.reset();
-		deadbandTimer.stop();
-		this.goalAngle = angle;
-		drivetrain.setNeutralMode(NeutralMode.Brake);
+		requires(drivetrain);
 		navx = Robot.sensors.navx.makeReader();
-		this.maxVel = Math.abs(angle) * 2.5 / 3.0;
-		this.k = Math.PI * 2 / (Math.abs(angle));
-		endZone = (25 * 90) / (60) * (maxVel / angle);
-		System.out.println("Endzone : " + endZone);
+		deadbandTimer = new Timer();
+		angle = a;
+	}
+	public TurnAngle(double angle) {
+		this(() -> angle);
 	}
 
 	private double getVelocity(double angle) {
@@ -54,13 +53,21 @@ public class TurnAngle extends NotifierCommand {
 
 	@Override
 	protected void init() {
+		double a = angle.get();
+		deadbandTimer.reset();
+		deadbandTimer.stop();
+		this.goalAngle = a;
+		this.maxVel = Math.abs(a) * 2.5 / 3.0;
+		this.k = Math.PI * 2 / (Math.abs(a));
+		endZone = (25 * 90) / (60) * (maxVel / a);
 		navx.zero();
-		System.out.println("Turn to angle started");
 		// pid.setSetpoint(goalAngle);
-		Robot.drivetrain.setNeutralMode(NeutralMode.Brake);
-		ClosedLoopProfile gains = Robot.drivetrain.velocityGains.clone();
+		drivetrain.setBrake();
+		ClosedLoopProfile gains = drivetrain.velocityGains.clone();
 		gains.kP = 0.3;
-		gains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
+		gains.selectGains(drivetrain.leftMaster, drivetrain.rightMaster);
+		Debugger.logStart(this, goalAngle + " degrees");
+		Debugger.logDetailedInfo("Endzone : " + endZone);
 	}
 
 	@Override
@@ -73,18 +80,18 @@ public class TurnAngle extends NotifierCommand {
 
 		// bump start vel
 		if (Math.abs(currentHeading) < Math.abs(goalAngle / 2) && Math.abs(vel) < startMinVel) {
-			System.out.println("bumping start velocity");
+			Debugger.logDetailedInfo("bumping start velocity");
 			vel = startMinVel * Math.signum(headingError);
 		}
 
 		if (Math.abs(currentHeading) > Math.abs(goalAngle / 2) && Math.abs(vel) < endMinVel) {
 			vel = endMinVel * Math.signum(headingError);
-			System.out.println("bumping end velocity");
+			Debugger.logDetailedInfo("bumping end velocity");
 		}
 
 		if (Math.abs(currentHeading) > Math.abs(goalAngle - endZone * Math.signum(goalAngle))
 				&& Math.abs(vel) > endMaxVel) {
-			System.out.println("capping end velocity");
+			Debugger.logDetailedInfo("capping end velocity");
 			vel = endMaxVel * Math.signum(headingError);
 		}
 
@@ -111,17 +118,17 @@ public class TurnAngle extends NotifierCommand {
 		// }
 
 		if (Util.epsilonEquals(goalAngle, currentHeading, ANGLE_DEADBAND + 0.5)) {
-			System.out.println("trying to stop robot");
-			drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(0));
-			drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(0));
+			Debugger.logDetailedInfo("trying to stop robot");
+			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(0));
+			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(0));
 		} else {
-			drivetrain.leftMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(vel));
-			drivetrain.rightMaster.set(ControlMode.Velocity, Robot.drivetrain.convertVelocitySetpoint(-vel));
+			drivetrain.leftMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(vel));
+			drivetrain.rightMaster.set(ControlMode.Velocity, drivetrain.convertVelocitySetpoint(-vel));
 		}
 		// drivetrain.leftTalon1.set(ControlMode.Velocity,
-		// Robot.drivetrain.convertVelocitySetpoint(headingAdjustment));
+		// drivetrain.convertVelocitySetpoint(headingAdjustment));
 		// drivetrain.rightTalon1.set(ControlMode.Velocity,
-		// Robot.drivetrain.convertVelocitySetpoint(-headingAdjustment));
+		// drivetrain.convertVelocitySetpoint(-headingAdjustment));
 
 		if (!inDeadband && Math.abs(goalAngle - currentHeading) < ANGLE_DEADBAND) {
 			deadbandTimer.start();
@@ -131,13 +138,13 @@ public class TurnAngle extends NotifierCommand {
 			deadbandTimer.reset();
 			deadbandTimer.stop();
 		}
-		System.out.println("angle: " + currentHeading + " " + headingError + " "
+		Debugger.logDetailedInfo("angle: " + currentHeading + " " + headingError + " "
 				+ (Math.abs(headingError) < ANGLE_DEADBAND) + " " + headingAdjustment);
-		System.out.println("left: " + Robot.drivetrain.leftMaster.getClosedLoopError(0) + " "
-				+ Robot.drivetrain.leftMaster.getClosedLoopTarget(0) + " " + vel);
-		System.out.println("right: " + Robot.drivetrain.rightMaster.getClosedLoopError(0) + " "
-				+ Robot.drivetrain.rightMaster.getClosedLoopTarget(0) + " " + -vel);
-		System.out.println();
+		Debugger.logDetailedInfo("left: " + drivetrain.leftMaster.getClosedLoopError(0) + " "
+				+ drivetrain.leftMaster.getClosedLoopTarget(0) + " " + vel);
+		Debugger.logDetailedInfo("right: " + drivetrain.rightMaster.getClosedLoopError(0) + " "
+				+ drivetrain.rightMaster.getClosedLoopTarget(0) + " " + -vel);
+		Debugger.logDetailedInfo("");
 	}
 
 	@Override
@@ -147,7 +154,7 @@ public class TurnAngle extends NotifierCommand {
 
 	@Override
 	protected void whenEnded() {
-		System.out.println("Turn to angle finished");
 		drivetrain.setStop();
+		Debugger.logEnd(this);
 	}
 }
