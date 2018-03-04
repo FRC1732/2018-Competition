@@ -10,12 +10,11 @@ package org.usfirst.frc.team1732.robot;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArcTurn;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArcTurn.ArcTurnCalculation;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
+import org.usfirst.frc.team1732.robot.sensors.encoders.Tracking;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
@@ -28,7 +27,6 @@ import org.usfirst.frc.team1732.robot.util.Debugger;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -52,6 +50,8 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Sensors sensors;
 
+	public static Tracking traker;
+
 	// input
 	public static Input joysticks;
 
@@ -64,13 +64,13 @@ public class Robot extends TimedRobot {
 	private Command defaultAuto;
 	private Supplier<Command> chosenAuto;
 
-	private static double fps;
+	private static double executionPeriod;
 
-	public double getFps() {
-		return fps;
+	public static double getFps() {
+		return executionPeriod;
 	}
 
-	private double last;
+	private double lastTimestamp;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -91,11 +91,16 @@ public class Robot extends TimedRobot {
 
 		joysticks = new Input(robotConfig);
 
-		defaultAuto = new DriveDistance(140);
+		traker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
+
+		defaultAuto = new DriveDistance(0);
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
-		dash.add("Update Rate", this::getFps);
+		dash.add("Update Rate", Robot::getFps);
+		dash.add("Robot x", traker::getX);
+		dash.add("Robot y", traker::getY);
+		dash.add("Robot heading", traker::getHeading);
 		Debugger.enableSimple();
 	}
 
@@ -129,12 +134,6 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-		chosenAuto = () -> new CommandGroup() {
-			{
-				// addSequential(new DriveDistanceNoStop(280 - drivetrain.robotLength * 2, 0.5));
-				addSequential(new ArcTurn(drivetrain.robotLength, 30, ArcTurnCalculation.HEIGHT_THETA, true));
-			}
-		};
 		autoStarted = false;
 	}
 
@@ -188,9 +187,10 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
+		executionPeriod = Timer.getFPGATimestamp() - lastTimestamp;
+		lastTimestamp = Timer.getFPGATimestamp();
 		Scheduler.getInstance().run();
-		fps = Timer.getFPGATimestamp() - last;
-		last = Timer.getFPGATimestamp();
+		traker.addPoint();
 	}
 
 	/**

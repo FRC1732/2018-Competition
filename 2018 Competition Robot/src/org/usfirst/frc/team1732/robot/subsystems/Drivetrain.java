@@ -40,8 +40,8 @@ public class Drivetrain extends Subsystem {
 	private final VictorSPX rightVictor1;
 	private final VictorSPX rightVictor2;
 
-	private final TalonEncoder leftEncoder;
-	private final TalonEncoder rightEncoder;
+	public final TalonEncoder leftEncoder;
+	public final TalonEncoder rightEncoder;
 
 	public final DifferentialDrive drive;
 

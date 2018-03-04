@@ -5,7 +5,6 @@ import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.NotifierCommand;
@@ -43,6 +42,7 @@ public class TurnAngle extends NotifierCommand {
 		deadbandTimer = new Timer();
 		angle = a;
 	}
+
 	public TurnAngle(double angle) {
 		this(() -> angle);
 	}
@@ -63,9 +63,7 @@ public class TurnAngle extends NotifierCommand {
 		navx.zero();
 		// pid.setSetpoint(goalAngle);
 		drivetrain.setBrake();
-		ClosedLoopProfile gains = drivetrain.velocityGains.clone();
-		gains.kP = 0.3;
-		gains.selectGains(drivetrain.leftMaster, drivetrain.rightMaster);
+		Robot.drivetrain.velocityGains.selectGains(drivetrain.leftMaster, drivetrain.rightMaster);
 		Debugger.logStart(this, goalAngle + " degrees");
 		Debugger.logDetailedInfo("Endzone : " + endZone);
 	}
