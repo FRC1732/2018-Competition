@@ -10,6 +10,7 @@ package org.usfirst.frc.team1732.robot;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
@@ -55,6 +56,10 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Sensors sensors;
 
+	// paths
+	public static Paths paths;
+
+	// tracking
 	public static Tracking traker;
 
 	// input
@@ -93,6 +98,8 @@ public class Robot extends TimedRobot {
 		elevator = new Elevator(robotConfig);
 		climber = new Climber(robotConfig);
 		sensors = new Sensors(robotConfig);
+
+		paths = new Paths();
 
 		joysticks = new Input(robotConfig);
 
