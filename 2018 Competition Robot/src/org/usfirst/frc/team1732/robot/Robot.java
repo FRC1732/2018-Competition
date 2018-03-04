@@ -106,8 +106,7 @@ public class Robot extends TimedRobot {
 		dash.add("Robot x", traker::getX);
 		dash.add("Robot y", traker::getY);
 		dash.add("Robot heading", traker::getHeading);
-
-		Debugger.enableDetailed();
+		Debugger.enableSimple();
 	}
 
 	/**

@@ -48,6 +48,9 @@ public class DriveDistanceNoStop extends Command {
 		drivetrain.drive.arcadeDrive(Util.cerp(1, endSpeed, percentDone), rot.get(), false);
 	}
 	protected boolean isFinished() {
-		return ((l.getPosition() + r.getPosition()) / 2) > distance;
+		return ((l.getPosition() + r.getPosition()) / 2) >= distance;
+	}
+	protected void end() {
+		Debugger.logEnd(this, (l.getPosition() + r.getPosition()) / 2);
 	}
 }
