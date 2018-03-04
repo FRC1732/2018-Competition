@@ -70,7 +70,7 @@ public class Debugger {
 	private enum Mode {
 		OFF(0), SIMPLE(1), DETAILED(2);
 
-		public int val;
+		public final int val;
 
 		private Mode(int n) {
 			val = n;
