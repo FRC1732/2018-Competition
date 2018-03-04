@@ -198,6 +198,7 @@ public class Robot extends TimedRobot {
 					defaultAuto.start();
 				} else {
 					System.out.println("Game data received. Starting chosen auto.");
+					// AutoChooser.getSelectedAuto().start();
 					chosenAuto.get().start();
 				}
 			} else {

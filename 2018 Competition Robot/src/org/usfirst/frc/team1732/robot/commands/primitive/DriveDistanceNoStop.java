@@ -51,6 +51,6 @@ public class DriveDistanceNoStop extends Command {
 		return ((l.getPosition() + r.getPosition()) / 2) >= distance;
 	}
 	protected void end() {
-		Debugger.logEnd(this, (l.getPosition() + r.getPosition()) / 2);
+		Debugger.logEnd(this, "%.2f inches", (l.getPosition() + r.getPosition()) / 2);
 	}
 }
