@@ -38,23 +38,24 @@ public class Elevator extends Subsystem {
 
 	private ControlMode controlMode = ControlMode.Position;
 
+	private final int magicVel;
+	private final int magicAccel;
+
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
 		upGains = config.elevatorUpPID;
 		downGains = config.elevatorDownPID;
-		magicGains = config.armMagicPID;
+		magicGains = config.elevatorMagicPID;
 
 		upGains.applyToTalon(motor);
 		downGains.applyToTalon(motor);
 		magicGains.applyToTalon(motor);
 
-		motor.configMotionCruiseVelocity(config.elevatorMagicVel, Robot.CONFIG_TIMEOUT);
-		motor.configMotionAcceleration(config.elevatorMagicAccel, Robot.CONFIG_TIMEOUT);
+		magicVel = config.elevatorMagicVel;
+		magicAccel = config.elevatorMagicAccel;
+		motor.configMotionCruiseVelocity(magicVel, Robot.CONFIG_TIMEOUT);
+		motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
 
-		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
-		// motor);
-		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
-		// 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		encoder.setPhase(config.reverseElevatorSensor);
 
@@ -83,8 +84,8 @@ public class Elevator extends Subsystem {
 
 		// 3311
 		// set these in pulses
-		MIN(3311), START(3311), INTAKE(4588), SWITCH(24713), RADIO(14904), SCALE_LOW(14904), SCALE_HIGH(22137), MAX(
-				33463);
+		MIN(3011), START(3311), INTAKE(3311), SWITCH(24713), RADIO(14904), SCALE_LOW(14904), HIT_RAMP(
+				14357), SCALE_HIGH(22137), MAX(33463);
 
 		private final int value;
 
@@ -119,11 +120,6 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(int position) {
-		position = getValue(position);
-		setRawPosition(position);
-	}
-
-	private void setRawPosition(int position) {
 		if (position < getValue(Positions.MIN)) {
 			position = getValue(Positions.MIN);
 		}
@@ -138,7 +134,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(Positions position) {
-		set(position.value);
+		set(getValue(position));
 	}
 
 	public void setManual(double percentVolt) {
@@ -147,7 +143,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void holdPosition() {
-		setRawPosition(encoder.getPulses());
+		set(encoder.getPulses());
 	}
 
 	public int getDesiredPosition() {
@@ -164,18 +160,32 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPulses() - allowedError > getValue(Positions.RADIO);
+		return encoder.getPulses() + allowedError > getValue(Positions.RADIO);
+	}
+
+	public boolean isArmSafeToGoDown() {
+		return encoder.getPulses() - allowedError < getValue(Positions.HIT_RAMP);
 	}
 
 	public int getEncoderPulses() {
 		return encoder.getPulses();
 	}
 
-	public void usePositionControl() {
+	public void usePositionControl(int desiredPosition) {
 		controlMode = ControlMode.Position;
+		int currentPosition = encoder.getPulses();
+		if (currentPosition < desiredPosition) {
+			upGains.selectGains(motor);
+			System.out.println("using up elevator position gains");
+		} else {
+			downGains.selectGains(motor);
+			System.out.println("using down elevator position gains");
+		}
 	}
 
-	public void useMagicControl() {
+	public void useMagicControl(int desiredPosition) {
 		controlMode = ControlMode.MotionMagic;
+		// int currentPosition = encoder.getPulses();
+		magicGains.selectGains(motor);
 	}
 }

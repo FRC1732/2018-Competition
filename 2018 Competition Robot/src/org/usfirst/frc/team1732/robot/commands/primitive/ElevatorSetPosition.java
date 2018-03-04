@@ -27,16 +27,7 @@ public class ElevatorSetPosition extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("Running eleavtor set command");
-		double currentPosition = Robot.elevator.getEncoderPulses();
-		// Robot.arm.magicGains.selectGains(Robot.arm.motor);
-		if (currentPosition < position) {
-			Robot.elevator.upGains.selectGains(Robot.elevator.motor);
-			System.out.println("using up elevator gains");
-		} else {
-			Robot.elevator.downGains.selectGains(Robot.elevator.motor);
-			System.out.println("using down elevator gains");
-		}
-		Robot.elevator.usePositionControl();
+		Robot.elevator.usePositionControl(position);
 		Robot.elevator.set(position);
 	}
 

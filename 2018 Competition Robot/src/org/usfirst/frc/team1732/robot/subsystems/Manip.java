@@ -30,7 +30,8 @@ public class Manip extends Subsystem {
 	}
 
 	@Override
-	public void initDefaultCommand() {}
+	public void initDefaultCommand() {
+	}
 
 	// might end up using a sensor for this
 	public boolean aboveStopCurrent() {

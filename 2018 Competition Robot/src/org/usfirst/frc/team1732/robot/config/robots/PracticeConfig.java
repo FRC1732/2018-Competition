@@ -11,7 +11,7 @@ public class PracticeConfig extends RobotConfig {
 		maxUnitsPer100Ms = 0; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
-		drivetrainConfig.openLoopRamp = 0.5;
+		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
 		drivetrainVelocityPID.kP = 0;
 		drivetrainVelocityPID.kI = 0;
@@ -35,14 +35,14 @@ public class PracticeConfig extends RobotConfig {
 		armDownPID.integralZone = 0;
 		armDownPID.maxIntegralAccumulated = 0;
 
-		armMagicVel = 0;
-		armMagicAccel = 0;
-		armMagicPID.kF = 0;
-		armMagicPID.kP = 0;
-		armMagicPID.kI = 0;
+		armMagicVel = 1203;
+		armMagicAccel = 1200;
+		armMagicPID.kF = 1023 / 1378; // 1023 / max sensor units per 100 ms
+		armMagicPID.kP = 4.1;
+		armMagicPID.kI = 0.1;
 		armMagicPID.kD = 0;
-		armMagicPID.integralZone = 0;
-		armMagicPID.maxIntegralAccumulated = 0;
+		armMagicPID.integralZone = 100;
+		armMagicPID.maxIntegralAccumulated = 100;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
@@ -58,10 +58,10 @@ public class PracticeConfig extends RobotConfig {
 		elevatorDownPID.integralZone = 0;
 		elevatorDownPID.maxIntegralAccumulated = 0;
 
-		elevatorMagicVel = 0;
-		elevatorMagicAccel = 0;
-		elevatorMagicPID.kF = 0;
-		elevatorMagicPID.kP = 0;
+		elevatorMagicVel = 3000;
+		elevatorMagicAccel = 4000;
+		elevatorMagicPID.kF = 1023 / 4366; // 1023 / max sensor units per 100 ms
+		elevatorMagicPID.kP = 1.2;
 		elevatorMagicPID.kI = 0;
 		elevatorMagicPID.kD = 0;
 		elevatorMagicPID.integralZone = 0;

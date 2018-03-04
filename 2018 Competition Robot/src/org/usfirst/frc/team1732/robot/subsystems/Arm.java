@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -24,9 +25,9 @@ public class Arm extends Subsystem {
 	public final TalonSRX motor;
 	private final TalonEncoder encoder;
 
-	public final ClosedLoopProfile magicGains;
-	public final ClosedLoopProfile upGains;
-	public final ClosedLoopProfile downGains;
+	private final ClosedLoopProfile magicGains;
+	private final ClosedLoopProfile upGains;
+	private final ClosedLoopProfile downGains;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
@@ -39,6 +40,11 @@ public class Arm extends Subsystem {
 
 	private ControlMode controlMode = ControlMode.Position;
 
+	private final int magicVel;
+	private final int magicAccel;
+
+	private final DigitalInput button;
+
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
 		upGains = config.armUpPID;
@@ -49,13 +55,11 @@ public class Arm extends Subsystem {
 		downGains.applyToTalon(motor);
 		magicGains.applyToTalon(motor);
 
-		motor.configMotionCruiseVelocity(config.armMagicVel, Robot.CONFIG_TIMEOUT);
-		motor.configMotionAcceleration(config.armMagicAccel, Robot.CONFIG_TIMEOUT);
+		magicVel = config.armMagicVel;
+		magicAccel = config.armMagicAccel;
+		motor.configMotionCruiseVelocity(magicVel, Robot.CONFIG_TIMEOUT);
+		motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
 
-		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
-		// motor);
-		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
-		// 1, motor);
 		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
 		encoder.setPhase(config.reverseArmSensor);
 
@@ -69,7 +73,7 @@ public class Arm extends Subsystem {
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
 
-		setManual(0);
+		button = new DigitalInput(1);
 	}
 
 	public int getValue(int oldPos) {
@@ -83,7 +87,8 @@ public class Arm extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		MIN(-8551), INTAKE(-8334), SWITCH(-8334), TUCK(-4641), MAX_LOW(-1969), START(-2332), SCALE(-427), MAX(-427);
+		BUTTON_POS(-6577), INTAKE(-6577), SWITCH(-6577), AVOID_RAMP(-1911), TUCK(-383), MAX_LOW(-403), START(
+				-413), SCALE(1030);
 
 		private final int value;
 
@@ -97,11 +102,12 @@ public class Arm extends Subsystem {
 	@Override
 	public void periodic() {
 		// Util.logForGraphing(Robot.arm.getEncoderPulses(),
-		// Robot.arm.motor.getSensorCollection().getPulseWidthPosition(),
-		// Robot.arm.getDesiredPosition(), Robot.arm.motor.getClosedLoopError(0),
+		// Robot.arm.getDesiredPosition(),
+		// Robot.arm.motor.getClosedLoopTarget(0),
+		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-		// System.out.println("Arm Encoder: " +
-		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+		if (isButtonPressed())
+			motor.setSelectedSensorPosition(getValue(Positions.BUTTON_POS), 0, Robot.CONFIG_TIMEOUT);
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
 		distanceFromStartup = startingCount - Positions.START.value;
@@ -110,6 +116,12 @@ public class Arm extends Subsystem {
 				motor.set(controlMode, getValue(Positions.TUCK));
 				desiredIsSet = false;
 			}
+			// if (desiredPosition < getValue(Positions.AVOID_RAMP) &&
+			// !Robot.elevator.isArmSafeToGoDown()
+			// && desiredIsSet) {
+			// motor.set(controlMode, getValue(Positions.AVOID_RAMP) + 100);
+			// desiredIsSet = false;
+			// }
 			if (Robot.elevator.isArmSafeToGoUp() && !desiredIsSet) {
 				motor.set(controlMode, desiredPosition);
 				desiredIsSet = true;
@@ -122,17 +134,6 @@ public class Arm extends Subsystem {
 	}
 
 	public void set(int position) {
-		position = getValue(position);
-		setRawPosition(position);
-	}
-
-	private void setRawPosition(int position) {
-		if (position < getValue(Positions.MIN)) {
-			position = getValue(Positions.MIN);
-		}
-		if (position > getValue(Positions.MAX)) {
-			position = getValue(Positions.MAX);
-		}
 		desiredPosition = position;
 		desiredIsSet = true;
 		motor.set(controlMode, position);
@@ -140,18 +141,15 @@ public class Arm extends Subsystem {
 		autoControl = true;
 	}
 
-	public void set(Positions position) {
-		set(position.value);
-	}
-
 	public void setManual(double percentVolt) {
-		// System.out.println("Manual control" + percentVolt);
+		System.out.println("Manual control" + percentVolt);
 		motor.set(ControlMode.PercentOutput, percentVolt);
 		autoControl = false;
 	}
 
 	public void holdPosition() {
-		setRawPosition(encoder.getPulses());
+		// motor.config_kP(magicGains.slotIdx, magicGains.kP * 5, Robot.CONFIG_TIMEOUT);
+		set(encoder.getPulses());
 	}
 
 	public void setStop() {
@@ -163,8 +161,12 @@ public class Arm extends Subsystem {
 		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
 	}
 
+	public boolean atSetpoint(int error) {
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, error);
+	}
+
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPulses() + allowedError < getValue(Positions.TUCK);
+		return encoder.getPulses() - allowedError < getValue(Positions.MAX_LOW);
 	}
 
 	public int getEncoderPulses() {
@@ -175,11 +177,35 @@ public class Arm extends Subsystem {
 		return desiredPosition;
 	}
 
-	public void usePositionControl() {
+	public void usePositionControl(int desiredPosition) {
 		controlMode = ControlMode.Position;
+		int currentPosition = encoder.getPulses();
+		if (currentPosition < desiredPosition) {
+			upGains.selectGains(motor);
+			System.out.println("using up arm position gains");
+		} else {
+			downGains.selectGains(motor);
+			System.out.println("using down arm position gains");
+		}
 	}
 
-	public void useMagicControl() {
+	public void useMagicControl(int desiredPosition) {
 		controlMode = ControlMode.MotionMagic;
+		int currentPosition = encoder.getPulses();
+		int maxLow = getValue(Positions.MAX_LOW);
+		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
+		if (desiredPosition > maxLow && currentPosition < maxLow) {
+			motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
+		} else if (desiredPosition < maxLow && currentPosition > maxLow) {
+			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT);
+			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT);
+		} else {
+			motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
+		}
+		magicGains.selectGains(motor);
+	}
+
+	public boolean isButtonPressed() {
+		return !button.get();
 	}
 }
