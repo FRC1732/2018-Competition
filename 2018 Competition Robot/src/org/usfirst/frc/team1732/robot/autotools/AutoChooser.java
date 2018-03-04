@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public final class AutoChooser {
 	public static enum AutoModes {
-		DRIVE30(()->new DriveDistance(30)), DRIVE60(()->new DriveDistance(60));
+		DRIVE30(() -> new DriveDistance(30)), DRIVE60(() -> new DriveDistance(60));
 
 		private final Supplier<Command> commandSupplier;
 
@@ -21,7 +21,9 @@ public final class AutoChooser {
 		}
 	}
 
-	private AutoChooser() {}
+	private AutoChooser() {
+		Robot.joysticks.autoDial.addValueChangeListener(System.out::println);
+	}
 
 	public static Command getSelectedAuto() {
 		return AutoModes.values()[Robot.joysticks.autoDial.get()].getCommand();

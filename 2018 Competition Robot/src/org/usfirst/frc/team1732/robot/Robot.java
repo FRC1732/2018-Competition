@@ -12,11 +12,8 @@ import java.util.function.Supplier;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
-import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
+import org.usfirst.frc.team1732.robot.commands.primitive.TurnAngle;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.sensors.encoders.Tracking;
@@ -28,7 +25,6 @@ import org.usfirst.frc.team1732.robot.subsystems.Manip;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 import org.usfirst.frc.team1732.robot.util.Debugger;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -115,7 +111,6 @@ public class Robot extends TimedRobot {
 		dash.add("Robot x", traker::getX);
 		dash.add("Robot y", traker::getY);
 		dash.add("Robot heading", traker::getHeading);
-		Debugger.enableSimple();
 	}
 
 	/**
@@ -144,18 +139,20 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		protectRobot();
 		gameDataWaiter.start();
+		Debugger.enableSimple();
 		// in the below line we would get our chosen auto through whatever means
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-		Path path = new Path(new Waypoint(0, 0, Math.PI / 2, 0), true);
-		path.addWaypoint(new Waypoint(0, 100, Math.PI / 2, 0));
-		double maxVel = drivetrain.convertVelocitySensorUnitsToInSec(drivetrain.maxUnitsPer100Ms);
-		double maxAccel = maxVel * 2;
-		path.generateProfile(maxVel * 0.8, maxAccel * 0.3);
-		Util.logForGraphing("Profile param: ", maxVel * 0.8, maxAccel * 0.3);
-		PointProfile profile = path.getVelocityProfile(drivetrain.effectiveRobotWidth);
-		chosenAuto = () -> new FollowVelocityPath(profile);
+		// Path path = new Path(new Waypoint(0, 0, Math.PI / 2, 0), true);
+		// path.addWaypoint(new Waypoint(0, 100, Math.PI / 2, 0));
+		// double maxVel = drivetrain.convertVelocitySensorUnitsToInSec(drivetrain.maxUnitsPer100Ms);
+		// double maxAccel = maxVel * 2;
+		// path.generateProfile(maxVel * 0.8, maxAccel * 0.3);
+		// Util.logForGraphing("Profile param: ", maxVel * 0.8, maxAccel * 0.3);
+		// PointProfile profile = path.getVelocityProfile(drivetrain.effectiveRobotWidth);
+		// chosenAuto = () -> new FollowVelocityPath(profile);
+		chosenAuto = () -> new TurnAngle(45);
 		autoStarted = false;
 	}
 
@@ -164,6 +161,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		protectRobot();
+		Debugger.disable();
 		// cancel auto command here
 		// arm.holdPosition();
 		// elevator.holdPosition();
@@ -220,14 +218,11 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during the robot mode.
 	 */
 	@Override
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 
 	@Override
-	public void disabledPeriodic() {
-	}
+	public void disabledPeriodic() {}
 
 	@Override
-	public void teleopPeriodic() {
-	}
+	public void teleopPeriodic() {}
 }

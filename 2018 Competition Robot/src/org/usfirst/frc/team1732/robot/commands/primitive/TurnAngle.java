@@ -21,7 +21,7 @@ public class TurnAngle extends NotifierCommand {
 
 	private static final double DEADBAND_TIME = 0.5;
 	private static final double ANGLE_DEADBAND = 1;
-	private static final double HEADING_P = 2;
+	private static final double HEADING_P = 2.5;
 	private static final double startMinVel = 20;
 	private static final double endMinVel = 8;
 	private static final double endMaxVel = 30;
@@ -56,7 +56,7 @@ public class TurnAngle extends NotifierCommand {
 		double a = angle.get();
 		deadbandTimer.reset();
 		deadbandTimer.stop();
-		this.goalAngle = a;
+		this.goalAngle = a + Math.signum(a);
 		this.maxVel = Math.abs(a) * 2.5 / 3.0;
 		this.k = Math.PI * 2 / (Math.abs(a));
 		endZone = (25 * 90) / (60) * (maxVel / a);
@@ -147,12 +147,13 @@ public class TurnAngle extends NotifierCommand {
 
 	@Override
 	protected boolean isDone() {
-		return Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND && deadbandTimer.get() > DEADBAND_TIME;
+		return Math.abs(goalAngle - Math.signum(goalAngle) - navx.getTotalAngle()) < ANGLE_DEADBAND
+				&& deadbandTimer.get() > DEADBAND_TIME;
 	}
 
 	@Override
 	protected void whenEnded() {
 		drivetrain.setStop();
-		Debugger.logEnd(this);
+		Debugger.logEnd(this, navx.getTotalAngle());
 	}
 }
