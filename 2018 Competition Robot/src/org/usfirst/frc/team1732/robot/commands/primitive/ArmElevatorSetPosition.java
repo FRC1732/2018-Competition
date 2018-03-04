@@ -12,11 +12,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ArmElevatorSetPosition extends CommandGroup {
 
 	public ArmElevatorSetPosition(Arm.Positions armPosition, Elevator.Positions elevatorPosition) {
-		this(Robot.arm.getValue(armPosition), Robot.elevator.getValue(elevatorPosition));
+		if (armPosition == Arm.Positions.INTAKE) {
+			addParallel(new ArmMagicIntake());
+		} else {
+			addParallel(new ArmMagicPosition(Robot.arm.getValue(armPosition)));
+		}
+		addParallel(new ElevatorMagicPosition(Robot.elevator.getValue(elevatorPosition)));
 	}
 
-	public ArmElevatorSetPosition(int armPosition, int elevatorPosition) {
-		addParallel(new ArmSetPosition(armPosition));
-		addParallel(new ElevatorSetPosition(elevatorPosition));
-	}
 }

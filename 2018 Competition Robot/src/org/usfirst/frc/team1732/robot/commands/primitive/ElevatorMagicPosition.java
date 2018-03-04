@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.subsystems.Elevator;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -13,11 +11,6 @@ public class ElevatorMagicPosition extends Command {
 
 	private int position;
 
-	public ElevatorMagicPosition(Elevator.Positions position) {
-		requires(Robot.elevator);
-		this.position = Robot.elevator.getValue(position);
-	}
-
 	public ElevatorMagicPosition(int position) {
 		requires(Robot.elevator);
 		this.position = position;
@@ -27,16 +20,18 @@ public class ElevatorMagicPosition extends Command {
 	@Override
 	protected void initialize() {
 		System.out.println("Running eleavtor set command");
-		Robot.elevator.useMagicControl();
+		Robot.elevator.useMagicControl(position);
 		Robot.elevator.set(position);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		// shouldn't need to do anything
-		Util.logForGraphing(Robot.elevator.getEncoderPulses(), Robot.elevator.getDesiredPosition(),
-				Robot.elevator.motor.getClosedLoopError(0), Robot.elevator.motor.getMotorOutputPercent());
+		// Util.logForGraphing(Robot.elevator.getEncoderPulses(),
+		// Robot.elevator.getDesiredPosition(),
+		// Robot.elevator.motor.getClosedLoopTarget(0),
+		// Robot.elevator.motor.getClosedLoopError(0),
+		// Robot.elevator.motor.getMotorOutputPercent());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

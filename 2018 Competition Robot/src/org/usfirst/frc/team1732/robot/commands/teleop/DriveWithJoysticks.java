@@ -12,7 +12,7 @@ public class DriveWithJoysticks extends NotifierCommand {
 	private final DifferentialDrive drive;
 
 	public DriveWithJoysticks(DifferentialDrive drive) {
-		super(20);
+		super(1);
 		requires(Robot.drivetrain);
 		this.drive = drive;
 	}
@@ -26,7 +26,9 @@ public class DriveWithJoysticks extends NotifierCommand {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void exec() {
-		drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(), false);
+		// drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(),
+		// false);
+		drive.tankDrive(-Robot.joysticks.getRight(), -Robot.joysticks.getLeft(), false);
 	}
 
 	@Override

@@ -56,6 +56,11 @@ public class Input {
 		rightTrigger.whenReleased(new ManipSetStop());
 
 		limelightToggle.whenPressed(new ToggleLED());
+
+		// posIntake.whenPressed(new ElevatorTest(0.3));
+		// posIntake.whenPressed(new ElevatorMagicPosition(-12000));
+		// posTuck.whenPressed(new ArmMagicPosition(2500));
+		// posIntake.whenPressed(new ElevatorMagicPosition(12000));
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

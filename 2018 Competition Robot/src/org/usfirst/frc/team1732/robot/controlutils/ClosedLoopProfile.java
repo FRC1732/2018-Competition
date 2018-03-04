@@ -59,19 +59,19 @@ public class ClosedLoopProfile {
 	}
 
 	public void applyToTalon(TalonSRX... talons) {
-		System.out.println(name);
-		System.out.println(feedback.name());
-		System.out.println(slotIdx);
-		System.out.println(pidIdx);
-		System.out.println(kP);
-		System.out.println(kI);
-		System.out.println(kD);
-		System.out.println(kF);
-		System.out.println(integralZone);
-		System.out.println(allowableError);
-		System.out.println(maxIntegralAccumulated);
-		System.out.println(secondsFromNeutralToFull);
-		System.out.println();
+		// System.out.println(name);
+		// System.out.println(feedback.name());
+		// System.out.println(slotIdx);
+		// System.out.println(pidIdx);
+		// System.out.println(kP);
+		// System.out.println(kI);
+		// System.out.println(kD);
+		// System.out.println(kF);
+		// System.out.println(integralZone);
+		// System.out.println(allowableError);
+		// System.out.println(maxIntegralAccumulated);
+		// System.out.println(secondsFromNeutralToFull);
+		// System.out.println();
 		for (TalonSRX talon : talons) {
 			talon.selectProfileSlot(slotIdx, pidIdx);
 			talon.configSelectedFeedbackSensor(feedback, pidIdx, Robot.CONFIG_TIMEOUT);
