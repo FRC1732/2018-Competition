@@ -1,10 +1,14 @@
 package org.usfirst.frc.team1732.robot.input;
 
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
+import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRockerControl;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
+import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -14,11 +18,13 @@ public class Input {
 	public final Joystick left;
 	public final Joystick right;
 	public final Joystick buttons;
+	public final Dial autoDial;
 
 	public Input(RobotConfig robotConfig) {
 		left = new Joystick(robotConfig.leftJoystickPort);
 		right = new Joystick(robotConfig.rightJoystickPort);
 		buttons = new Joystick(robotConfig.buttonJoystickPort);
+		autoDial = new Dial(0);
 
 		// Define all the buttons here
 		JoystickButton posIntake = new JoystickButton(left, 3);
@@ -40,12 +46,12 @@ public class Input {
 		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));
 
 		// Add commands here
-		// posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
-		// posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
-		// posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SWITCH));
-		// posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
-		// posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
-		// rocker.whenActive(new ElevatorRockerControl(rocker));
+		posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+		posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SWITCH));
+		posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
+		posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
+		rocker.whenActive(new ElevatorRockerControl(rocker));
 
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
