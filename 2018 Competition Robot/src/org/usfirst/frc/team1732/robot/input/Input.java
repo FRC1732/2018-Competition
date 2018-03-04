@@ -24,8 +24,8 @@ public class Input {
 		buttons = new Joystick(robotConfig.buttonJoystickPort);
 
 		// Define all the buttons here
-		JoystickButton posIntake = new JoystickButton(buttons, 9);
-		JoystickButton posTuck = new JoystickButton(buttons, 4);
+		JoystickButton posIntake = new JoystickButton(left, 3);
+		JoystickButton posTuck = new JoystickButton(right, 3);
 		JoystickButton posSwitch = new JoystickButton(buttons, 8);
 		JoystickButton posScaleLow = new JoystickButton(buttons, 7);
 		JoystickButton posScaleHigh = new JoystickButton(buttons, 6);

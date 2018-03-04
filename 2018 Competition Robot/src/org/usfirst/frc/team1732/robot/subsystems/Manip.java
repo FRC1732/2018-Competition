@@ -17,16 +17,23 @@ public class Manip extends Subsystem {
 
 	public static final double STOP_TIME = 0.25;
 	public static final double ABS_IN_SPEED = 0.7;
-	public static final double ABS_OUT_SPEED = 0.7;
+	public static final double ABS_OUT_SPEED = 0.4;
 
 	public final VictorSPX master;
 
 	public final double stopCurrent;
 
+	private double outSpeed;
+
 	public Manip(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
 		MotorUtils.makeVictor(config.manipFollower, config.manipConfig);
 		stopCurrent = config.manipStopCurrent;
+		outSpeed = ABS_OUT_SPEED;
+	}
+
+	public void setOutSpeed(double outSpeed) {
+		this.outSpeed = outSpeed;
 	}
 
 	@Override
@@ -44,6 +51,10 @@ public class Manip extends Subsystem {
 
 	public void setOut() {
 		master.set(ControlMode.PercentOutput, ABS_OUT_SPEED);
+	}
+
+	public void setOut(double absOutSpeed) {
+		master.set(ControlMode.PercentOutput, absOutSpeed);
 	}
 
 	public void setStop() {

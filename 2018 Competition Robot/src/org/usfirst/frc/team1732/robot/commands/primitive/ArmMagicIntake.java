@@ -31,7 +31,7 @@ public class ArmMagicIntake extends CommandGroup {
 		@Override
 		protected void initialize() {
 			System.out.println("Running arm intake command");
-			int position = Robot.arm.getValue(Positions.INTAKE);
+			int position = Positions.INTAKE.value;
 			Robot.arm.useMagicControl(position);
 			Robot.arm.set(position);
 		}
@@ -72,7 +72,7 @@ public class ArmMagicIntake extends CommandGroup {
 		@Override
 		protected void initialize() {
 			System.out.println("Running arm intake command 2");
-			accumulatedPosition = Robot.arm.getValue(Positions.INTAKE);
+			accumulatedPosition = Positions.INTAKE.value;
 			Robot.arm.useMagicControl(accumulatedPosition);
 			Robot.arm.set(accumulatedPosition);
 		}

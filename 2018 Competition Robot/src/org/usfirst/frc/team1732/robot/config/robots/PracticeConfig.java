@@ -59,7 +59,7 @@ public class PracticeConfig extends RobotConfig {
 		elevatorDownPID.maxIntegralAccumulated = 0;
 
 		elevatorMagicVel = 3000;
-		elevatorMagicAccel = 4000;
+		elevatorMagicAccel = 3000;
 		elevatorMagicPID.kF = 1023 / 4366; // 1023 / max sensor units per 100 ms
 		elevatorMagicPID.kP = 1.2;
 		elevatorMagicPID.kI = 0;

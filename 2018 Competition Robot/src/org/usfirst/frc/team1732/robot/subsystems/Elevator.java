@@ -84,8 +84,8 @@ public class Elevator extends Subsystem {
 
 		// 3311
 		// set these in pulses
-		MIN(3011), START(3311), INTAKE(3311), SWITCH(24713), RADIO(14904), SCALE_LOW(14904), HIT_RAMP(
-				14357), SCALE_HIGH(22137), MAX(33463);
+		MIN(3011), START(3311), INTAKE(3311), SWITCH(3311), RADIO(14904), SCALE_LOW(14904), HIT_RAMP(14357), SCALE_HIGH(
+				22137), MAX(33463);
 
 		private final int value;
 
