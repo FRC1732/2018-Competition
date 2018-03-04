@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
 	public static Elevator elevator;
 	public static Climber climber;
 	public static Sensors sensors;
-	
+
 	public static Tracking traker;
 
 	// input
@@ -64,13 +64,13 @@ public class Robot extends TimedRobot {
 	private Command defaultAuto;
 	private Supplier<Command> chosenAuto;
 
-	private static double fps;
+	private static double executionPeriod;
 
 	public static double getFps() {
-		return fps;
+		return executionPeriod;
 	}
 
-	private double last;
+	private double lastTimestamp;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -90,10 +90,10 @@ public class Robot extends TimedRobot {
 		sensors = new Sensors(robotConfig);
 
 		joysticks = new Input(robotConfig);
-		
+
 		traker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
 
-		defaultAuto = new DriveDistance(140);
+		defaultAuto = new DriveDistance(0);
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
+
 		autoStarted = false;
 	}
 
@@ -187,8 +188,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		fps = Timer.getFPGATimestamp() - last;
-		last = Timer.getFPGATimestamp();
+		executionPeriod = Timer.getFPGATimestamp() - lastTimestamp;
+		lastTimestamp = Timer.getFPGATimestamp();
 		Scheduler.getInstance().run();
 		traker.addPoint();
 	}
@@ -197,11 +198,14 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during the robot mode.
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
 
 	@Override
-	public void teleopPeriodic() {}
+	public void teleopPeriodic() {
+	}
 }
