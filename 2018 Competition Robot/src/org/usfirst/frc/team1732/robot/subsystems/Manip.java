@@ -23,17 +23,10 @@ public class Manip extends Subsystem {
 
 	public final double stopCurrent;
 
-	private double outSpeed;
-
 	public Manip(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
 		MotorUtils.makeVictor(config.manipFollower, config.manipConfig);
 		stopCurrent = config.manipStopCurrent;
-		outSpeed = ABS_OUT_SPEED;
-	}
-
-	public void setOutSpeed(double outSpeed) {
-		this.outSpeed = outSpeed;
 	}
 
 	@Override

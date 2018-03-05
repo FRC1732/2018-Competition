@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -37,6 +38,8 @@ public class Elevator extends Subsystem {
 	private final int magicVel;
 	private final int magicAccel;
 
+	private final DigitalInput button;
+
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
 		magicGains = config.elevatorMagicPID;
@@ -61,6 +64,9 @@ public class Elevator extends Subsystem {
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Elevator Encoder Rate", encoder::getRate);
 		// holdPosition();
+
+		button = new DigitalInput(0);
+
 		setManual(0);
 	}
 
@@ -76,7 +82,8 @@ public class Elevator extends Subsystem {
 
 		// 3311
 		// set these in pulses
-		INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(18389), MAX(30958);
+		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
+				18389), MAX(30958);
 
 		private final int value;
 
@@ -149,6 +156,10 @@ public class Elevator extends Subsystem {
 		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
 	}
 
+	public boolean atSetpoint(int error) {
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, error);
+	}
+
 	public boolean isArmSafeToGoUp() {
 		return encoder.getPulses() + allowedError > getValue(Positions.RADIO);
 	}
@@ -167,5 +178,13 @@ public class Elevator extends Subsystem {
 	public void useMagicControl(int desiredPosition) {
 		// int currentPosition = encoder.getPulses();
 		magicGains.selectGains(motor);
+	}
+
+	public boolean isButtonPressed() {
+		return !button.get();
+	}
+
+	public void resetElevatorPos() {
+		motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
 	}
 }

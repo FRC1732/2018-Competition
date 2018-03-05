@@ -219,6 +219,9 @@ public class Robot extends TimedRobot {
 		if (arm.isButtonPressed()) {
 			arm.resetArmPos();
 		}
+		// if (elevator.isButtonPressed()) {
+		// elevator.resetElevatorPos();
+		// }
 	}
 
 	@Override
