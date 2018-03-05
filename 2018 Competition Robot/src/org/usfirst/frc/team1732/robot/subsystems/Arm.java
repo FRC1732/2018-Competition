@@ -87,9 +87,6 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-		if (isButtonPressed()) {
-			motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
-		}
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
 		if (autoControl) {
@@ -182,5 +179,9 @@ public class Arm extends Subsystem {
 
 	public boolean isButtonPressed() {
 		return !button.get();
+	}
+
+	public void resetArmPos() {
+		motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
 	}
 }

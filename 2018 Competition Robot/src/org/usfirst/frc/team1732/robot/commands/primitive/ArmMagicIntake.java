@@ -39,10 +39,12 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void execute() {
-			parentCommand.hitButton = arm.isButtonPressed();
-			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
-					arm.motor.getClosedLoopTarget(0), arm.motor.getClosedLoopError(0),
-					arm.motor.getMotorOutputPercent());
+			if (!parentCommand.hitButton) {
+				parentCommand.hitButton = arm.isButtonPressed();
+			}
+
+			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(), arm.motor.getClosedLoopTarget(0),
+					arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
 		}
 
 		@Override
@@ -52,6 +54,9 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void end() {
+			if (parentCommand.hitButton) {
+				arm.resetArmPos();
+			}
 			System.out.println("ending arm intake command");
 			System.out.println("hit button: " + parentCommand.hitButton);
 		}
@@ -62,9 +67,6 @@ public class ArmMagicIntake extends CommandGroup {
 
 		private final ArmMagicIntake parentCommand;
 
-		private int accumulationRate = 20;
-		private int accumulatedPosition = 0;
-
 		public ArmUntilButton(ArmMagicIntake parentCommand) {
 			requires(arm);
 			this.parentCommand = parentCommand;
@@ -73,18 +75,13 @@ public class ArmMagicIntake extends CommandGroup {
 		@Override
 		protected void initialize() {
 			System.out.println("Running arm intake command 2");
-			accumulatedPosition = Positions.INTAKE.value;
-			arm.useMagicControl(accumulatedPosition);
-			arm.set(accumulatedPosition);
+			arm.setManual(-0.15);
 		}
 
 		@Override
 		protected void execute() {
-			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
-					arm.motor.getClosedLoopTarget(0), arm.motor.getClosedLoopError(0),
-					arm.motor.getMotorOutputPercent());
-			arm.set(accumulatedPosition);
-			accumulatedPosition = accumulatedPosition - accumulationRate;
+			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(), arm.motor.getClosedLoopTarget(0),
+					arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
 			if (!parentCommand.hitButton) {
 				parentCommand.hitButton = arm.isButtonPressed();
 			}
@@ -99,7 +96,12 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void end() {
 			System.out.println("ending arm intake command 2");
 			System.out.println("hit button: " + parentCommand.hitButton);
-			arm.set(arm.getEncoderPulses());
+			if (parentCommand.hitButton) {
+				arm.resetArmPos();
+			}
+			int position = Positions.INTAKE.value;
+			arm.useMagicControl(position);
+			arm.set(position);
 		}
 
 	}

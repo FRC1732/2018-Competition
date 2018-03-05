@@ -216,6 +216,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		if (arm.isButtonPressed()) {
+			arm.resetArmPos();
+		}
 	}
 
 	@Override
