@@ -21,7 +21,14 @@ public class Paths {
 
 		switchCenterFrontLeftProfile = makeSwitchCenterFrontLeftProfile();
 		switchCenterFrontStraightProfile = makeSwitchCenterFrontStraightProfile();
+		scaleLeftSingleLeftProfile = makeScaleLeftSingleLeftProfile();
+		scaleLeftSingleRightProfile = makeScaleLeftSingleRightProfile();
+		scaleRightSingleLeftProfile = makeScaleRightSingleLeftProfile();
+		scaleRightSingleRightProfile = makeScaleRightSingleRightProfile();
 	}
+
+	// naming convention is [autoName][side]Profile
+	// side means which side our plate is
 
 	public final PointProfile switchCenterFrontLeftProfile;
 
@@ -49,4 +56,55 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
+	public final PointProfile scaleLeftSingleLeftProfile;
+
+	private PointProfile makeScaleLeftSingleLeftProfile() {
+		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		double startingY = robotLength / 2.0;
+		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Switch.BOUNDARY.getX();
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.generateProfile(maxVelocity, maxAcceleration);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
+	public final PointProfile scaleLeftSingleRightProfile;
+
+	private PointProfile makeScaleLeftSingleRightProfile() {
+		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		double startingY = robotLength / 2.0;
+		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Switch.BOUNDARY.getX();
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.generateProfile(maxVelocity, maxAcceleration);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
+	public final PointProfile scaleRightSingleLeftProfile;
+
+	private PointProfile makeScaleRightSingleLeftProfile() {
+		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		double startingY = robotLength / 2.0;
+		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Switch.BOUNDARY.getX();
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.generateProfile(maxVelocity, maxAcceleration);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
+	public final PointProfile scaleRightSingleRightProfile;
+
+	private PointProfile makeScaleRightSingleRightProfile() {
+		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		double startingY = robotLength / 2.0;
+		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Switch.BOUNDARY.getX();
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.generateProfile(maxVelocity, maxAcceleration);
+		return path.getVelocityProfile(effectiveWidth);
+	}
 }
