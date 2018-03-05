@@ -18,20 +18,35 @@ public class Paths {
 		robotLength = Robot.drivetrain.robotLength;
 		robotWidth = Robot.drivetrain.robotWidth;
 		effectiveWidth = Robot.drivetrain.effectiveRobotWidth;
-		switchCenterFrontScoreLeftProfile = makeSwitchCenterFrontScoreLeftProfile();
+
+		switchCenterFrontLeftProfile = makeSwitchCenterFrontLeftProfile();
+		switchCenterFrontStraightProfile = makeSwitchCenterFrontStraightProfile();
 	}
 
-	private PointProfile makeSwitchCenterFrontScoreLeftProfile() {
+	public final PointProfile switchCenterFrontLeftProfile;
+
+	private PointProfile makeSwitchCenterFrontLeftProfile() {
 		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
 		double startingY = robotLength / 2.0;
 		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Switch.BOUNDARY.getX();
-		double endingY = Field.Switch.BOUNDARY.getY();
-		path.addWaypoint(new Waypoint(endingX - 5, endingY, Math.PI / 2, 0), 0.1);
+		double endingX = Field.Switch.BOUNDARY.getX() + robotWidth / 2.0;
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
 		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile switchCenterFrontScoreLeftProfile;
+	public final PointProfile switchCenterFrontStraightProfile;
+
+	private PointProfile makeSwitchCenterFrontStraightProfile() {
+		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		double startingY = robotLength / 2.0;
+		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Switch.BOUNDARY.getX();
+		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.generateProfile(maxVelocity, maxAcceleration);
+		return path.getVelocityProfile(effectiveWidth);
+	}
 
 }
