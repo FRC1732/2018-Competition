@@ -33,12 +33,13 @@ public class Paths {
 	public final PointProfile switchCenterFrontLeftProfile;
 
 	private PointProfile makeSwitchCenterFrontLeftProfile() {
+		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = Field.Switch.BOUNDARY.getX() + robotWidth / 2.0;
 		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.5);
 		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -46,11 +47,12 @@ public class Paths {
 	public final PointProfile switchCenterFrontStraightProfile;
 
 	private PointProfile makeSwitchCenterFrontStraightProfile() {
+		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(startingX, endingY, Math.PI / 2, 0), 0.1);
+		path.addWaypoint(new Waypoint(startingX, endingY, Math.PI / 2, 0));
 		path.generateProfile(maxVelocity, maxAcceleration);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -58,12 +60,14 @@ public class Paths {
 	public final PointProfile scaleLeftSingleLeftProfile;
 
 	private PointProfile makeScaleLeftSingleLeftProfile() {
+		Path path;
 		double startingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 - 5;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Scale.LEFT_PLATE.getX() - robotWidth / 2.0;
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Scale.LEFT_PLATE.getCenterX() - robotWidth / 2.0;
 		double endingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 3, 0), 0.1);
+		path.addWaypoint(new Waypoint(endingX + 5, endingY + 5, 3 * Math.PI / 7, 0));
+
 		path.generateProfile(maxVelocity, maxAcceleration);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -71,12 +75,23 @@ public class Paths {
 	public final PointProfile scaleLeftSingleRightProfile;
 
 	private PointProfile makeScaleLeftSingleRightProfile() {
-		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		Path path;
+		double startingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 - 5;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Switch.BOUNDARY.getX();
-		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+
+		double middle1X = Field.Scale.PLATFORM.getX() + robotLength / 2.0;
+		double middle1Y = Field.Scale.PLATFORM.getY() - robotWidth / 2.0;
+		path.addWaypoint(new Waypoint(middle1X, middle1Y, 0, maxVelocity));
+
+		double middle2X = Field.Scale.PLATFORM.getMaxX() - robotLength / 2.0;
+		double middle2Y = middle1Y;
+		path.addWaypoint(new Waypoint(middle2X, middle2Y, 0, maxVelocity));
+
+		double endingX = Field.Scale.RIGHT_PLATE.getMaxX() - 5;
+		double endingY = Field.Scale.RIGHT_PLATE.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+
 		path.generateProfile(maxVelocity, maxAcceleration);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -84,12 +99,24 @@ public class Paths {
 	public final PointProfile scaleRightSingleLeftProfile;
 
 	private PointProfile makeScaleRightSingleLeftProfile() {
+		Path path;
+
 		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 5;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Scale.RIGHT_PLATE.getX() + robotWidth / 2.0;
-		double endingY = Field.Scale.RIGHT_PLATE.getY() + robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, 2 * Math.PI / 3, 0), 0.1);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+
+		double middle1X = Field.Scale.PLATFORM.getMaxX() - robotLength / 2.0;
+		double middle1Y = Field.Scale.PLATFORM.getY() - robotWidth / 2.0;
+		path.addWaypoint(new Waypoint(middle1X, middle1Y, Math.PI, maxVelocity));
+
+		double middle2X = Field.Scale.PLATFORM.getX() + robotLength / 2.0;
+		double middle2Y = middle1Y;
+		path.addWaypoint(new Waypoint(middle2X, middle2Y, Math.PI, maxVelocity));
+
+		double endingX = Field.Scale.LEFT_PLATE.getX() + 5;
+		double endingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+
 		path.generateProfile(maxVelocity, maxAcceleration);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -97,12 +124,14 @@ public class Paths {
 	public final PointProfile scaleRightSingleRightProfile;
 
 	private PointProfile makeScaleRightSingleRightProfile() {
-		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
+		Path path;
+		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 5;
 		double startingY = robotLength / 2.0;
-		Path path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Switch.BOUNDARY.getX();
-		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.1);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = Field.Scale.RIGHT_PLATE.getCenterX() + robotWidth / 2.0;
+		double endingY = Field.Scale.RIGHT_PLATE.getY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(endingX - 5, endingY + 5, 4 * Math.PI / 7, 0));
+
 		path.generateProfile(maxVelocity, maxAcceleration);
 		return path.getVelocityProfile(effectiveWidth);
 	}
