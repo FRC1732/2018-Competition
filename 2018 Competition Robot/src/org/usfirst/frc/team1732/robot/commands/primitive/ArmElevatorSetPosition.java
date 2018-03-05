@@ -15,7 +15,7 @@ public class ArmElevatorSetPosition extends CommandGroup {
 		if (armPosition == Arm.Positions.INTAKE) {
 			addParallel(new ArmMagicIntake());
 		} else {
-			addParallel(new ArmMagicPosition(armPosition.value));
+			addParallel(new ArmMagicPosition(armPosition));
 		}
 		// if (elevatorPosition == Elevator.Positions.INTAKE) {
 		// addParallel(new ElevatorMagicIntake());

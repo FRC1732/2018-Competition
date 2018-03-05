@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -15,7 +16,11 @@ public class ArmMagicPosition extends Command {
 	// private boolean startedTimer = false;
 	// private final Timer timer;
 
-	public ArmMagicPosition(int position) {
+	public ArmMagicPosition(Arm.Positions position) {
+		this(position.value);
+	}
+
+	private ArmMagicPosition(int position) {
 		requires(Robot.arm);
 		this.position = position;
 		// timer = new Timer();
