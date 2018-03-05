@@ -13,7 +13,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class FollowVelocityPath extends NotifierCommand {
 
-	private static final double HEADING_P = 0.2 / 5; // with an error of 5 degrees, use 20% of velocity
+	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
+	// degrees, use 20% of velocity
+	private static final double HEADING_P = 2;
 
 	private final GyroReader navx;
 	private final EncoderReader leftE;
@@ -65,11 +67,13 @@ public class FollowVelocityPath extends NotifierCommand {
 
 		double leftVel = left.velocity;
 		double rightVel = right.velocity;
-		double leftNew = leftVel + leftVel * headingAdjustment;
-		double rightNew = rightVel - rightVel * headingAdjustment;
+		// double leftNew = leftVel + leftVel * headingAdjustment;
+		// double rightNew = rightVel - rightVel * headingAdjustment;
+		double leftNew = leftVel + Math.signum(leftVel) * headingAdjustment;
+		double rightNew = rightVel - Math.signum(rightVel) * headingAdjustment;
 
-		int leftSensor = Robot.drivetrain.convertVelocitySetpointToSensorUnits(leftNew);
-		int rightSensor = Robot.drivetrain.convertVelocitySetpointToSensorUnits(rightNew);
+		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
+		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
 
 		System.out.println();
 		Util.logForGraphing("heading", desiredHeading, currentHeading, headingError, headingAdjustment);
@@ -94,8 +98,8 @@ public class FollowVelocityPath extends NotifierCommand {
 	@Override
 	protected boolean isDone() {
 		return timeSinceStarted() > profile.getTotalTimeSec()
-				&& Util.epsilonEquals(profile.finalAbsCenterPos, Math.abs(leftE.getPosition()), 80)
-				&& Util.epsilonEquals(profile.finalAbsCenterPos, Math.abs(rightE.getPosition()), 80);
+				&& Util.epsilonEquals(profile.finalAbsCenterPos, Math.abs(leftE.getPosition()), 120)
+				&& Util.epsilonEquals(profile.finalAbsCenterPos, Math.abs(rightE.getPosition()), 120);
 	}
 
 	@Override

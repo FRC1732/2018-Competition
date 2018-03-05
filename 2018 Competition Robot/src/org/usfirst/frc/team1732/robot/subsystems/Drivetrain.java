@@ -167,11 +167,11 @@ public class Drivetrain extends Subsystem {
 		shifter.set(!highGearValue);
 	}
 
-	public int convertVelocitySetpointToSensorUnits(double desiredInPerSec) {
+	public int velInToUnits(double desiredInPerSec) {
 		return (int) (desiredInPerSec / 10 / inchesPerPulse);
 	}
 
-	public double convertVelocitySensorUnitsToInSec(double desiredUnitsPer100Ms) {
+	public double velUnitsToIn(double desiredUnitsPer100Ms) {
 		return desiredUnitsPer100Ms * 10 * inchesPerPulse;
 	}
 

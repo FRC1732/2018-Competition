@@ -1,11 +1,12 @@
 package org.usfirst.frc.team1732.robot.input;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
-import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRockerControl;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
@@ -28,30 +29,36 @@ public class Input {
 
 		// Define all the buttons here
 		JoystickButton posIntake = new JoystickButton(buttons, 1);
-		JoystickButton posTuck = new JoystickButton(buttons, 3);
-		JoystickButton posSwitch = new JoystickButton(buttons, 2);
-		JoystickButton posScaleLow = new JoystickButton(buttons, 4);
-		JoystickButton posScaleHigh = new JoystickButton(buttons, 5);
+		JoystickButton posExchange = new JoystickButton(buttons, 2);
+		JoystickButton posHuman = new JoystickButton(buttons, 3);
+		JoystickButton posSwitch = new JoystickButton(buttons, 4);
+		JoystickButton posTuck = new JoystickButton(buttons, 5);
+		JoystickButton posScaleLow = new JoystickButton(buttons, 6);
+		JoystickButton posScaleHigh = new JoystickButton(buttons, 7);
+
 		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
 		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
 		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
+
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
 		JoystickButton limelightToggle = new JoystickButton(left, 2);
-		//
-		// JoystickButton magicElevator = new JoystickButton(buttons, 1);
-		// JoystickButton magicArm = new JoystickButton(buttons, 11);
 
-		// magicArm.whenPressed(new ArmMagicPosition(-5000));
-		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));
+		// JoystickButton magicArm = new JoystickButton(buttons, 1);
+		// JoystickButton magicElevator = new JoystickButton(buttons, 2);
 
 		// Add commands here
 		posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		posExchange.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
+		posHuman.whenPressed(new ArmElevatorSetPosition(Arm.Positions.HUMAN_PLAYER, Elevator.Positions.HUMAN));
+		posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
 		posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
-		posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SWITCH));
 		posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
 		posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
-		rocker.whenActive(new ElevatorRockerControl(rocker));
+
+		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
+		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
+		rocker.whenInactive(new ElevatorHoldPosition());
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
@@ -59,10 +66,10 @@ public class Input {
 
 		limelightToggle.whenPressed(new ToggleLED());
 
-		// posIntake.whenPressed(new ElevatorTest(0.3));
-		// posIntake.whenPressed(new ElevatorMagicPosition(-12000));
-		// posTuck.whenPressed(new ArmMagicPosition(2500));
-		// posIntake.whenPressed(new ElevatorMagicPosition(12000));
+		// magicArm.whenPressed(new ArmTest(0.3));
+		// magicElevator.whenPressed(new ElevatorTest(0.3));
+		// magicArm.whenPressed(new ArmMagicPosition(-5000));
+		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));
 	}
 
 	// joysticks are reversed from the start, so we negate here to avoid confusion

@@ -25,8 +25,6 @@ public class Elevator extends Subsystem {
 	private final TalonEncoder encoder;
 
 	public final ClosedLoopProfile magicGains;
-	public final ClosedLoopProfile upGains;
-	public final ClosedLoopProfile downGains;
 
 	private final int allowedError;
 	private int distanceFromStartup;
@@ -36,19 +34,13 @@ public class Elevator extends Subsystem {
 	private boolean autoControl = false;
 	private static final String key = "Elevator Starting Count";
 
-	private ControlMode controlMode = ControlMode.Position;
-
 	private final int magicVel;
 	private final int magicAccel;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
-		upGains = config.elevatorUpPID;
-		downGains = config.elevatorDownPID;
 		magicGains = config.elevatorMagicPID;
 
-		upGains.applyToTalon(motor);
-		downGains.applyToTalon(motor);
 		magicGains.applyToTalon(motor);
 
 		magicVel = config.elevatorMagicVel;
@@ -63,7 +55,7 @@ public class Elevator extends Subsystem {
 
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
-		distanceFromStartup = startingCount - Positions.START.value;
+		distanceFromStartup = startingCount - Positions.INTAKE.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
@@ -84,8 +76,7 @@ public class Elevator extends Subsystem {
 
 		// 3311
 		// set these in pulses
-		MIN(3011), START(3311), INTAKE(3311), SWITCH(3311), RADIO(14904), SCALE_LOW(14904), HIT_RAMP(14357), SCALE_HIGH(
-				22137), MAX(33463);
+		INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(18389), MAX(30958);
 
 		private final int value;
 
@@ -100,17 +91,19 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
-		distanceFromStartup = startingCount - Positions.START.value;
+		distanceFromStartup = startingCount - Positions.INTAKE.value;
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
-			if (desiredPosition < getValue(Positions.RADIO) && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-				motor.set(controlMode, getValue(Positions.RADIO));
-				desiredIsSet = false;
-			}
-			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
-				motor.set(controlMode, desiredPosition);
-				desiredIsSet = true;
+			if (desiredPosition < getValue(Positions.RADIO)) {
+				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, getValue(Positions.RADIO));
+					desiredIsSet = false;
+				}
+				if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, desiredPosition);
+					desiredIsSet = true;
+				}
 			}
 		}
 	}
@@ -120,15 +113,12 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(int position) {
-		if (position < getValue(Positions.MIN)) {
-			position = getValue(Positions.MIN);
-		}
 		if (position > getValue(Positions.MAX)) {
 			position = getValue(Positions.MAX);
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
-		motor.set(controlMode, desiredPosition);
+		motor.set(ControlMode.MotionMagic, desiredPosition);
 		System.out.println("setting position: " + desiredPosition);
 		autoControl = true;
 	}
@@ -164,27 +154,17 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoDown() {
-		return encoder.getPulses() - allowedError < getValue(Positions.HIT_RAMP);
+		if (encoder.getPulses() - allowedError < getValue(Positions.HIT_RAMP))
+			return true;
+		else // only if the above is false
+			return !(getDesiredPosition() < Positions.HIT_RAMP.value);
 	}
 
 	public int getEncoderPulses() {
 		return encoder.getPulses();
 	}
 
-	public void usePositionControl(int desiredPosition) {
-		controlMode = ControlMode.Position;
-		int currentPosition = encoder.getPulses();
-		if (currentPosition < desiredPosition) {
-			upGains.selectGains(motor);
-			System.out.println("using up elevator position gains");
-		} else {
-			downGains.selectGains(motor);
-			System.out.println("using down elevator position gains");
-		}
-	}
-
 	public void useMagicControl(int desiredPosition) {
-		controlMode = ControlMode.MotionMagic;
 		// int currentPosition = encoder.getPulses();
 		magicGains.selectGains(motor);
 	}

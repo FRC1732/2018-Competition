@@ -11,6 +11,7 @@ public class NavX extends GyroBase {
 
 	public NavX(AHRS navx) {
 		this.navx = navx;
+		// addToDashboard();
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class NavX extends GyroBase {
 		navx.zeroYaw();
 	}
 
-	public void addToDashboard() {
+	private void addToDashboard() {
 		String imu = "IMU/";
 		/* Display 6-axis Processed Angle Data */
 		Robot.dash.add(imu + "IMU_Connected", () -> navx.isConnected());

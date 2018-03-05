@@ -101,7 +101,7 @@ public final class Path {
 		Vector v1 = prev.position;
 		Vector v7 = w.position;
 		LineSegment l17 = new LineSegment(v1, v7);
-		Vector v4 = l17.getPointAtPercent(n);
+		Vector v4 = l17.getPointAtPercent(0.5);
 		Vector h3 = prev.heading.rotate(-Math.PI / 2);
 		Vector v3 = new LineSegment(v4, v4.add(h3)).getIntersection(new LineSegment(prev));
 		Vector h5 = w.heading.rotate(Math.PI / 2);
@@ -132,7 +132,7 @@ public final class Path {
 		Vector v1 = prev.position;
 		Vector v7 = w.position;
 		LineSegment l17 = new LineSegment(v1, v7);
-		Vector m4 = l17.getPointAtPercent(n);
+		Vector m4 = l17.getPointAtPercent(0.5);
 		Vector a4 = l17.getDirection().rotate(Math.PI / 2);
 		Vector v4 = m4.add(a4.scale(0.5));
 		LineSegment l4 = new LineSegment(v4, v4.add(l17.getDirection()));

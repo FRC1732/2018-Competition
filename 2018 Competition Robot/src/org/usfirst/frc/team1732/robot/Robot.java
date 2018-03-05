@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.Paths;
+import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
-import org.usfirst.frc.team1732.robot.commands.primitive.TurnAngle;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
-		sensors.navx.addToDashboard();
+		// sensors.navx.addToDashboard();
 
 		dash.add("Update Rate", Robot::getFps);
 		dash.add("Robot x", traker::getX);
@@ -144,15 +144,8 @@ public class Robot extends TimedRobot {
 		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
 		// Direction.Forward);
 		// chosenAuto = () -> new DrivetrainClosedLoop();
-		// Path path = new Path(new Waypoint(0, 0, Math.PI / 2, 0), true);
-		// path.addWaypoint(new Waypoint(0, 100, Math.PI / 2, 0));
-		// double maxVel = drivetrain.convertVelocitySensorUnitsToInSec(drivetrain.maxUnitsPer100Ms);
-		// double maxAccel = maxVel * 2;
-		// path.generateProfile(maxVel * 0.8, maxAccel * 0.3);
-		// Util.logForGraphing("Profile param: ", maxVel * 0.8, maxAccel * 0.3);
-		// PointProfile profile = path.getVelocityProfile(drivetrain.effectiveRobotWidth);
-		// chosenAuto = () -> new FollowVelocityPath(profile);
-		chosenAuto = () -> new TurnAngle(45);
+		chosenAuto = () -> new SwitchCenterFront();
+		// chosenAuto = () -> new TurnAngleMagic(90);
 		autoStarted = false;
 	}
 
@@ -218,11 +211,14 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during the robot mode.
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
 
 	@Override
-	public void disabledPeriodic() {}
+	public void disabledPeriodic() {
+	}
 
 	@Override
-	public void teleopPeriodic() {}
+	public void teleopPeriodic() {
+	}
 }

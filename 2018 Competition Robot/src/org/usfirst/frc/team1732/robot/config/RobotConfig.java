@@ -52,10 +52,6 @@ public class RobotConfig {
 	private final boolean reverseArm = true;
 	public final boolean reverseArmSensor = false;
 	public final CTREParam arm = new CTREParam(12, reverseArm);
-	public final ClosedLoopProfile armUpPID = new ClosedLoopProfile("Arm Up PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2);
-	public final ClosedLoopProfile armDownPID = new ClosedLoopProfile("Arm Down PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0.2);
 	public final ClosedLoopProfile armMagicPID = new ClosedLoopProfile("Arm Magic PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public int armMagicVel = 0;
@@ -79,10 +75,6 @@ public class RobotConfig {
 	private final boolean reverseElevator = true;
 	public final boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
-	public final ClosedLoopProfile elevatorUpPID = new ClosedLoopProfile("Elevator Up PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5);
-	public final ClosedLoopProfile elevatorDownPID = new ClosedLoopProfile("Elevator Down PID",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0.5);
 	public final ClosedLoopProfile elevatorMagicPID = new ClosedLoopProfile("Elevator Magic PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	public int elevatorMagicVel = 0;
@@ -134,6 +126,7 @@ public class RobotConfig {
 		return config;
 	}
 
-	protected RobotConfig() {}
+	protected RobotConfig() {
+	}
 
 }
