@@ -7,6 +7,7 @@ import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
+import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
@@ -42,10 +43,12 @@ public class Input {
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
-		JoystickButton limelightToggle = new JoystickButton(left, 2);
-
-		// JoystickButton magicArm = new JoystickButton(buttons, 1);
-		// JoystickButton magicElevator = new JoystickButton(buttons, 2);
+		JoystickButton leftIntake = new JoystickButton(left, 3);
+		JoystickButton rightTuck = new JoystickButton(right, 3);
+		JoystickButton functionButton = new JoystickButton(right, 2); // use this for special function stuff, to be
+																		// determined
+		JoystickButton shifting = new JoystickButton(right, 5);
+		JoystickButton limelightToggle = new JoystickButton(left, 7);
 
 		// Add commands here
 		posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
@@ -64,6 +67,9 @@ public class Input {
 		rightTrigger.whenPressed(new ManipSetOut());
 		rightTrigger.whenReleased(new ManipSetStop());
 
+		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+		shifting.whileHeld(new TeleopShift());
 		limelightToggle.whenPressed(new ToggleLED());
 
 		// magicArm.whenPressed(new ArmTest(0.3));
