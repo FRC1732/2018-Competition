@@ -14,7 +14,6 @@ import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
-import org.usfirst.frc.team1732.robot.sensors.encoders.Tracking;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
@@ -56,7 +55,7 @@ public class Robot extends TimedRobot {
 	public static Paths paths;
 
 	// tracking
-	public static Tracking traker;
+	// public static Tracking tracker;
 
 	// input
 	public static Input joysticks;
@@ -99,7 +98,7 @@ public class Robot extends TimedRobot {
 
 		joysticks = new Input(robotConfig);
 
-		traker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
+		// tracker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
 
 		defaultAuto = new DriveDistance(0);
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
@@ -108,9 +107,9 @@ public class Robot extends TimedRobot {
 		// sensors.navx.addToDashboard();
 
 		dash.add("Update Rate", Robot::getFps);
-		dash.add("Robot x", traker::getX);
-		dash.add("Robot y", traker::getY);
-		dash.add("Robot heading", traker::getHeading);
+		// dash.add("Robot x", tracker::getX);
+		// dash.add("Robot y", tracker::getY);
+		// dash.add("Robot heading", tracker::getHeading);
 	}
 
 	@Override
@@ -118,7 +117,7 @@ public class Robot extends TimedRobot {
 		executionPeriod = Timer.getFPGATimestamp() - lastTimestamp;
 		lastTimestamp = Timer.getFPGATimestamp();
 		Scheduler.getInstance().run();
-		traker.addPoint();
+		// tracker.addPoint();
 	}
 
 	/**
