@@ -82,6 +82,10 @@ public class Input {
 		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
 		posSwitch.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
 
+		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
+		posScaleLow.whenOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.INTAKE));
+
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rocker.whenReleased(new ElevatorHoldPosition());
