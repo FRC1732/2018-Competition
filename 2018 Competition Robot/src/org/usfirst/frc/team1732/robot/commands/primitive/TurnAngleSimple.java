@@ -9,10 +9,20 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 public class TurnAngleSimple extends PIDCommand {
 
 	private PIDController pidController = getPIDController();
+	private final double rampTime;
+	private final boolean isAbsolute;
 	private GyroReader navx;
 	private int countOnTarget;
 
-	public TurnAngleSimple(double target, double maxPercent, double rampTime) {
+	public static TurnAngleSimple absolute(double target, double maxPercent, double rampTime) {
+		return new TurnAngleSimple(target, maxPercent, rampTime, true);
+	}
+
+	public static TurnAngleSimple relative(double target, double maxPercent, double rampTime) {
+		return new TurnAngleSimple(target, maxPercent, rampTime, false);
+	}
+
+	private TurnAngleSimple(double target, double maxPercent, double rampTime, boolean absolute) {
 		super(0, 0, 0);
 		requires(Robot.drivetrain);
 		navx = Robot.sensors.navx.makeReader();
@@ -22,14 +32,25 @@ public class TurnAngleSimple extends PIDCommand {
 		pidController.setContinuous();
 		pidController.setOutputRange(-maxPercent, maxPercent);
 		pidController.setPercentTolerance(1);
+		isAbsolute = absolute;
+		this.rampTime = rampTime;
+	}
+
+	@Override
+	protected void initialize() {
 		Robot.drivetrain.setBrake();
+		navx.zero(); // onlt affects relative
 		Robot.drivetrain.leftMaster.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 		Robot.drivetrain.rightMaster.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 	}
 
 	@Override
 	protected double returnPIDInput() {
-		return navx.getAngle();
+		if (isAbsolute) {
+			return navx.getAngle();
+		} else {
+			return navx.getTotalAngle();
+		}
 	}
 
 	@Override
