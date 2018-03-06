@@ -32,17 +32,17 @@ public class Input {
 		// Define all the buttons here
 		JoystickButton override = new JoystickButton(buttons, 12);
 
-		JoystickButton posIntake = new JoystickButton(buttons, 1);
-		JoystickButton posExchange = new JoystickButton(buttons, 2);
-		JoystickButton posHuman = new JoystickButton(buttons, 3);
-		JoystickButton posSwitch = new JoystickButton(buttons, 4);
-		JoystickButton posTuck = new JoystickButton(buttons, 5);
-		JoystickButton posScaleLow = new JoystickButton(buttons, 6);
-		JoystickButton posScaleHigh = new JoystickButton(buttons, 7);
+		OverrideButton posIntake = new OverrideButton(new JoystickButton(buttons, 1), override);
+		OverrideButton posExchange = new OverrideButton(new JoystickButton(buttons, 2), override);
+		OverrideButton posHuman = new OverrideButton(new JoystickButton(buttons, 3), override);
+		OverrideButton posSwitch = new OverrideButton(new JoystickButton(buttons, 4), override);
+		OverrideButton posTuck = new OverrideButton(new JoystickButton(buttons, 5), override);
+		OverrideButton posScaleLow = new OverrideButton(new JoystickButton(buttons, 6), override);
+		OverrideButton posScaleHigh = new OverrideButton(new JoystickButton(buttons, 7), override);
 
-		JoystickButton redButton = new JoystickButton(buttons, 8);
-		JoystickButton greenButton1 = new JoystickButton(buttons, 9);
-		JoystickButton greenButton2 = new JoystickButton(buttons, 10);
+		OverrideButton redButton = new OverrideButton(new JoystickButton(buttons, 8), override);
+		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
+		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
 
 		Button manipHiSpeed = new JoystickRangeButton(buttons, 0, 0.1);
 		Button manipLowSpeed = new JoystickRangeButton(buttons, 0, -0.1);
@@ -61,13 +61,19 @@ public class Input {
 		JoystickButton limelightToggle = new JoystickButton(left, 7);
 
 		// Add commands here
-		posIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
-		posExchange.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
-		posHuman.whenPressed(new ArmElevatorSetPosition(Arm.Positions.HUMAN_PLAYER, Elevator.Positions.HUMAN));
-		posSwitch.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
-		posTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
-		posScaleLow.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
-		posScaleHigh.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
+		posIntake.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		posExchange.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
+		posHuman.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.HUMAN_PLAYER, Elevator.Positions.HUMAN));
+		posSwitch.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
+		posTuck.whenNotOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+		posScaleLow.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
+		posScaleHigh.whenNotOverriden
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));

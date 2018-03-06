@@ -29,8 +29,9 @@ public class Ramp extends Subsystem {
 		solenoid.set(!rampOutValue);
 	}
 
-	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+	@Override
+	protected void initDefaultCommand() {
+
 	}
+
 }
