@@ -110,6 +110,14 @@ public class Robot extends TimedRobot {
 		dash.add("Robot heading", traker::getHeading);
 	}
 
+	@Override
+	public void robotPeriodic() {
+		executionPeriod = Timer.getFPGATimestamp() - lastTimestamp;
+		lastTimestamp = Timer.getFPGATimestamp();
+		Scheduler.getInstance().run();
+		traker.addPoint();
+	}
+
 	/**
 	 * This function is called once each time the robot enters Disabled mode. You
 	 * can use it to reset any subsystem information you want to clear when the
@@ -119,6 +127,18 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		protectRobot();
 	}
+
+	@Override
+	public void disabledPeriodic() {
+		if (arm.isButtonPressed()) {
+			arm.resetArmPos();
+		}
+		// if (elevator.isButtonPressed()) {
+		// elevator.resetElevatorPos();
+		// }
+	}
+
+	private boolean autoStarted = false;
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
@@ -140,33 +160,6 @@ public class Robot extends TimedRobot {
 		autoStarted = false;
 	}
 
-	private boolean autoStarted = false;
-
-	@Override
-	public void teleopInit() {
-		protectRobot();
-		Debugger.disable();
-		// cancel auto command here
-		// arm.holdPosition();
-		// elevator.holdPosition();
-		arm.setManual(0);
-		elevator.setManual(0);
-		drivetrain.setCoast();
-	}
-
-	@Override
-	public void testInit() {
-		protectRobot();
-	}
-
-	/**
-	 * Safety functions to prevent auto and teleop commands from interfering with
-	 * each other
-	 */
-	private void protectRobot() {
-		Scheduler.getInstance().removeAll();
-	}
-
 	/**
 	 * This function is called periodically during autonomous.
 	 */
@@ -186,15 +179,25 @@ public class Robot extends TimedRobot {
 				System.out.println("Game data not yet received");
 			}
 		}
-
 	}
 
 	@Override
-	public void robotPeriodic() {
-		executionPeriod = Timer.getFPGATimestamp() - lastTimestamp;
-		lastTimestamp = Timer.getFPGATimestamp();
-		Scheduler.getInstance().run();
-		traker.addPoint();
+	public void teleopInit() {
+		protectRobot();
+		Debugger.disable();
+		// cancel auto command here
+		arm.setManual(0);
+		elevator.setManual(0);
+		drivetrain.setCoast();
+	}
+
+	@Override
+	public void teleopPeriodic() {
+	}
+
+	@Override
+	public void testInit() {
+		protectRobot();
 	}
 
 	/**
@@ -204,17 +207,11 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 	}
 
-	@Override
-	public void disabledPeriodic() {
-		if (arm.isButtonPressed()) {
-			arm.resetArmPos();
-		}
-		// if (elevator.isButtonPressed()) {
-		// elevator.resetElevatorPos();
-		// }
-	}
-
-	@Override
-	public void teleopPeriodic() {
+	/**
+	 * Safety functions to prevent auto and teleop commands from interfering with
+	 * each other
+	 */
+	private void protectRobot() {
+		Scheduler.getInstance().removeAll();
 	}
 }
