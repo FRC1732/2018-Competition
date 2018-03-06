@@ -45,8 +45,7 @@ public class Input {
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
 		JoystickButton leftIntake = new JoystickButton(left, 3);
 		JoystickButton rightTuck = new JoystickButton(right, 3);
-		JoystickButton functionButton = new JoystickButton(right, 2); // use this for special function stuff, to be
-																		// determined
+
 		JoystickButton shifting = new JoystickButton(right, 5);
 		JoystickButton limelightToggle = new JoystickButton(left, 7);
 
