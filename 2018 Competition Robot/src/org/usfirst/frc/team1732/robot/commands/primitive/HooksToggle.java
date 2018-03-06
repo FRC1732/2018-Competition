@@ -19,7 +19,7 @@ public class HooksToggle extends Command {
 	// Called once when the command executes
 	@Override
 	protected void initialize() {
-		Robot.hooks.setHooksUp();
+		Robot.hooks.setUp();
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class HooksToggle extends Command {
 
 	@Override
 	protected void end() {
-		Robot.hooks.setHooksDown();
+		Robot.hooks.setDown();
 	}
 
 }

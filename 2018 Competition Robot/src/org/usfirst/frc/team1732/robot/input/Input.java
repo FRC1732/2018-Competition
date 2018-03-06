@@ -1,23 +1,20 @@
 package org.usfirst.frc.team1732.robot.input;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmRunManual;
-import org.usfirst.frc.team1732.robot.commands.primitive.ClimberRun;
-import org.usfirst.frc.team1732.robot.commands.primitive.ClimberStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
-import org.usfirst.frc.team1732.robot.commands.primitive.HooksSetUp;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
-import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
-import org.usfirst.frc.team1732.robot.commands.teleop.ManipSetVariable;
 import org.usfirst.frc.team1732.robot.commands.teleop.SetOuttakeSpeed;
 import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
+import org.usfirst.frc.team1732.robot.util.InstantLambda;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -101,7 +98,7 @@ public class Input {
 		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
 
 		leftTrigger.whenPressed(new ManipSetIn());
-		rightTrigger.whenPressed(new ManipSetVariable());
+		rightTrigger.whenPressed(InstantLambda.makeCommand(Robot.manip, Robot.manip::setOutVariable));
 		triggerSwitch.whenReleased(new ManipSetStop());
 
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
@@ -109,11 +106,11 @@ public class Input {
 
 		shifting.whileHeld(new TeleopShift());
 
-		greenButton1.whenOverriden.whenPressed(new HooksSetUp());
-		redButton.whenOverriden.whenPressed(new ClimberRun());
-		redButton.whenOverriden.whenPressed(new ClimberStop());
+		greenButton1.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.hooks, Robot.hooks::setUp));
+		redButton.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::climb));
+		redButton.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::stop));
 
-		limelightToggle.whenPressed(new ToggleLED());
+		limelightToggle.whenPressed(InstantLambda.makeCommand(Robot.sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));
 		// magicElevator.whenPressed(new ElevatorTest(0.3));

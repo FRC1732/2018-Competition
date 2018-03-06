@@ -18,11 +18,11 @@ public class Hooks extends Subsystem {
 		this.hooksUpValue = false;
 	}
 
-	public void setHooksUp() {
+	public void setUp() {
 		hooks.set(hooksUpValue);
 	}
 
-	public void setHooksDown() {
+	public void setDown() {
 		hooks.set(!hooksUpValue);
 	}
 
