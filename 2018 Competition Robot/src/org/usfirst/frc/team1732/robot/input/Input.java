@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.input;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ClimberRun;
+import org.usfirst.frc.team1732.robot.commands.primitive.ClimberRunReverse;
 import org.usfirst.frc.team1732.robot.commands.primitive.ClimberStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
@@ -49,6 +50,7 @@ public class Input {
 		OverrideButton redButton = new OverrideButton(new JoystickButton(buttons, 8), override);
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
+		ThreePosSwitch climbButton = new ThreePosSwitch(redButton.whenOverriden, greenButton2.whenOverriden);
 
 		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
 		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
@@ -90,7 +92,7 @@ public class Input {
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.INTAKE));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
@@ -111,7 +113,8 @@ public class Input {
 
 		greenButton1.whenOverriden.whenPressed(new HooksSetUp());
 		redButton.whenOverriden.whenPressed(new ClimberRun());
-		redButton.whenOverriden.whenPressed(new ClimberStop());
+		greenButton2.whenOverriden.whenPressed(new ClimberRunReverse());
+		climbButton.whenReleased(new ClimberStop());
 
 		limelightToggle.whenPressed(new ToggleLED());
 

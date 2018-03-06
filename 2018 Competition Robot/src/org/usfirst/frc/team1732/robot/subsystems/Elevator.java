@@ -66,26 +66,19 @@ public class Elevator extends Subsystem {
 		// holdPosition();
 
 		button = new DigitalInput(0);
+		Robot.dash.add("Elevator Button Pressed", this::isButtonPressed);
 
 		setManual(0);
-	}
-
-	public int getValue(int oldValue) {
-		return oldValue + distanceFromStartup;
-	}
-
-	public int getValue(Positions position) {
-		return position.value + distanceFromStartup;
 	}
 
 	public static enum Positions {
 
 		// 3311
 		// set these in pulses
-		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
+		BUTTON_POS(0), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
 				18389), MAX(30958);
 
-		private final int value;
+		public final int value;
 
 		private Positions(int value) {
 			this.value = value;
@@ -102,9 +95,9 @@ public class Elevator extends Subsystem {
 		// System.out.println("Elevator Encoder: " +
 		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
-			if (desiredPosition < getValue(Positions.RADIO)) {
+			if (desiredPosition < Positions.RADIO.value) {
 				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-					motor.set(ControlMode.MotionMagic, getValue(Positions.RADIO));
+					motor.set(ControlMode.MotionMagic, Positions.RADIO.value);
 					desiredIsSet = false;
 				}
 				if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
@@ -120,8 +113,8 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(int position) {
-		if (position > getValue(Positions.MAX)) {
-			position = getValue(Positions.MAX);
+		if (position > Positions.MAX.value) {
+			position = Positions.MAX.value;
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
@@ -131,7 +124,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void set(Positions position) {
-		set(getValue(position));
+		set(position.value);
 	}
 
 	public void setManual(double percentVolt) {
@@ -161,11 +154,11 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPulses() + allowedError > getValue(Positions.RADIO);
+		return encoder.getPulses() + allowedError > Positions.RADIO.value;
 	}
 
 	public boolean isArmSafeToGoDown() {
-		if (encoder.getPulses() - allowedError < getValue(Positions.HIT_RAMP))
+		if (encoder.getPulses() - allowedError < Positions.HIT_RAMP.value)
 			return true;
 		else // only if the above is false
 			return !(getDesiredPosition() < Positions.HIT_RAMP.value);
