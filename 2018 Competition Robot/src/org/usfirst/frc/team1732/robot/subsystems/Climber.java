@@ -6,7 +6,6 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -16,22 +15,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Climber extends Subsystem {
 	public final VictorSPX master;
-	private final Solenoid hooks;
-	public final boolean rampOutValue;
 
 	public Climber(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.climberMaster, config.climberConfig);
 		MotorUtils.makeVictor(config.climberFollower, config.climberConfig);
-		hooks = new Solenoid(2);
-		this.rampOutValue = false;
-	}
-
-	public void setHooksOut() {
-		hooks.set(rampOutValue);
-	}
-
-	public void setHooksIn() {
-		hooks.set(!rampOutValue);
 	}
 
 	public void climb() {
@@ -40,6 +27,10 @@ public class Climber extends Subsystem {
 
 	public void hold() {
 		// ???
+	}
+
+	public void stop() {
+		master.set(ControlMode.PercentOutput, 0);
 	}
 
 	@Override

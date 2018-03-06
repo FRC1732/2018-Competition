@@ -7,6 +7,7 @@ import org.usfirst.frc.team1732.robot.config.robots.PracticeConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
@@ -60,6 +61,9 @@ public class RobotConfig {
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
+	{
+		climberConfig.neutralMode = NeutralMode.Brake;
+	}
 	private final int climberMasterID = 4;
 	private final boolean reverseClimberMaster = false;
 	private final boolean reverseClimberFollower = false;

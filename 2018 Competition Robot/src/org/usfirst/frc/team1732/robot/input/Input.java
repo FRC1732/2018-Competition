@@ -2,9 +2,12 @@ package org.usfirst.frc.team1732.robot.input;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmRunManual;
+import org.usfirst.frc.team1732.robot.commands.primitive.ClimberRun;
+import org.usfirst.frc.team1732.robot.commands.primitive.ClimberStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
+import org.usfirst.frc.team1732.robot.commands.primitive.HooksSetUp;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -49,9 +52,9 @@ public class Input {
 		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
 		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden, manipLowSpeed.whenNotOverriden);
 
-		OverrideButton rockerUp = new OverrideButton(new JoystickButton(autoDial, 11), override);
-		OverrideButton rockerDown = new OverrideButton(new JoystickButton(autoDial, 12), override);
-		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp.whenNotOverriden, rockerDown.whenNotOverriden);
+		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
+		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
+		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
@@ -80,15 +83,15 @@ public class Input {
 
 		posIntake.whenOverriden.whenPressed(new ArmRunManual(-0.3));
 		posExchange.whenOverriden.whenPressed(new ArmRunManual(0.4));
-		rockerUp.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
-		rockerDown.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
+		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
+		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.INTAKE));
 
-		rockerUp.whenNotOverriden.whenPressed(new ElevatorRunManualSafe(0.4));
-		rockerDown.whenNotOverriden.whenPressed(new ElevatorRunManualSafe(-0.3));
+		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
+		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rocker.whenReleased(new ElevatorHoldPosition());
 
 		leftTrigger.whenPressed(new ManipSetIn());
@@ -99,6 +102,10 @@ public class Input {
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 
 		shifting.whileHeld(new TeleopShift());
+
+		greenButton1.whenOverriden.whenPressed(new HooksSetUp());
+		redButton.whenOverriden.whenPressed(new ClimberRun());
+		redButton.whenOverriden.whenPressed(new ClimberStop());
 		limelightToggle.whenPressed(new ToggleLED());
 
 		// magicArm.whenPressed(new ArmTest(0.3));
