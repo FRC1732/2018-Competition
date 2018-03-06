@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1732.robot.input;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
@@ -74,6 +76,11 @@ public class Input {
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
 		posScaleHigh.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
+
+		posIntake.whenOverriden.whenPressed(new ArmRunManual(-0.3));
+		posExchange.whenOverriden.whenPressed(new ArmRunManual(0.4));
+		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
+		posSwitch.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
