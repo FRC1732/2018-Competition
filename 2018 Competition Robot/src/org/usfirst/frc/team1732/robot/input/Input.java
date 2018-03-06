@@ -13,6 +13,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class Input {
@@ -29,6 +30,8 @@ public class Input {
 		autoDial = new Dial(robotConfig.dialJoystickPort);
 
 		// Define all the buttons here
+		JoystickButton override = new JoystickButton(buttons, 12);
+
 		JoystickButton posIntake = new JoystickButton(buttons, 1);
 		JoystickButton posExchange = new JoystickButton(buttons, 2);
 		JoystickButton posHuman = new JoystickButton(buttons, 3);
@@ -36,6 +39,14 @@ public class Input {
 		JoystickButton posTuck = new JoystickButton(buttons, 5);
 		JoystickButton posScaleLow = new JoystickButton(buttons, 6);
 		JoystickButton posScaleHigh = new JoystickButton(buttons, 7);
+
+		JoystickButton redButton = new JoystickButton(buttons, 8);
+		JoystickButton greenButton1 = new JoystickButton(buttons, 9);
+		JoystickButton greenButton2 = new JoystickButton(buttons, 10);
+
+		Button manipHiSpeed = new JoystickRangeButton(buttons, 0, 0.1);
+		Button manipLowSpeed = new JoystickRangeButton(buttons, 0, -0.1);
+		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed, manipLowSpeed);
 
 		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
 		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
@@ -60,7 +71,7 @@ public class Input {
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
-		rocker.whenInactive(new ElevatorHoldPosition());
+		rocker.whenReleased(new ElevatorHoldPosition());
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
@@ -88,7 +99,4 @@ public class Input {
 		return -right.getRawAxis(1);
 	}
 
-	// public boolean isReversed() {
-	// return buttons.getRawButton(5);
-	// }
 }
