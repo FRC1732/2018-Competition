@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -10,6 +11,10 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ElevatorMagicPosition extends Command {
 
 	private int position;
+
+	public ElevatorMagicPosition(Elevator.Positions position) {
+		this(position.value);
+	}
 
 	public ElevatorMagicPosition(int position) {
 		requires(Robot.elevator);

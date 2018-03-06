@@ -46,6 +46,7 @@ public class Input {
 		OverrideButton redButton = new OverrideButton(new JoystickButton(buttons, 8), override);
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
+		ThreePosSwitch climbButton = new ThreePosSwitch(redButton.whenOverriden, greenButton2.whenOverriden);
 
 		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
 		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
@@ -87,7 +88,7 @@ public class Input {
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.INTAKE));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
@@ -108,7 +109,8 @@ public class Input {
 
 		greenButton1.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.hooks, Robot.hooks::setUp));
 		redButton.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::climb));
-		redButton.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::stop));
+		greenButton2.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::reverseClimb));
+		climbButton.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::stop));
 
 		limelightToggle.whenPressed(InstantLambda.makeCommand(Robot.sensors.limelight::toggleLED));
 

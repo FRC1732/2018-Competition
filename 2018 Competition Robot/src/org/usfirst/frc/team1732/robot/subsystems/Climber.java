@@ -25,6 +25,10 @@ public class Climber extends Subsystem {
 		master.set(ControlMode.PercentOutput, 1);
 	}
 
+	public void reverseClimb() {
+		master.set(ControlMode.PercentOutput, -0.5);
+	}
+
 	public void hold() {
 		// ???
 	}

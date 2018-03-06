@@ -66,7 +66,7 @@ public class RobotConfig {
 	}
 	private final int climberMasterID = 4;
 	private final boolean reverseClimberMaster = false;
-	private final boolean reverseClimberFollower = false;
+	private final boolean reverseClimberFollower = true;
 	public final CTREParam climberMaster = new CTREParam(climberMasterID, reverseClimberMaster);
 	public final CTREParam climberFollower = new CTREParam(5, reverseClimberFollower, climberMasterID);
 
