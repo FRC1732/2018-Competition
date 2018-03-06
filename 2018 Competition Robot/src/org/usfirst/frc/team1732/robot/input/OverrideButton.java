@@ -7,12 +7,7 @@ public class OverrideButton {
 	public final Button whenOverriden;
 	public final Button whenNotOverriden;
 
-	private final Button button;
-	private final Button override;
-
 	public OverrideButton(Button button, Button override) {
-		this.button = button;
-		this.override = override;
 		whenOverriden = new Button() {
 
 			@Override
