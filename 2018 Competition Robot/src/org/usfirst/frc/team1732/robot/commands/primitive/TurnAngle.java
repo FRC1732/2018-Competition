@@ -6,7 +6,7 @@ import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 
-public class TurnAngleSimple extends PIDCommand {
+public class TurnAngle extends PIDCommand {
 
 	private PIDController pidController = getPIDController();
 	private final double rampTime;
@@ -14,15 +14,23 @@ public class TurnAngleSimple extends PIDCommand {
 	private GyroReader navx;
 	private int countOnTarget;
 
-	public static TurnAngleSimple absolute(double target, double maxPercent, double rampTime) {
-		return new TurnAngleSimple(target, maxPercent, rampTime, true);
+	public static TurnAngle absolute(double target, double rampTime) {
+		return new TurnAngle(target, 1, rampTime, true);
 	}
 
-	public static TurnAngleSimple relative(double target, double maxPercent, double rampTime) {
-		return new TurnAngleSimple(target, maxPercent, rampTime, false);
+	public static TurnAngle absolute(double target, double maxPercent, double rampTime) {
+		return new TurnAngle(target, maxPercent, rampTime, true);
 	}
 
-	private TurnAngleSimple(double target, double maxPercent, double rampTime, boolean absolute) {
+	public static TurnAngle relative(double target, double rampTime) {
+		return new TurnAngle(target, 1, rampTime, false);
+	}
+
+	public static TurnAngle relative(double target, double maxPercent, double rampTime) {
+		return new TurnAngle(target, maxPercent, rampTime, false);
+	}
+
+	private TurnAngle(double target, double maxPercent, double rampTime, boolean absolute) {
 		super(0, 0, 0);
 		requires(Robot.drivetrain);
 		navx = Robot.sensors.navx.makeReader();
