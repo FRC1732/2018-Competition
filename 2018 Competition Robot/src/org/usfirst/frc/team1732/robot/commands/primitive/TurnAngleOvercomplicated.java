@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  *
  */
-public class TurnAngle extends NotifierCommand {
+public class TurnAngleOvercomplicated extends NotifierCommand {
 
 	private static final double DEADBAND_TIME = 0.5;
 	private static final double ANGLE_DEADBAND = 1;
@@ -35,7 +35,7 @@ public class TurnAngle extends NotifierCommand {
 	private GyroReader navx;
 	private double endZone = 20;
 
-	public TurnAngle(Supplier<Double> a) {
+	public TurnAngleOvercomplicated(Supplier<Double> a) {
 		super(5);
 		requires(drivetrain);
 		navx = Robot.sensors.navx.makeReader();
@@ -43,7 +43,7 @@ public class TurnAngle extends NotifierCommand {
 		angle = a;
 	}
 
-	public TurnAngle(double angle) {
+	public TurnAngleOvercomplicated(double angle) {
 		this(() -> angle);
 	}
 
