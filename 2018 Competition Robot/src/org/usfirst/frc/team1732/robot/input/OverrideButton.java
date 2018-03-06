@@ -1,17 +1,16 @@
 package org.usfirst.frc.team1732.robot.input;
 
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class OverrideButton {
 
 	public final Button whenOverriden;
 	public final Button whenNotOverriden;
 
-	private final JoystickButton button;
-	private final JoystickButton override;
+	private final Button button;
+	private final Button override;
 
-	public OverrideButton(JoystickButton button, JoystickButton override) {
+	public OverrideButton(Button button, Button override) {
 		this.button = button;
 		this.override = override;
 		whenOverriden = new Button() {

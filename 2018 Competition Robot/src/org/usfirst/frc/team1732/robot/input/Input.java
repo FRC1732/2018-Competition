@@ -15,7 +15,6 @@ import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class Input {
@@ -46,16 +45,18 @@ public class Input {
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
 
-		Button manipHiSpeed = new JoystickRangeButton(buttons, 0, 0.1);
-		Button manipLowSpeed = new JoystickRangeButton(buttons, 0, -0.1);
-		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed, manipLowSpeed);
+		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
+		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
+		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden, manipLowSpeed.whenNotOverriden);
 
-		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
-		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
-		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
+		OverrideButton rockerUp = new OverrideButton(new JoystickButton(autoDial, 11), override);
+		OverrideButton rockerDown = new OverrideButton(new JoystickButton(autoDial, 12), override);
+		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp.whenNotOverriden, rockerDown.whenNotOverriden);
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
+		ThreePosSwitch triggerSwitch = new ThreePosSwitch(leftTrigger, rightTrigger);
+
 		JoystickButton leftIntake = new JoystickButton(left, 3);
 		JoystickButton rightTuck = new JoystickButton(right, 3);
 
@@ -79,23 +80,24 @@ public class Input {
 
 		posIntake.whenOverriden.whenPressed(new ArmRunManual(-0.3));
 		posExchange.whenOverriden.whenPressed(new ArmRunManual(0.4));
-		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
-		posSwitch.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
+		rockerUp.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
+		rockerDown.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.INTAKE));
 
-		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
-		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
+		rockerUp.whenNotOverriden.whenPressed(new ElevatorRunManualSafe(0.4));
+		rockerDown.whenNotOverriden.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rocker.whenReleased(new ElevatorHoldPosition());
+
 		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(new ManipSetOut());
-		rightTrigger.whenReleased(new ManipSetStop());
+		triggerSwitch.whenReleased(new ManipSetStop());
 
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+
 		shifting.whileHeld(new TeleopShift());
 		limelightToggle.whenPressed(new ToggleLED());
 
