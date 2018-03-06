@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class ElevatorMagicIntake extends CommandGroup {
 
-	private boolean hitButton = false;
+	// private boolean hitButton = false;
 
 	public ElevatorMagicIntake() {
 		// addSequential(new ElevatorMagicIntakeUntilButton(this));
