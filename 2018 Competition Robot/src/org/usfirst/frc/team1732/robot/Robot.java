@@ -7,11 +7,9 @@
 
 package org.usfirst.frc.team1732.robot;
 
-import java.util.function.Supplier;
-
+import org.usfirst.frc.team1732.robot.autotools.AutoChooser;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.Paths;
-import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
@@ -68,7 +66,6 @@ public class Robot extends TimedRobot {
 	private static BooleanTimer gameDataWaiter;
 
 	private Command defaultAuto;
-	private Supplier<Command> chosenAuto;
 
 	private static double executionPeriod;
 
@@ -140,12 +137,6 @@ public class Robot extends TimedRobot {
 		protectRobot();
 		gameDataWaiter.start();
 		Debugger.enableSimple();
-		// in the below line we would get our chosen auto through whatever means
-		// chosenAuto = () -> new DrivetrainCharacterizer(TestMode.QUASI_STATIC,
-		// Direction.Forward);
-		// chosenAuto = () -> new DrivetrainClosedLoop();
-		chosenAuto = () -> new SwitchCenterFront();
-		// chosenAuto = () -> new TurnAngleMagic(90);
 		autoStarted = false;
 	}
 
@@ -189,8 +180,7 @@ public class Robot extends TimedRobot {
 					defaultAuto.start();
 				} else {
 					System.out.println("Game data received. Starting chosen auto.");
-					// AutoChooser.getSelectedAuto().start();
-					chosenAuto.get().start();
+					AutoChooser.getSelectedAuto().start();
 				}
 			} else {
 				System.out.println("Game data not yet received");
