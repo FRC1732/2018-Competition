@@ -8,6 +8,7 @@ import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.TurnAngle;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -19,7 +20,7 @@ public class ScaleLeftSingle extends CommandGroup {
 			addSequential(new DriveDistance(forwardDistance));
 			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 			addSequential(TurnAngle.absolute(35, 0.25));
-			addSequential(new ManipSetOut());
+			addSequential(new ManipSetOut(Manip.BASE_OUT_SPEED));
 		} else {
 
 		}

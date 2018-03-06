@@ -29,6 +29,7 @@ public class ManipSetInUntilCube extends Command {
 	private Timer stopTimer = new Timer();
 	private boolean gotAboveStopCurent = false;
 
+	@Override
 	protected void execute() {
 		if (manip.aboveStopCurrent() && !gotAboveStopCurent) {
 			gotAboveStopCurent = true;
@@ -41,10 +42,12 @@ public class ManipSetInUntilCube extends Command {
 
 	}
 
+	@Override
 	protected boolean isFinished() {
 		return manip.aboveStopCurrent() && stopTimer.get() > Manip.STOP_TIME;
 	}
 
+	@Override
 	protected void end() {
 		manip.setStop();
 		Debugger.logEnd(this);

@@ -9,13 +9,15 @@ import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.primitive.HooksSetUp;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.ToggleLED;
+import org.usfirst.frc.team1732.robot.commands.teleop.ManipSetVariable;
+import org.usfirst.frc.team1732.robot.commands.teleop.SetOuttakeSpeed;
 import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -94,8 +96,12 @@ public class Input {
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rocker.whenReleased(new ElevatorHoldPosition());
 
+		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
+		manipSpeed.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
+
 		leftTrigger.whenPressed(new ManipSetIn());
-		rightTrigger.whenPressed(new ManipSetOut());
+		rightTrigger.whenPressed(new ManipSetVariable());
 		triggerSwitch.whenReleased(new ManipSetStop());
 
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
@@ -106,6 +112,7 @@ public class Input {
 		greenButton1.whenOverriden.whenPressed(new HooksSetUp());
 		redButton.whenOverriden.whenPressed(new ClimberRun());
 		redButton.whenOverriden.whenPressed(new ClimberStop());
+
 		limelightToggle.whenPressed(new ToggleLED());
 
 		// magicArm.whenPressed(new ArmTest(0.3));
