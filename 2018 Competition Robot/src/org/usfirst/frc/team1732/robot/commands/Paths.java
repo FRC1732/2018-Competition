@@ -21,10 +21,10 @@ public class Paths {
 
 		switchCenterFrontLeftProfile = makeSwitchCenterFrontLeftProfile();
 		switchCenterFrontStraightProfile = makeSwitchCenterFrontStraightProfile();
-		// scaleLeftSingleLeftProfile = makeScaleLeftSingleLeftProfile();
+		scaleLeftSingleLeftProfile = makeScaleLeftSingleLeftProfile();
 		scaleLeftSingleRightProfile = makeScaleLeftSingleRightProfile();
 		scaleRightSingleLeftProfile = makeScaleRightSingleLeftProfile();
-		// scaleRightSingleRightProfile = makeScaleRightSingleRightProfile();
+		scaleRightSingleRightProfile = makeScaleRightSingleRightProfile();
 	}
 
 	// naming convention is [autoName][side]Profile
@@ -58,7 +58,7 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	// public final PointProfile scaleLeftSingleLeftProfile;
+	public final PointProfile scaleLeftSingleLeftProfile;
 
 	public PointProfile makeScaleLeftSingleLeftProfile() {
 		Path path;
@@ -122,7 +122,7 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	// public final PointProfile scaleRightSingleRightProfile;
+	public final PointProfile scaleRightSingleRightProfile;
 
 	public PointProfile makeScaleRightSingleRightProfile() {
 		Path path;
