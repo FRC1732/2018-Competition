@@ -19,6 +19,7 @@ public class Paths {
 		robotWidth = Robot.drivetrain.robotWidth;
 		effectiveWidth = Robot.drivetrain.effectiveRobotWidth;
 
+		defaultDriveStraight = makeDefaultDriveStraight();
 		switchCenterFrontLeftProfile = makeSwitchCenterFrontLeftProfile();
 		switchCenterFrontStraightProfile = makeSwitchCenterFrontStraightProfile();
 		scaleLeftSingleLeftProfile = makeScaleLeftSingleLeftProfile();
