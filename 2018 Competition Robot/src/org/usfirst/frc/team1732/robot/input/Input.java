@@ -51,7 +51,6 @@ public class Input {
 		OverrideButton redButton = new OverrideButton(new JoystickButton(buttons, 8), override);
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
-		ThreePosSwitch climbButton = new ThreePosSwitch(redButton.whenOverriden, greenButton2.whenOverriden);
 
 		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
 		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
@@ -63,7 +62,6 @@ public class Input {
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
-		ThreePosSwitch triggerSwitch = new ThreePosSwitch(leftTrigger, rightTrigger);
 
 		JoystickButton leftIntake = new JoystickButton(left, 3);
 		JoystickButton rightTuck = new JoystickButton(right, 3);
@@ -87,12 +85,13 @@ public class Input {
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 
 		posIntake.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(-0.3)));
-		posExchange.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(0.4)));
 		posIntake.whenOverriden.whenReleased(makeCommand(arm, arm::setStop));
+		posExchange.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(0.4)));
 		posExchange.whenOverriden.whenReleased(makeCommand(arm, arm::setStop));
+
 		posHuman.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(-0.3)));
-		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
 		posHuman.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
+		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
 		posSwitch.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
 
 		posScaleHigh.whenOverriden
@@ -109,8 +108,9 @@ public class Input {
 		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
 
 		leftTrigger.whenPressed(new ManipSetIn());
+		leftTrigger.whenReleased(new ManipSetStop());
 		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
-		triggerSwitch.whenReleased(new ManipSetStop());
+		rightTrigger.whenReleased(new ManipSetStop());
 
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
@@ -122,8 +122,9 @@ public class Input {
 		posTuck.whenOverriden.whenPressed(makeCommand(hooks, hooks::setDown));
 
 		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
+		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
 		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
-		climbButton.whenReleased(makeCommand(climber, climber::stop));
+		greenButton2.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
 
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
