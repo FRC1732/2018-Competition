@@ -20,6 +20,7 @@ import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Hooks;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
+import org.usfirst.frc.team1732.robot.subsystems.Ramp;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 import org.usfirst.frc.team1732.robot.util.Debugger;
@@ -50,6 +51,7 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Hooks hooks;
 	public static Sensors sensors;
+	public static Ramp ramp;
 
 	// paths
 	public static Paths paths;
@@ -93,7 +95,7 @@ public class Robot extends TimedRobot {
 		climber = new Climber(robotConfig);
 		hooks = new Hooks(robotConfig);
 		sensors = new Sensors(robotConfig);
-
+		ramp = new Ramp(robotConfig);
 		paths = new Paths();
 
 		joysticks = new Input(robotConfig);

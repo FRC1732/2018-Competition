@@ -95,8 +95,12 @@ public class RobotConfig {
 	public double manipStopCurrent = 0;
 
 	// ramp
-	public final int rampSolenoidID = 1;
+	public final int rampSolenoidID = 2;
 	public final boolean rampOutValue = true;// setting the ramp solenoid to this value should make it go out
+
+	// hooks
+	public final int hookSolenoidID = 1;
+	public final boolean hookOutValue = true;
 
 	public final Port navxPort = SPI.Port.kMXP;
 
