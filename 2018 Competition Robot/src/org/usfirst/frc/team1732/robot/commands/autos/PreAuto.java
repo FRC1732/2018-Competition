@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.autos;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicIntake;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -20,7 +21,11 @@ public class PreAuto extends CommandGroup {
 			{
 				addSequential(new ManipSetIn());
 				addSequential(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
-				addSequential(new ArmMagicPosition(armPos));
+				if (armPos == Arm.Positions.INTAKE) {
+					addSequential(new ArmMagicIntake());
+				} else {
+					addSequential(new ArmMagicPosition(armPos));
+				}
 				addSequential(new ManipSetStop());
 			}
 		});

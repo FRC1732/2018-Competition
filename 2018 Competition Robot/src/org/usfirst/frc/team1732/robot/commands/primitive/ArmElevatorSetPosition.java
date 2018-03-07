@@ -16,11 +16,11 @@ public class ArmElevatorSetPosition extends CommandGroup {
 		} else {
 			addParallel(new ArmMagicPosition(armPosition));
 		}
-		// if (elevatorPosition == Elevator.Positions.INTAKE) {
-		// addParallel(new ElevatorMagicIntake());
-		// } else {
-		addParallel(new ElevatorMagicPosition(elevatorPosition.value));
-		// }
+		if (elevatorPosition == Elevator.Positions.INTAKE) {
+			addParallel(new ElevatorMagicIntake());
+		} else {
+			addParallel(new ElevatorMagicPosition(elevatorPosition));
+		}
 	}
 
 }
