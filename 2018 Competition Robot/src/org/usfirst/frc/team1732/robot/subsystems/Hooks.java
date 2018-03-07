@@ -14,8 +14,8 @@ public class Hooks extends Subsystem {
 	public final boolean hooksUpValue;
 
 	public Hooks(RobotConfig config) {
-		hooks = new Solenoid(2);
-		this.hooksUpValue = false;
+		hooks = new Solenoid(config.hookSolenoidID);
+		this.hooksUpValue = config.hookOutValue;
 	}
 
 	public void setUp() {

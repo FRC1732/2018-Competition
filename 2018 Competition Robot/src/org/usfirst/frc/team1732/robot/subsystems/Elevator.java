@@ -29,7 +29,6 @@ public class Elevator extends Subsystem {
 	public final ClosedLoopProfile magicGains;
 
 	private final int allowedError;
-	private int distanceFromStartup;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
@@ -59,7 +58,6 @@ public class Elevator extends Subsystem {
 
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
-		distanceFromStartup = startingCount - Positions.INTAKE.value;
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
@@ -92,7 +90,6 @@ public class Elevator extends Subsystem {
 	public void periodic() {
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
-		distanceFromStartup = startingCount - Positions.INTAKE.value;
 		if (autoControl) {
 			if (desiredPosition < Positions.RADIO.value) {
 				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
