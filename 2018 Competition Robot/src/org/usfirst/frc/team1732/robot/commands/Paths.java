@@ -30,6 +30,20 @@ public class Paths {
 	// naming convention is [autoName][side]Profile
 	// side means which side our plate is
 
+	public final PointProfile defaultDriveStraight;
+
+	public PointProfile makeDefaultDriveStraight() {
+		Path path;
+		double startingX = 0;
+		double startingY = 0;
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+		double endingX = startingX;
+		double endingY = 150;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
 	public final PointProfile switchCenterFrontLeftProfile;
 
 	public PointProfile makeSwitchCenterFrontLeftProfile() {
