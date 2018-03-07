@@ -10,7 +10,7 @@ package org.usfirst.frc.team1732.robot;
 import org.usfirst.frc.team1732.robot.autotools.AutoChooser;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.Paths;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
+import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
 		AutoChooser.addListener(joysticks);
 		// tracker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
 
-		defaultAuto = new DriveDistance(0);
+		defaultAuto = new DefaultDriveForward();
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
 		// seconds, or it will drive across the auto line after 10 seconds
