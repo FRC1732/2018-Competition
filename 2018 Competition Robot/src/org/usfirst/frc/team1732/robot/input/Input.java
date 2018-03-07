@@ -1,18 +1,25 @@
 package org.usfirst.frc.team1732.robot.input;
 
-import org.usfirst.frc.team1732.robot.Robot;
+import static org.usfirst.frc.team1732.robot.Robot.arm;
+import static org.usfirst.frc.team1732.robot.Robot.climber;
+import static org.usfirst.frc.team1732.robot.Robot.elevator;
+import static org.usfirst.frc.team1732.robot.Robot.hooks;
+import static org.usfirst.frc.team1732.robot.Robot.manip;
+import static org.usfirst.frc.team1732.robot.Robot.ramp;
+import static org.usfirst.frc.team1732.robot.Robot.sensors;
+import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
+
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManual;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.teleop.SetOuttakeSpeed;
 import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.subsystems.Manip;
-import org.usfirst.frc.team1732.robot.util.InstantLambda;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -79,14 +86,14 @@ public class Input {
 		posScaleHigh.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
 
-		posIntake.whenOverriden.whenPressed(new ArmRunManual(-0.3));
-		posExchange.whenOverriden.whenPressed(new ArmRunManual(0.4));
-		posIntake.whenOverriden.whenReleased(new ArmRunManual(0));
-		posExchange.whenOverriden.whenReleased(new ArmRunManual(0));
-		posHuman.whenOverriden.whenPressed(new ElevatorRunManual(-0.3));
-		posSwitch.whenOverriden.whenPressed(new ElevatorRunManual(0.4));
-		posHuman.whenOverriden.whenReleased(new ElevatorRunManual(0));
-		posSwitch.whenOverriden.whenReleased(new ElevatorRunManual(0));
+		posIntake.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(-0.3)));
+		posExchange.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(0.4)));
+		posIntake.whenOverriden.whenReleased(makeCommand(arm, arm::setStop));
+		posExchange.whenOverriden.whenReleased(makeCommand(arm, arm::setStop));
+		posHuman.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(-0.3)));
+		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
+		posHuman.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
+		posSwitch.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
@@ -100,24 +107,24 @@ public class Input {
 		manipSpeed.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
 		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
 
-		leftTrigger.whenPressed(InstantLambda.makeCommand(Robot.manip, Robot.manip::setIn));
-		rightTrigger.whenPressed(InstantLambda.makeCommand(Robot.manip, Robot.manip::setOutVariable));
-		triggerSwitch.whenReleased(InstantLambda.makeCommand(Robot.manip, Robot.manip::setStop));
+		leftTrigger.whenPressed(new ManipSetIn());
+		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
+		triggerSwitch.whenReleased(new ManipSetStop());
 
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 
 		shifting.whileHeld(new TeleopShift());
 
-		greenButton1.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.hooks, Robot.hooks::setUp));
-		posTuck.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.hooks, Robot.hooks::setDown));
-		greenButton1.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.ramp, Robot.ramp::setOut));
+		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
+		greenButton1.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
+		posTuck.whenOverriden.whenPressed(makeCommand(hooks, hooks::setDown));
 
-		redButton.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::climb));
-		greenButton2.whenOverriden.whenPressed(InstantLambda.makeCommand(Robot.climber, Robot.climber::reverseClimb));
-		climbButton.whenReleased(InstantLambda.makeCommand(Robot.climber, Robot.climber::stop));
+		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
+		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
+		climbButton.whenReleased(makeCommand(climber, climber::stop));
 
-		limelightToggle.whenPressed(InstantLambda.makeCommand(Robot.sensors.limelight::toggleLED));
+		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));
 		// magicElevator.whenPressed(new ElevatorTest(0.3));
