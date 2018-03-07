@@ -54,11 +54,7 @@ public class TurnAngle extends PIDCommand {
 
 	@Override
 	protected double returnPIDInput() {
-		if (isAbsolute) {
-			return navx.getAngle();
-		} else {
-			return navx.getTotalAngle();
-		}
+		return isAbsolute ? navx.getAngle() : navx.getTotalAngle();
 	}
 
 	@Override
@@ -73,7 +69,6 @@ public class TurnAngle extends PIDCommand {
 				return true;
 			}
 			countOnTarget++;
-
 		} else {
 			countOnTarget = 0;
 		}

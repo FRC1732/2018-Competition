@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.util;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 public class Util {
@@ -124,12 +125,9 @@ public class Util {
 		double mu2 = (1 - Math.cos(mu * Math.PI)) / 2;
 		return (y1 * (1 - mu2)) + (y2 * mu2);
 	}
-	
-	public static void logForGraphing(Object... obs) {
-		for(Object o : obs) {
-			System.out.print(o + ", ");
-		}
-		System.out.println();
-	}
 
+	public static void logForGraphing(Object... obs) {
+		Arrays.asList(obs).forEach(o -> Debugger.logDetailedInfo(o + ", "));
+		Debugger.logDetailedInfo("");
+	}
 }

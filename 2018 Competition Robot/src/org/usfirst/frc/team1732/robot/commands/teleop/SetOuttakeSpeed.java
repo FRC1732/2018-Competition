@@ -15,7 +15,6 @@ public class SetOuttakeSpeed extends InstantCommand {
 		this.variableOut = variableOut;
 	}
 
-	// Called once when the command executes
 	@Override
 	protected void initialize() {
 		Robot.manip.setVariableOutSpeed(variableOut);

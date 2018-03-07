@@ -17,13 +17,11 @@ public class DriveWithJoysticks extends NotifierCommand {
 		this.drive = drive;
 	}
 
-	// Called just before this Command runs the first time
 	@Override
 	protected void init() {
 		Robot.drivetrain.setCoast();
 	}
 
-	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void exec() {
 		// drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(),
@@ -37,6 +35,5 @@ public class DriveWithJoysticks extends NotifierCommand {
 	}
 
 	@Override
-	protected void whenEnded() {
-	}
+	protected void whenEnded() {}
 }

@@ -6,6 +6,7 @@ import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.VelocityPoint;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.NotifierCommand;
 import org.usfirst.frc.team1732.robot.util.Util;
 
@@ -43,8 +44,8 @@ public class FollowVelocityPath extends NotifierCommand {
 		navx.zero();
 		leftE.zero();
 		rightE.zero();
-		System.out.println("Initial heading: " + profile.initialHeading);
-		System.out.println("Final Center Pos : " + profile.finalAbsCenterPos);
+		Debugger.logStart(this, "Initial heading: %.3f, Final Center Pos: %.3f", profile.initialHeading,
+				profile.finalAbsCenterPos);
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
 		// timer.reset();
 		// timer.start();
@@ -54,7 +55,7 @@ public class FollowVelocityPath extends NotifierCommand {
 
 	@Override
 	protected void exec() {
-		// System.out.println("Time: " + timer.get());
+		// Debugger.logDetailedInfo("Time: " + timer.get());
 		// timer.reset();
 		// timer.start();
 		PointPair<VelocityPoint> pair = profile.getCeilingPoint(timeSinceStarted());

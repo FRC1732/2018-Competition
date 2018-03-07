@@ -14,7 +14,6 @@ public class ManipSetIn extends InstantCommand {
 		requires(Robot.manip);
 	}
 
-	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		Robot.manip.setIn();

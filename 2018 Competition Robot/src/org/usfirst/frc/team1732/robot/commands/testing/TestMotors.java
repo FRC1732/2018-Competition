@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.testing;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -29,9 +30,9 @@ public class TestMotors extends Command {
 		r = rightValue;
 		this.mode = mode;
 		this.rampRate = rampRate;
+		Debugger.logStart(this);
 	}
 
-	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		Robot.drivetrain.setNeutralMode(mode);
@@ -47,17 +48,14 @@ public class TestMotors extends Command {
 		maxR = Math.max(maxR, Math.abs(Robot.drivetrain.rightEncoder.getRate()));
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
 
-	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		System.out.println("Max left: " + maxL);
-		System.out.println("Max right: " + maxR);
+		Debugger.logEnd(this, "Max left: %.2f, Max right: %.2f", maxL, maxR);
 		Robot.drivetrain.leftMaster.configOpenloopRamp(0, Robot.CONFIG_TIMEOUT);
 		Robot.drivetrain.rightMaster.configOpenloopRamp(0, Robot.CONFIG_TIMEOUT);
 		Robot.drivetrain.setStop();

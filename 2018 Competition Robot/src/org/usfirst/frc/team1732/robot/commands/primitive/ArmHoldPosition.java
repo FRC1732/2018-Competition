@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
@@ -16,7 +17,7 @@ public class ArmHoldPosition extends InstantCommand {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		System.out.println("Running arm hold command");
+		Debugger.logStart(this);
 		int pos = Robot.arm.getEncoderPulses();
 		Robot.arm.useMagicControl(pos);
 		Robot.arm.holdPosition();

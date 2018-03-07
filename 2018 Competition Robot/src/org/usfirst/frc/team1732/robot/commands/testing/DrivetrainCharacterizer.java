@@ -36,7 +36,6 @@ public class DrivetrainCharacterizer extends Command {
 
 	private FileWriter fw;
 
-	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		leftEncoder.zero();
@@ -89,7 +88,6 @@ public class DrivetrainCharacterizer extends Command {
 	private final CircularBuffer leftVelBuff = new CircularBuffer(length);
 	private final CircularBuffer rightVelBuff = new CircularBuffer(length);
 
-	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
 		double time = Timer.getFPGATimestamp();
@@ -118,13 +116,11 @@ public class DrivetrainCharacterizer extends Command {
 		}
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
 		return false;
 	}
 
-	// Called once after isFinished returns true
 	@Override
 	protected void end() {
 		Robot.drivetrain.drive.tankDrive(0, 0);

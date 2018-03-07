@@ -16,14 +16,9 @@ public class ArmTest extends Command {
 		this.percentVolt = percentVolt;
 	}
 
-	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		Robot.arm.setManual(percentVolt);
-	}
-
-	@Override
-	protected void execute() {
 	}
 
 	@Override

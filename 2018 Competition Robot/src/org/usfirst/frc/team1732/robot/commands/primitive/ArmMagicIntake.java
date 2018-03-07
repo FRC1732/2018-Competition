@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 import static org.usfirst.frc.team1732.robot.Robot.arm;
 
 import org.usfirst.frc.team1732.robot.subsystems.Arm.Positions;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -31,7 +32,7 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void initialize() {
-			System.out.println("Running arm intake command");
+			Debugger.logStart(this);
 			int position = Positions.INTAKE.value;
 			arm.useMagicControl(position);
 			arm.set(position);
@@ -57,8 +58,7 @@ public class ArmMagicIntake extends CommandGroup {
 			if (parentCommand.hitButton) {
 				arm.resetArmPos();
 			}
-			System.out.println("ending arm intake command");
-			System.out.println("hit button: " + parentCommand.hitButton);
+			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 		}
 
 	}
@@ -74,7 +74,7 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void initialize() {
-			System.out.println("Running arm intake command 2");
+			Debugger.logStart(this);
 			arm.setManual(-0.15);
 		}
 
@@ -94,8 +94,7 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void end() {
-			System.out.println("ending arm intake command 2");
-			System.out.println("hit button: " + parentCommand.hitButton);
+			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 			if (parentCommand.hitButton) {
 				arm.resetArmPos();
 			}

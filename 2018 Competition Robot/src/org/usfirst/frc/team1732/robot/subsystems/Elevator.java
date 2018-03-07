@@ -5,6 +5,7 @@ import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -92,8 +93,6 @@ public class Elevator extends Subsystem {
 		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
 		Preferences.getInstance().putDouble(key, startingCount);
 		distanceFromStartup = startingCount - Positions.INTAKE.value;
-		// System.out.println("Elevator Encoder: " +
-		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
 		if (autoControl) {
 			if (desiredPosition < Positions.RADIO.value) {
 				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
@@ -109,8 +108,7 @@ public class Elevator extends Subsystem {
 	}
 
 	@Override
-	public void initDefaultCommand() {
-	}
+	public void initDefaultCommand() {}
 
 	public void set(int position) {
 		if (position > Positions.MAX.value) {
@@ -119,7 +117,7 @@ public class Elevator extends Subsystem {
 		desiredPosition = position;
 		desiredIsSet = true;
 		motor.set(ControlMode.MotionMagic, desiredPosition);
-		System.out.println("setting position: " + desiredPosition);
+		Debugger.logDetailedInfo("Setting Elevator position: " + desiredPosition);
 		autoControl = true;
 	}
 

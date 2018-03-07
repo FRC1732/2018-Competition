@@ -10,13 +10,9 @@ import edu.wpi.first.wpilibj.command.Command;
 public class HooksToggle extends Command {
 
 	public HooksToggle() {
-		super();
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
 		requires(Robot.hooks);
 	}
 
-	// Called once when the command executes
 	@Override
 	protected void initialize() {
 		Robot.hooks.setUp();

@@ -5,6 +5,7 @@ import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -116,19 +117,18 @@ public class Arm extends Subsystem {
 	}
 
 	@Override
-	public void initDefaultCommand() {
-	}
+	public void initDefaultCommand() {}
 
 	public void set(int position) {
 		desiredPosition = position;
 		desiredIsSet = true;
 		motor.set(ControlMode.MotionMagic, position);
-		System.out.println("setting position: " + desiredPosition);
+		Debugger.logDetailedInfo("Setting Arm position: " + desiredPosition);
 		autoControl = true;
 	}
 
 	public void setManual(double percentVolt) {
-		System.out.println("Manual control" + percentVolt);
+		Debugger.logDetailedInfo("Manual Arm control: " + percentVolt);
 		motor.set(ControlMode.PercentOutput, percentVolt);
 		autoControl = false;
 	}

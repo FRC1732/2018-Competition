@@ -21,7 +21,6 @@ public class ManipSetOut extends InstantCommand {
 	@Override
 	protected void initialize() {
 		Robot.manip.setOut(speed);
-		System.out.println("ManipSetOut: Ran");
 		Debugger.logStart(this);
 	}
 }
