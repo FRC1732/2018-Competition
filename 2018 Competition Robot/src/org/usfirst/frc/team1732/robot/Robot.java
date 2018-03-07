@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 		paths = new Paths();
 
 		joysticks = new Input(robotConfig);
-
+		AutoChooser.addListener(joysticks);
 		// tracker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
 
 		defaultAuto = new DriveDistance(0);
@@ -137,9 +137,9 @@ public class Robot extends TimedRobot {
 		if (arm.isButtonPressed()) {
 			arm.resetArmPos();
 		}
-		// if (elevator.isButtonPressed()) {
-		// elevator.resetElevatorPos();
-		// }
+		if (elevator.isButtonPressed()) {
+			elevator.resetElevatorPos();
+		}
 	}
 
 	private boolean autoStarted = false;
@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		protectRobot();
 		gameDataWaiter.start();
-		Debugger.enableSimple();
+		Debugger.enableDetailed();
 		autoStarted = false;
 	}
 
