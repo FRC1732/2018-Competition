@@ -39,7 +39,8 @@ public class Paths {
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = Field.Switch.BOUNDARY.getX() + robotWidth / 2.0;
 		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.5);
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.5); // - robotWidth/2.0 - 5; +
+																				// robotLength/2.0; 0.1;
 		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
