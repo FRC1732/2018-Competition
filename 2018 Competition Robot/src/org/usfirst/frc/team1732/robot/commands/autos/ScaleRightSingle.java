@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.commands.autos;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.autotools.Field;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
@@ -14,8 +15,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ScaleRightSingle extends CommandGroup {
 
-	public ScaleRightSingle(boolean scaleIsLeft) {
-		if (scaleIsLeft) {
+	public ScaleRightSingle() {
+		if (DriverStationData.scaleIsLeft) {
 			double forwardDistance = Field.Scale.LEFT_NULL_ZONE.getY() - Robot.drivetrain.robotLength;
 			addSequential(new DriveDistance(forwardDistance));
 			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
