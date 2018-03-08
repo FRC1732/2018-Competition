@@ -18,19 +18,20 @@ public class Ramp extends Subsystem {
 	public Ramp(RobotConfig config) {
 		solenoid = new Solenoid(config.rampSolenoidID);
 		rampOutValue = config.rampOutValue;
-		setRampIn();
+		setIn();
 	}
 
-	public void setRampOut() {
+	public void setOut() {
 		solenoid.set(rampOutValue);
 	}
 
-	public void setRampIn() {
+	public void setIn() {
 		solenoid.set(!rampOutValue);
 	}
 
-	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+	@Override
+	protected void initDefaultCommand() {
+
 	}
+
 }

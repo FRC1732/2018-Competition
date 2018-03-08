@@ -8,10 +8,12 @@ import com.kauailabs.navx.frc.AHRS;
 public class Sensors {
 
 	public final NavX navx;
+	public final Limelight limelight;
 
 	public Sensors(RobotConfig robotConfig) {
 		navx = new NavX(new AHRS(robotConfig.navxPort));
 		navx.zero();
+		limelight = new Limelight();
 	}
 
 	public static double convertTotalAngle(double angle) {

@@ -2,144 +2,84 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
-import org.usfirst.frc.team1732.robot.util.Util;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.command.PIDCommand;
 
-/**
- * Turns the robot an angle using NavX
- */
-public class TurnAngle extends Command {
-	private static final double OUTER_DEADBAND = 20;
-	private static final double DEADBAND_TIME = 0.25;
-	private static final double ANGLE_DEADBAND = 3;
-	private static final double ERROR_P = 0.025;
+public class TurnAngle extends PIDCommand {
 
-	private final GyroReader navx;
-	private final Timer timer;
-	private final Timer deadbandTimer;
-	private boolean inDeadband = false;
-	private final double sign;
-	private final double goalAngle;
-	private final double maxVel;
-	private final double k;
-	private final double radius;
-	private final double endTime;
+	private PIDController pidController = getPIDController();
+	private final double rampTime;
+	private final boolean isAbsolute;
+	private GyroReader navx;
+	private int countOnTarget;
 
-	// private final PIDController pid = new PIDController(0.1, 0, 0, new
-	// PIDSource() {
-	//
-	// @Override
-	// public void setPIDSourceType(PIDSourceType pidSource) {
-	// }
-	//
-	// @Override
-	// public PIDSourceType getPIDSourceType() {
-	// return PIDSourceType.kDisplacement;
-	// }
-	//
-	// @Override
-	// public double pidGet() {
-	// return Robot.sensors.navX.getAngle();
-	// }
-	//
-	// }, d -> {
-	// });
+	public static TurnAngle absolute(double target, double rampTime) {
+		return new TurnAngle(target, 1, rampTime, true);
+	}
 
-	public TurnAngle(double angle, double maxVel) {
+	public static TurnAngle absolute(double target, double maxPercent, double rampTime) {
+		return new TurnAngle(target, maxPercent, rampTime, true);
+	}
+
+	public static TurnAngle relative(double target, double rampTime) {
+		return new TurnAngle(target, 1, rampTime, false);
+	}
+
+	public static TurnAngle relative(double target, double maxPercent, double rampTime) {
+		return new TurnAngle(target, maxPercent, rampTime, false);
+	}
+
+	private TurnAngle(double target, double maxPercent, double rampTime, boolean absolute) {
+		super(0, 0, 0);
+		requires(Robot.drivetrain);
 		navx = Robot.sensors.navx.makeReader();
-		timer = new Timer();
-		deadbandTimer = new Timer();
-		timer.reset();
-		timer.stop();
-		deadbandTimer.reset();
-		deadbandTimer.stop();
-		this.goalAngle = angle;
-		this.sign = Math.signum(angle);
-		this.maxVel = maxVel;
-		radius = Robot.drivetrain.effectiveRobotWidth / 2.0 * 1.2;
-		double distance = radius * Math.toRadians(Math.abs(angle));
-		k = 2 * maxVel / distance;
-		Robot.drivetrain.setBrake();
-		endTime = Math.PI / k;
+		countOnTarget = 0;
+		setSetpoint(target);
+		setInputRange(-180.0, 180.0);
+		pidController.setContinuous();
+		pidController.setOutputRange(-maxPercent, maxPercent);
+		pidController.setPercentTolerance(1);
+		isAbsolute = absolute;
+		this.rampTime = rampTime;
 	}
-
-	// private double getPosition(double t) {
-	// return -maxVel / k * Math.cos(k * t) + maxVel / k;
-	// }
-
-	private double getVelocity(double t) {
-		return maxVel * Math.sin(k * t);
-	}
-
-	private double getAcceleration(double t) {
-		return maxVel * k * Math.cos(k * t);
-	}
-
-	// private double getAngle(double t) {
-	// return getPosition(t) / (Math.PI * 2) * Math.signum(goalAngle);
-	// }
 
 	@Override
 	protected void initialize() {
-		navx.zero();
-		timer.start();
-		System.out.println("Turn to angle started");
-		// pid.setSetpoint(goalAngle);
+		Robot.drivetrain.setBrake();
+		navx.zero(); // onlt affects relative
+		Robot.drivetrain.leftMaster.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
+		Robot.drivetrain.rightMaster.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 	}
 
 	@Override
-	protected void execute() {
-		double time = timer.get();
+	protected double returnPIDInput() {
+		return isAbsolute ? navx.getAngle() : navx.getTotalAngle();
+	}
 
-		double currentAngle = navx.getTotalAngle();
-		double error = goalAngle - currentAngle;
-
-		if (time >= endTime) {
-			System.out.println("Passed max time");
-			double errorSign = Math.signum(error);
-			Robot.drivetrain.setLeft(Util.limit(error * ERROR_P, 0.1 * errorSign, 0.2 * errorSign));
-			Robot.drivetrain
-					.setRight(Util.limit(error * ERROR_P * -1.0, 0.1 * errorSign * -1.0, 0.2 * errorSign * -1.0));
-		} else {
-			double leftVel = getVelocity(time) * sign;
-			double leftAcc = (getAcceleration(time)) * sign;
-			double rightVel = -getVelocity(time) * sign;
-			double rightAcc = -(getAcceleration(time)) * sign;
-
-			double adjust = 1.0;
-			double leftVolt = Robot.drivetrain.leftFF.getAppliedVoltage(leftVel, leftAcc * adjust, 1.1);
-			double rightVolt = Robot.drivetrain.rightFF.getAppliedVoltage(rightVel, rightAcc * adjust, 1.1);
-
-			if (Math.abs(error) < OUTER_DEADBAND) {
-				Robot.drivetrain.setLeft(leftVolt / 12.0 * 0.75);
-				Robot.drivetrain.setRight(rightVolt / 12 * 0.75);
-				System.out.println("inside outer deadband");
-			} else {
-				Robot.drivetrain.setLeft(leftVolt / 12.0);
-				Robot.drivetrain.setRight(rightVolt / 12.0);
-			}
-		}
-		if (!inDeadband && Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND) {
-			deadbandTimer.start();
-			inDeadband = true;
-		} else if (inDeadband && !(Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND)) {
-			inDeadband = false;
-			deadbandTimer.reset();
-			deadbandTimer.stop();
-		}
-		System.out.println("ANGLE ERROR: " + error + " should finish: " + (Math.abs(error) < ANGLE_DEADBAND));
+	@Override
+	protected void usePIDOutput(double output) {
+		Robot.drivetrain.drive.tankDrive(-output, output);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Math.abs(goalAngle - navx.getTotalAngle()) < ANGLE_DEADBAND && deadbandTimer.get() > DEADBAND_TIME;
+		if (pidController.onTarget()) {
+			if (countOnTarget == 10) {
+				return true;
+			}
+			countOnTarget++;
+		} else {
+			countOnTarget = 0;
+		}
+		return false;
 	}
 
 	@Override
 	protected void end() {
-		System.out.println("Turn to angle finsished");
 		Robot.drivetrain.setStop();
+		Robot.drivetrain.leftMaster.configOpenloopRamp(0, Robot.CONFIG_TIMEOUT);
+		Robot.drivetrain.rightMaster.configOpenloopRamp(0, Robot.CONFIG_TIMEOUT);
 	}
+
 }

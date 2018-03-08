@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.subsystems;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,14 +21,26 @@ public class Climber extends Subsystem {
 		MotorUtils.makeVictor(config.climberFollower, config.climberConfig);
 	}
 
+	public void climb() {
+		master.set(ControlMode.PercentOutput, 1);
+	}
+
+	public void reverseClimb() {
+		master.set(ControlMode.PercentOutput, -0.5);
+	}
+
+	public void hold() {
+		// ???
+	}
+
+	public void stop() {
+		master.set(ControlMode.PercentOutput, 0);
+	}
+
 	@Override
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
-	}
-
-	public void periodic() {
-
 	}
 
 }

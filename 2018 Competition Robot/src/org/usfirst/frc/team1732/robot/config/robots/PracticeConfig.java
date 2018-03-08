@@ -1,69 +1,49 @@
 package org.usfirst.frc.team1732.robot.config.robots;
 
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 
 public class PracticeConfig extends RobotConfig {
 
 	{
 		// drivetrain
-		effectiveRobotWidth = robotWidth; // calculate
-		drivetrainInchesPerPulse = 0; // calculate
-		maxInPerSec = 0; // calculate
-		maxInPerSecSq = 0; // calculate
+		effectiveRobotWidth = 28.1877; // calculate
+		drivetrainInchesPerPulse = 136 / 70679.5; // calculate
+		maxUnitsPer100Ms = 7500; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
+		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainMotionPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		drivetrainMotionPID.kP = 0;
-		drivetrainMotionPID.kI = 0;
-		drivetrainMotionPID.kD = 0;
-		drivetrainMotionPID.integralZone = 0;
-		drivetrainMotionPID.allowableError = 0;
-		drivetrainMotionPID.maxIntegralAccumulated = 0;
-		drivetrainMotionPID.secondsFromNeutralToFull = 0;
-		leftFF = new Feedforward(0, 0, 0, 0, 0, 0);
-		rightFF = new Feedforward(0, 0, 0, 0, 0, 0);
+		drivetrainVelocityPID.kP = 0.45/* 0.4 */;
+		drivetrainVelocityPID.kI = 1;// 0.5;
+		drivetrainVelocityPID.kD = 0;
+		drivetrainVelocityPID.kF = 1023 / 7500/* 5000 */;
+		drivetrainVelocityPID.integralZone = 100;// zone is sensor units per 100m
+		drivetrainVelocityPID.allowableError = 0;
+		drivetrainVelocityPID.maxIntegralAccumulated = 100;
+		drivetrainVelocityPID.secondsFromNeutralToFull = 0;
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
-		armUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		armUpPID.kP = 0;
-		armUpPID.kI = 0;
-		armUpPID.kD = 0;
-		armUpPID.integralZone = 0;
-		armUpPID.allowableError = 0;
-		armUpPID.maxIntegralAccumulated = 0;
-		armUpPID.secondsFromNeutralToFull = 0;
-		armDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		armDownPID.kP = 0;
-		armDownPID.kI = 0;
-		armDownPID.kD = 0;
-		armDownPID.integralZone = 0;
-		armDownPID.allowableError = 0;
-		armDownPID.maxIntegralAccumulated = 0;
-		armDownPID.secondsFromNeutralToFull = 0;
-		armDegreesPerPulse = 0;
+		armMagicVel = 1203;
+		armMagicAccel = 1200;
+		armMagicPID.kF = 1023 / 1378; // 1023 / max sensor units per 100 ms
+		armMagicPID.kP = 4.1;
+		armMagicPID.kI = 0.1;
+		armMagicPID.kD = 0;
+		armMagicPID.integralZone = 100;
+		armMagicPID.maxIntegralAccumulated = 100;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-		elevatorUpPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		elevatorUpPID.kP = 0;
-		elevatorUpPID.kI = 0;
-		elevatorUpPID.kD = 0;
-		elevatorUpPID.integralZone = 0;
-		elevatorUpPID.allowableError = 0;
-		elevatorUpPID.maxIntegralAccumulated = 0;
-		elevatorUpPID.secondsFromNeutralToFull = 0;
-		elevatorDownPID.kF = Feedforward.TALON_SRX_FF_GAIN;
-		elevatorDownPID.kP = 0;
-		elevatorDownPID.kI = 0;
-		elevatorDownPID.kD = 0;
-		elevatorDownPID.integralZone = 0;
-		elevatorDownPID.allowableError = 0;
-		elevatorDownPID.maxIntegralAccumulated = 0;
-		elevatorDownPID.secondsFromNeutralToFull = 0;
-		elevatorInchesPerPulse = 0;
+
+		elevatorMagicVel = 3000;
+		elevatorMagicAccel = 3000;
+		elevatorMagicPID.kF = 1023 / 4366; // 1023 / max sensor units per 100 ms
+		elevatorMagicPID.kP = 1.2;
+		elevatorMagicPID.kI = 0;
+		elevatorMagicPID.kD = 0;
+		elevatorMagicPID.integralZone = 0;
+		elevatorMagicPID.maxIntegralAccumulated = 0;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

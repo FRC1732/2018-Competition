@@ -1,39 +1,44 @@
 package org.usfirst.frc.team1732.robot.commands.autos;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.autotools.Field;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
-import org.usfirst.frc.team1732.robot.commands.primitive.TurnAngle;
-import org.usfirst.frc.team1732.robot.subsystems.Arm;
-import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
+import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ScaleLeftSingle extends CommandGroup {
 
-	public ScaleLeftSingle(boolean scaleIsLeft) {
-		double startCenterX = Field.Switch.BOUNDARY.getX() - 5 - Robot.drivetrain.robotWidth / 2.0;
-		if (scaleIsLeft) {
-			double forwardDistance = Field.Scale.LEFT_NULL_ZONE.getY() - Robot.drivetrain.robotLength;
-			addSequential(new DriveDistance(forwardDistance));
-			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE));
-			addSequential(new TurnAngle(35, 80));
-			addSequential(new ManipSetOut());
+	public ScaleLeftSingle() {
+		PointProfile profile;
+		// addSequential(new ArmHoldPosition());
+		// addParallel(new PreAuto(Arm.Positions.TUCK));
+		if (DriverStationData.scaleIsLeft) {
+			profile = Robot.paths.scaleLeftSingleLeftProfile;
+			// double time = profile.getTotalTimeSec();
+			// addParallel(new CommandGroup() {
+			// {
+			// addSequential(new Wait(time * 0.7));
+			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+			// Elevator.Positions.SCALE_HIGH));
+			// }
+			// });
+			addSequential(new FollowVelocityPath(profile));
 		} else {
-			double forwardDistance = Field.Switch.BOUNDARY.getMaxY() + Robot.drivetrain.robotLength + 4;
-			double middlePartY = forwardDistance;
-			addSequential(new DriveDistance(forwardDistance));
-			addSequential(new TurnAngle(90, 80));
-			double forward2 = Field.Switch.BOUNDARY.getMaxX() - startCenterX + 10;
-			addSequential(new DriveDistance(forward2));
-			addSequential(new TurnAngle(-90, 90));
-			double forward3 = Field.Scale.RIGHT_NULL_ZONE.getMinY() - middlePartY;
-			addSequential(new DriveDistance(forward3));
-			addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE));
-			addSequential(new TurnAngle(-30, 80));
-			addSequential(new ManipSetOut());
+			profile = Robot.paths.scaleLeftSingleRightProfile;
+			// double time = profile.getTotalTimeSec();
+			// addParallel(new CommandGroup() {
+			// {
+			// addSequential(new Wait(time * 0.9));
+			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+			// Elevator.Positions.SCALE_HIGH));
+			// }
+			// });
+			addSequential(new FollowVelocityPath(profile));
 		}
+		// addSequential(new PreAuto(Arm.Positions.TUCK));
+		// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+		// Elevator.Positions.SCALE_HIGH));
+		// addSequential(new ManipAutoEject(0.5));
 	}
 }

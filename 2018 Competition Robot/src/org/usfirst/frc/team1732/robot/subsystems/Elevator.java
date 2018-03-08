@@ -4,14 +4,16 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderBase;
-import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Debugger;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -22,44 +24,58 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Elevator extends Subsystem {
 
 	public final TalonSRX motor;
-	public final EncoderBase encoder;
+	private final TalonEncoder encoder;
 
-	public final ClosedLoopProfile upGains;
-	public final ClosedLoopProfile downGains;
+	public final ClosedLoopProfile magicGains;
 
-	public final double inchesPerPulse;
+	private final int allowedError;
 
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
+	private static final String key = "Elevator Starting Count";
+
+	private final int magicVel;
+	private final int magicAccel;
+
+	private final DigitalInput button;
 
 	public Elevator(RobotConfig config) {
-		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
-		upGains = config.elevatorUpPID;
-		downGains = config.elevatorDownPID;
-		upGains.applyToTalon(motor);
-		downGains.applyToTalon(motor);
-		// ClosedLoopProfile.applyZeroGainToTalon(upGains.feedback, upGains.slotIdx, 1,
-		// motor);
-		// ClosedLoopProfile.applyZeroGainToTalon(downGains.feedback, downGains.slotIdx,
-		// 1, motor);
+		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
+		magicGains = config.elevatorMagicPID;
+
+		magicGains.applyToTalon(motor);
+
+		magicVel = config.elevatorMagicVel;
+		magicAccel = config.elevatorMagicAccel;
+		motor.configMotionCruiseVelocity(magicVel, Robot.CONFIG_TIMEOUT);
+		motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
+
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
-		inchesPerPulse = config.elevatorInchesPerPulse;
-		encoder.setDistancePerPulse(config.elevatorInchesPerPulse);
+		encoder.setPhase(config.reverseElevatorSensor);
+
+		allowedError = config.elevatorAllowedErrorCount;
+
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
-		Robot.dash.add("Elevator Encoder Talon Pulses", this::getSensorPosition);
-	}
+		Robot.dash.add("Elevator Encoder Rate", encoder::getRate);
+		// holdPosition();
 
-	private double getSensorPosition() {
-		return motor.getSelectedSensorPosition(0);
+		button = new DigitalInput(0);
+		Robot.dash.add("Elevator Button Pressed", this::isButtonPressed);
+
+		setManual(0);
 	}
 
 	public static enum Positions {
 
+		// 3311
 		// set these in pulses
-		MIN(0), INTAKE(0), SWITCH(0), RADIO(0), SCALE(0), MAX(0);
+		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
+				18389), MAX(30958);
 
 		public final int value;
 
@@ -72,16 +88,18 @@ public class Elevator extends Subsystem {
 
 	@Override
 	public void periodic() {
-		// System.out.println("Elevator Encoder: " +
-		// motor.getSensorCollection().getPulseWidthRiseToRiseUs());
+		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		Preferences.getInstance().putDouble(key, startingCount);
 		if (autoControl) {
-			if (desiredPosition < Positions.RADIO.value && !Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-				motor.set(ControlMode.Position, Positions.RADIO.value);
-				desiredIsSet = false;
-			}
-			if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
-				motor.set(ControlMode.Position, desiredPosition);
-				desiredIsSet = true;
+			if (desiredPosition < Positions.RADIO.value) {
+				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, Positions.RADIO.value);
+					desiredIsSet = false;
+				}
+				if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, desiredPosition);
+					desiredIsSet = true;
+				}
 			}
 		}
 	}
@@ -90,29 +108,19 @@ public class Elevator extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
-	public EncoderReader getEncoderReader() {
-		return encoder.makeReader();
-	}
-
-	public void set(double pos) {
-		int position = (int) (pos / inchesPerPulse);
-		if (position < Positions.MIN.value) {
-			position = Positions.MIN.value;
-		}
+	public void set(int position) {
 		if (position > Positions.MAX.value) {
 			position = Positions.MAX.value;
 		}
 		desiredPosition = position;
 		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
+		motor.set(ControlMode.MotionMagic, desiredPosition);
+		Debugger.logDetailedInfo("Setting Elevator position: " + desiredPosition);
 		autoControl = true;
 	}
 
 	public void set(Positions position) {
-		desiredPosition = position.value;
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		autoControl = true;
+		set(position.value);
 	}
 
 	public void setManual(double percentVolt) {
@@ -121,10 +129,11 @@ public class Elevator extends Subsystem {
 	}
 
 	public void holdPosition() {
-		desiredPosition = encoder.getPulses();
-		desiredIsSet = true;
-		motor.set(ControlMode.Position, desiredPosition);
-		autoControl = true;
+		set(encoder.getPulses());
+	}
+
+	public int getDesiredPosition() {
+		return desiredPosition;
 	}
 
 	public void setStop() {
@@ -132,11 +141,39 @@ public class Elevator extends Subsystem {
 		autoControl = false;
 	}
 
-	public boolean atSetpoint(double allowableError) {
-		return Math.abs(motor.getClosedLoopError(0)) < allowableError;
+	public boolean atSetpoint() {
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, allowedError);
+	}
+
+	public boolean atSetpoint(int error) {
+		return Util.epsilonEquals(encoder.getPulses(), desiredPosition, error);
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPosition() > Positions.RADIO.value;
+		return encoder.getPulses() + allowedError > Positions.RADIO.value;
+	}
+
+	public boolean isArmSafeToGoDown() {
+		if (encoder.getPulses() - allowedError < Positions.HIT_RAMP.value)
+			return true;
+		else // only if the above is false
+			return !(getDesiredPosition() < Positions.HIT_RAMP.value);
+	}
+
+	public int getEncoderPulses() {
+		return encoder.getPulses();
+	}
+
+	public void useMagicControl(int desiredPosition) {
+		// int currentPosition = encoder.getPulses();
+		magicGains.selectGains(motor);
+	}
+
+	public boolean isButtonPressed() {
+		return !button.get();
+	}
+
+	public void resetElevatorPos() {
+		motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
 	}
 }

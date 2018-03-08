@@ -5,7 +5,6 @@ import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
-import org.usfirst.frc.team1732.robot.controlutils.Feedforward;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
@@ -18,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -42,8 +40,8 @@ public class Drivetrain extends Subsystem {
 	private final VictorSPX rightVictor1;
 	private final VictorSPX rightVictor2;
 
-	private final TalonEncoder leftEncoder;
-	private final TalonEncoder rightEncoder;
+	public final TalonEncoder leftEncoder;
+	public final TalonEncoder rightEncoder;
 
 	public final DifferentialDrive drive;
 
@@ -51,14 +49,8 @@ public class Drivetrain extends Subsystem {
 	public final double robotLength;
 	public final double robotWidth;
 	public final double effectiveRobotWidth;
-	public final double maxInPerSec;
-	public final double maxInPerSecSq;
+	public final double maxUnitsPer100Ms;
 
-	// Feedforward
-	public final Feedforward leftFF;
-	public final Feedforward rightFF;
-
-	public final ClosedLoopProfile motionGains;
 	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
@@ -66,22 +58,16 @@ public class Drivetrain extends Subsystem {
 		highGearValue = config.highGearValue;
 
 		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		leftVictor1 = MotorUtils.makeVictor(config.leftFollower1, config.drivetrainConfig);
-		leftVictor2 = MotorUtils.makeVictor(config.leftFollower2, config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1, config.drivetrainConfig, leftMaster);
+		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2, config.drivetrainConfig, leftMaster);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		rightVictor1 = MotorUtils.makeVictor(config.rightFollower1, config.drivetrainConfig);
-		rightVictor2 = MotorUtils.makeVictor(config.rightFollower2, config.drivetrainConfig);
+		rightVictor1 = MotorUtils.makeVictorFollower(config.rightFollower1, config.drivetrainConfig, rightMaster);
+		rightVictor2 = MotorUtils.makeVictorFollower(config.rightFollower2, config.drivetrainConfig, rightMaster);
 
-		leftFF = config.leftFF;
-		rightFF = config.rightFF;
-
-		motionGains = config.drivetrainMotionPID;
-		motionGains.applyToTalon(leftMaster, rightMaster);
 		velocityGains = config.drivetrainVelocityPID;
 		velocityGains.applyToTalon(leftMaster, rightMaster);
-		maxInPerSec = config.maxInPerSec;
-		maxInPerSecSq = config.maxInPerSecSq;
+		maxUnitsPer100Ms = config.maxUnitsPer100Ms;
 
 		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
 		// motionGains.slotIdx, 1, leftMaster,
@@ -97,7 +83,6 @@ public class Drivetrain extends Subsystem {
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
 				config.inputDeadband);
-		defaultCommand = new DriveWithJoysticks(drive);
 
 		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
@@ -127,11 +112,9 @@ public class Drivetrain extends Subsystem {
 		return rightMaster.getSelectedSensorVelocity(0);
 	}
 
-	private Command defaultCommand;
-
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(defaultCommand);
+		setDefaultCommand(new DriveWithJoysticks(drive));
 	}
 
 	public EncoderReader getRightEncoderReader() {
@@ -183,4 +166,13 @@ public class Drivetrain extends Subsystem {
 	public void shiftLow() {
 		shifter.set(!highGearValue);
 	}
+
+	public int velInToUnits(double desiredInPerSec) {
+		return (int) (desiredInPerSec / 10 / inchesPerPulse);
+	}
+
+	public double velUnitsToIn(double desiredUnitsPer100Ms) {
+		return desiredUnitsPer100Ms * 10 * inchesPerPulse;
+	}
+
 }

@@ -16,10 +16,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Manip extends Subsystem {
 
 	public static final double STOP_TIME = 0.25;
+	public static final double BASE_IN_SPEED = 0.7;
+	public static final double BASE_OUT_SPEED = 0.5;
 
 	public final VictorSPX master;
-
 	public final double stopCurrent;
+
+	private double absVariableOut = BASE_OUT_SPEED;
 
 	public Manip(RobotConfig config) {
 		master = MotorUtils.makeVictor(config.manipMaster, config.manipConfig);
@@ -36,12 +39,20 @@ public class Manip extends Subsystem {
 		return master.getOutputCurrent() > stopCurrent;
 	}
 
-	public void setIn() {
-		master.set(ControlMode.PercentOutput, -0.5);
+	public void setVariableOutSpeed(double absVariableOut) {
+		this.absVariableOut = Math.abs(absVariableOut);
 	}
 
-	public void setOut() {
-		master.set(ControlMode.PercentOutput, 0.5);
+	public void setOutVariable() {
+		setOut(absVariableOut);
+	}
+
+	public void setIn() {
+		master.set(ControlMode.PercentOutput, -BASE_IN_SPEED);
+	}
+
+	public void setOut(double absOutSpeed) {
+		master.set(ControlMode.PercentOutput, absOutSpeed);
 	}
 
 	public void setStop() {

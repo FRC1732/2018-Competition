@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1732.robot.util;
 
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Dashboard {
 
+	private static ConcurrentLinkedQueue<Entry> entries;
+
 	public Dashboard() {
+		entries = new ConcurrentLinkedQueue<>();
 		Notifier notifier = new Notifier(this::loop);
 		int loopTimeMs = 40;
 		notifier.startPeriodic(loopTimeMs / 1000.0);
@@ -22,8 +25,6 @@ public class Dashboard {
 	private void call(Entry e) {
 		e.putToDashboard();
 	}
-
-	private static LinkedList<Entry> entries;
 
 	public void add(String name, Supplier<?> sup) {
 		entries.add(new Entry(name, sup));

@@ -6,10 +6,9 @@ import static org.usfirst.frc.team1732.robot.Robot.drivetrain;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.navx.GyroReader;
+import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.DisplacementPIDSource;
 import org.usfirst.frc.team1732.robot.util.Util;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -41,13 +40,17 @@ public class DriveDistanceNoStop extends Command {
 		r.zero();
 		g.zero();
 		rot.enable();
-		drivetrain.setNeutralMode(NeutralMode.Brake);
+		drivetrain.setBrake();
+		Debugger.logStart(this, "Dist = %.2f, End Speed = %.2f", distance, endSpeed);
 	}
 	protected void execute() {
 		double percentDone = ((l.getPosition() + r.getPosition()) / 2) / distance;
 		drivetrain.drive.arcadeDrive(Util.cerp(1, endSpeed, percentDone), rot.get(), false);
 	}
 	protected boolean isFinished() {
-		return ((l.getPosition() + r.getPosition()) / 2) > distance;
+		return ((l.getPosition() + r.getPosition()) / 2) >= distance;
+	}
+	protected void end() {
+		Debugger.logEnd(this, "%.2f inches", (l.getPosition() + r.getPosition()) / 2);
 	}
 }
