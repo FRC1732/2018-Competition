@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.commands.primitive;
+package org.usfirst.frc.team1732.robot.commands.teleop;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;

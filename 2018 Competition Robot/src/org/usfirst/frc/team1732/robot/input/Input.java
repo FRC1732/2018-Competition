@@ -11,9 +11,9 @@ import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
+import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.teleop.SetOuttakeSpeed;
 import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
