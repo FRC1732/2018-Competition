@@ -35,7 +35,6 @@ public class PracticeConfig extends RobotConfig {
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-
 		elevatorMagicVel = 3000;
 		elevatorMagicAccel = 3000;
 		elevatorMagicPID.kF = 1023 / 4366; // 1023 / max sensor units per 100 ms
