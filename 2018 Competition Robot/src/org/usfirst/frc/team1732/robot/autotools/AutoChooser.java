@@ -49,9 +49,11 @@ public final class AutoChooser {
 	}
 
 	public static void addListener(Input joysticks) {
+		int first = (int) Util.limit(joysticks.autoDial.get(), 0, AutoModes.values().length - 1);
+		System.err.println("ERROR 0 AUTO: " + AutoModes.values()[first]);
 		joysticks.autoDial.addValueChangeListener(d -> {
 			int i = (int) Util.limit(d, 0, AutoModes.values().length - 1);
-			System.err.println("ERROR -1 AUTO: " + AutoModes.values()[i]);
+			System.err.println("ERROR 0 AUTO: " + AutoModes.values()[i]);
 		});
 	}
 
