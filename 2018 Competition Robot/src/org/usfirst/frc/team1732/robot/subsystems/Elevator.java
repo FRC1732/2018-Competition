@@ -56,8 +56,8 @@ public class Elevator extends Subsystem {
 
 		allowedError = config.elevatorAllowedErrorCount;
 
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);

@@ -57,8 +57,8 @@ public class Arm extends Subsystem {
 
 		allowedError = config.armAllowedErrorCount;
 
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
