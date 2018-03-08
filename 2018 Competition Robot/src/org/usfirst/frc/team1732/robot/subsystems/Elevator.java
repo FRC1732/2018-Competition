@@ -39,6 +39,7 @@ public class Elevator extends Subsystem {
 	private final int magicAccel;
 
 	private final DigitalInput button;
+	private final boolean reverseButton;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
@@ -64,7 +65,9 @@ public class Elevator extends Subsystem {
 		Robot.dash.add("Elevator Encoder Rate", encoder::getRate);
 		// holdPosition();
 
-		button = new DigitalInput(0);
+		button = new DigitalInput(config.elevatorButtonDIO);
+		reverseButton = config.reverseElevatorButton;
+
 		Robot.dash.add("Elevator Button Pressed", this::isButtonPressed);
 
 		setManual(0);
@@ -170,7 +173,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isButtonPressed() {
-		return !button.get();
+		return !reverseButton == button.get();
 	}
 
 	public void resetElevatorPos() {

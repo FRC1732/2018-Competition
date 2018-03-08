@@ -40,6 +40,7 @@ public class Arm extends Subsystem {
 	private final int magicAccel;
 
 	private final DigitalInput button;
+	private final boolean reverseButton;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -63,7 +64,8 @@ public class Arm extends Subsystem {
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
-		button = new DigitalInput(1);
+		button = new DigitalInput(config.armButtonDIO);
+		reverseButton = config.reverseArmButton;
 		Robot.dash.add("Arm Button Pressed", this::isButtonPressed);
 	}
 
@@ -180,7 +182,7 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean isButtonPressed() {
-		return !button.get();
+		return !reverseButton == button.get();
 	}
 
 	public void resetArmPos() {

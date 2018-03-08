@@ -58,6 +58,8 @@ public class RobotConfig {
 	public int armMagicVel = 0;
 	public int armMagicAccel = 0;
 	public final int armAllowedErrorCount = 80;
+	public final int armButtonDIO = 1;
+	public boolean reverseArmButton = false;
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -84,6 +86,8 @@ public class RobotConfig {
 	public int elevatorMagicVel = 0;
 	public int elevatorMagicAccel = 0;
 	public final int elevatorAllowedErrorCount = 50;
+	public final int elevatorButtonDIO = 1;
+	public boolean reverseElevatorButton = false;
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
