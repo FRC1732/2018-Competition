@@ -19,7 +19,7 @@ public class ScaleRightSingle extends CommandGroup {
 		double time;
 		double percent;
 
-		addSequential(new ArmMagicPosition(Arm.Positions.START));
+		addParallel(new ArmMagicPosition(Arm.Positions.START));
 		// addParallel(new PreAuto(Arm.Positions.TUCK));
 
 		if (DriverStationData.scaleIsLeft) {
