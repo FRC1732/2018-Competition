@@ -6,9 +6,9 @@ public class CompetitionConfig extends RobotConfig {
 
 	{
 		// drivetrain
-		effectiveRobotWidth = 25; // calculate
+		effectiveRobotWidth = 28.1877; // calculate
 		drivetrainInchesPerPulse = 100.0 / ((51310 - (12) + 51034 - (117)) / 2.0); // = 0.001957
-		maxUnitsPer100Ms = 0; // measure
+		maxUnitsPer100Ms = 7500; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		// change PID values like this:
