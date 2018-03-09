@@ -12,11 +12,13 @@ import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class FollowVelocityPath extends NotifierCommand {
 
 	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
 	// degrees, use 20% of velocity
-	private static final double HEADING_P = 0;
+	private static final double HEADING_P = 2;
 
 	private final GyroReader navx;
 	private final EncoderReader leftE;
@@ -37,7 +39,10 @@ public class FollowVelocityPath extends NotifierCommand {
 		leftE = Robot.drivetrain.getLeftEncoderReader();
 		rightE = Robot.drivetrain.getRightEncoderReader();
 		this.profile = profile;
+		// timer = new Timer();
 	}
+
+	private Timer timer;
 
 	@Override
 	protected void init() {
@@ -50,8 +55,6 @@ public class FollowVelocityPath extends NotifierCommand {
 		// timer.reset();
 		// timer.start();
 	}
-
-	// Timer timer = new Timer();
 
 	@Override
 	protected void exec() {
@@ -76,12 +79,15 @@ public class FollowVelocityPath extends NotifierCommand {
 		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
 		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
 
-		System.out.println();
-		Util.logForGraphing("heading", desiredHeading, currentHeading, headingError, headingAdjustment);
-		Util.logForGraphing("left", Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
-				Robot.drivetrain.leftMaster.getClosedLoopError(0));
-		Util.logForGraphing("right", Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
-				Robot.drivetrain.rightMaster.getClosedLoopError(0));
+		// System.out.println();
+		// Util.logForGraphing("heading", desiredHeading, currentHeading, headingError,
+		// headingAdjustment);
+		// Util.logForGraphing("left",
+		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
+		// Robot.drivetrain.leftMaster.getClosedLoopError(0));
+		// Util.logForGraphing("right",
+		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
+		// Robot.drivetrain.rightMaster.getClosedLoopError(0));
 		// Util.logForGraphing("left", leftE.getRate(), leftVel, leftNew, leftSensor,
 		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
 		// Robot.drivetrain.leftMaster.getClosedLoopError(0),
@@ -94,6 +100,9 @@ public class FollowVelocityPath extends NotifierCommand {
 
 		Robot.drivetrain.leftMaster.set(ControlMode.Velocity, leftSensor);
 		Robot.drivetrain.rightMaster.set(ControlMode.Velocity, rightSensor);
+		// SmartDashboard.putNumber("Rate: ", timer.get());
+		// timer.reset();
+		// timer.get();
 	}
 
 	@Override

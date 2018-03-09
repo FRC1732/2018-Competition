@@ -33,7 +33,7 @@ public final class AutoChooser {
 							double endingY = 50;
 							path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
-							path.generateProfile(150, 300);
+							path.generateProfile(50, 100);
 							return new FollowVelocityPath(
 									path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
 						}), DRIVE_VOLT(() -> new DriveVoltage(0.5, 0.5, NeutralMode.Coast)), DRIVE_LEFT(
