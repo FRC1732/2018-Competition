@@ -16,7 +16,7 @@ public class FollowVelocityPath extends NotifierCommand {
 
 	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
 	// degrees, use 20% of velocity
-	private static final double HEADING_P = 2;
+	private static final double HEADING_P = 0;
 
 	private final GyroReader navx;
 	private final EncoderReader leftE;

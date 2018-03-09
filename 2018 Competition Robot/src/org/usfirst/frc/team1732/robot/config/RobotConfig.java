@@ -33,7 +33,7 @@ public class RobotConfig {
 
 	private final int leftMasterID = 0;
 	private final boolean reverseLeft = true;
-	public final boolean reverseLeftSensor = false;
+	public final boolean reverseLeftSensor = true;
 	public final CTREParam leftMaster = new CTREParam(leftMasterID, reverseLeft);
 	public final CTREParam leftFollower1 = new CTREParam(1, reverseLeft, leftMasterID);
 	public final CTREParam leftFollower2 = new CTREParam(2, reverseLeft, leftMasterID);

@@ -13,6 +13,8 @@ import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.CamMode;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -101,7 +103,7 @@ public class Robot extends TimedRobot {
 		joysticks = new Input(robotConfig);
 		AutoChooser.addListener(joysticks);
 		// tracker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
-
+		sensors.navx.addToDashboard();
 		defaultAuto = new DefaultDriveForward();
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
@@ -190,6 +192,8 @@ public class Robot extends TimedRobot {
 		protectRobot();
 		Debugger.enableDetailed();
 		// cancel auto command here
+		sensors.limelight.setLEDMode(LEDMode.OFF);
+		sensors.limelight.setCamMode(CamMode.DRIVER_FEEDBACK);
 		arm.setManual(0);
 		elevator.setManual(0);
 		drivetrain.setCoast();
