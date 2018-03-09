@@ -8,7 +8,6 @@ import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingle;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
@@ -36,7 +35,7 @@ public final class AutoChooser {
 							path.generateProfile(50, 100);
 							return new FollowVelocityPath(
 									path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
-						}), DRIVE_VOLT(() -> new DriveVoltage(0.5, 0.5, NeutralMode.Coast)), DRIVE_LEFT(
+						}), DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5)), DRIVE_LEFT(
 								() -> new DriveTime(1, 0, NeutralMode.Coast, 10)), DRIVE_RIGHT(
 										() -> new DriveTime(0, 1, NeutralMode.Coast, 10));
 

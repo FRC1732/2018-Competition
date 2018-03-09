@@ -142,6 +142,10 @@ public class Robot extends TimedRobot {
 		if (elevator.isButtonPressed()) {
 			elevator.resetElevatorPos();
 		}
+		// System.out.println("left vel: " + drivetrain.leftEncoder.getRate());
+		// System.out.println("right vel: " + drivetrain.rightEncoder.getRate());
+		// System.out.println("arm enc: " + arm.getEncoderPulses());
+		// System.out.println("elevator enc: " + elevator.getEncoderPulses());
 	}
 
 	private boolean autoStarted = false;
