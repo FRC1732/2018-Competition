@@ -173,8 +173,8 @@ public class Arm extends Subsystem {
 		if (desiredPosition > maxLow && currentPosition < maxLow) {
 			motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
 		} else if (desiredPosition < maxLow && currentPosition > maxLow) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.05), Robot.CONFIG_TIMEOUT);
-			motor.configMotionCruiseVelocity((int) (magicVel * 0.4), Robot.CONFIG_TIMEOUT);
+			motor.configMotionAcceleration((int) (magicAccel * 0.05), Robot.CONFIG_TIMEOUT); // 0.2
+			motor.configMotionCruiseVelocity((int) (magicVel * 0.4), Robot.CONFIG_TIMEOUT); // 0.5
 		} else {
 			motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
 		}
