@@ -19,7 +19,7 @@ public class ScaleRightSingle extends CommandGroup {
 		double time;
 		double percent;
 
-		addParallel(new ArmMagicPosition(Arm.Positions.START));
+		addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
 		// addParallel(new PreAuto(Arm.Positions.TUCK));
 
 		if (DriverStationData.scaleIsLeft) {
@@ -38,7 +38,7 @@ public class ScaleRightSingle extends CommandGroup {
 				addParallel(new CommandGroup() {
 					{
 						addSequential(new Wait(time * percent));
-						addSequential(new ArmElevatorSetPosition(Arm.Positions.START, Elevator.Positions.SCALE_HIGH));
+						addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_HIGH));
 					}
 				});
 				addSequential(new FollowVelocityPath(profile));

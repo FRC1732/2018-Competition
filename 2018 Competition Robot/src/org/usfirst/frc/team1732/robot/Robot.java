@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		protectRobot();
-		Debugger.disable();
+		Debugger.enableDetailed();
 		// cancel auto command here
 		arm.setManual(0);
 		elevator.setManual(0);

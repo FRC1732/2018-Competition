@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SwitchCenterFront extends CommandGroup {
 
 	public SwitchCenterFront() {
-		addParallel(new ArmMagicPosition(Arm.Positions.START));
+		addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
 
 		if (DriverStationData.closeSwitchIsLeft) {
 			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontLeftProfile));

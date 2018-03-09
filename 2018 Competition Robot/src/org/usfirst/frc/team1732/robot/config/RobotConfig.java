@@ -59,7 +59,7 @@ public class RobotConfig {
 	public int armMagicAccel = 0;
 	public final int armAllowedErrorCount = 80;
 	public final int armButtonDIO = 1;
-	public boolean reverseArmButton = false;
+	public boolean reverseArmButton = true;
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -86,7 +86,7 @@ public class RobotConfig {
 	public int elevatorMagicVel = 0;
 	public int elevatorMagicAccel = 0;
 	public final int elevatorAllowedErrorCount = 50;
-	public final int elevatorButtonDIO = 1;
+	public final int elevatorButtonDIO = 0;
 	public boolean reverseElevatorButton = false;
 
 	// cube manip (intake)
@@ -108,7 +108,7 @@ public class RobotConfig {
 
 	public final Port navxPort = SPI.Port.kMXP;
 
-	public final double inputDeadband = 0.025; // 2.5%
+	public final double inputDeadband = 0.04; // 2.5%
 	public final int leftJoystickPort = 0;
 	public final int rightJoystickPort = 1;
 	public final int buttonJoystickPort = 2;
