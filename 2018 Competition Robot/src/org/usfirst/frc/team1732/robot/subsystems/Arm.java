@@ -170,10 +170,10 @@ public class Arm extends Subsystem {
 		int currentPosition = encoder.getPulses();
 		int maxLow = Positions.TUCK.value;
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		if (desiredPosition >= maxLow && currentPosition < maxLow) {
+		if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
 			motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
 		} else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.15), Robot.CONFIG_TIMEOUT); // 0.2
+			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT); // 0.2
 			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT); // 0.5
 		} else {
 			motor.configMotionAcceleration((int) (magicAccel * 0.7), Robot.CONFIG_TIMEOUT);

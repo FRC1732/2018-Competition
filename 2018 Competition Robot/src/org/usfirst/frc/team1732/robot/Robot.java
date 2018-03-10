@@ -15,6 +15,7 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.CamMode;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.StreamMode;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -198,6 +199,7 @@ public class Robot extends TimedRobot {
 		// cancel auto command here
 		sensors.limelight.setLEDMode(LEDMode.OFF);
 		sensors.limelight.setCamMode(CamMode.DRIVER_FEEDBACK);
+		sensors.limelight.setStreamMode(StreamMode.PIP_SECONDARY);
 		arm.setManual(0);
 		elevator.setManual(0);
 		drivetrain.setCoast();
