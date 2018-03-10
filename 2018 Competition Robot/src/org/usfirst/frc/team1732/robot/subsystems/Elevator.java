@@ -51,7 +51,7 @@ public class Elevator extends Subsystem {
 		motor.configMotionCruiseVelocity(magicVel, Robot.CONFIG_TIMEOUT);
 		motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
 
-		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
+		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		encoder.setPhase(config.reverseElevatorSensor);
 
 		allowedError = config.elevatorAllowedErrorCount;

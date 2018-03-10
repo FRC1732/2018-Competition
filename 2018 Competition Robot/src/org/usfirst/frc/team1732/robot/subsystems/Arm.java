@@ -52,7 +52,7 @@ public class Arm extends Subsystem {
 		motor.configMotionCruiseVelocity(magicVel, Robot.CONFIG_TIMEOUT);
 		motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
 
-		encoder = new TalonEncoder(motor, FeedbackDevice.CTRE_MagEncoder_Absolute);
+		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
@@ -117,7 +117,8 @@ public class Arm extends Subsystem {
 	}
 
 	@Override
-	public void initDefaultCommand() {}
+	public void initDefaultCommand() {
+	}
 
 	public void set(int position) {
 		desiredPosition = position;
