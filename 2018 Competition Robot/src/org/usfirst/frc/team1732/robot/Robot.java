@@ -13,6 +13,7 @@ import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
+import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -112,6 +113,9 @@ public class Robot extends TimedRobot {
 		// dash.add("Robot x", tracker::getX);
 		// dash.add("Robot y", tracker::getY);
 		// dash.add("Robot heading", tracker::getHeading);
+		SensorChecker.addSensor(sensors.navx::isConnected, "NavX board");
+		SensorChecker.addSensor(drivetrain.leftEncoder::isConnected, "Left drivetrain encoder");
+		SensorChecker.addSensor(drivetrain.rightEncoder::isConnected, "Right drivetrain encoder");
 	}
 
 	@Override

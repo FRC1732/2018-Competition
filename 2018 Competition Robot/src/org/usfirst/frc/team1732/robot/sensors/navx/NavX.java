@@ -115,4 +115,9 @@ public class NavX extends GyroBase {
 		Robot.dash.add(imu + "IMU_Update_Count", () -> navx.getUpdateCount());
 	}
 
+	public boolean isConnected() {
+		return navx.isConnected();
+	}
+	
+	
 }

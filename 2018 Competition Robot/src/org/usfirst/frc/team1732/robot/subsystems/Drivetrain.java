@@ -148,10 +148,12 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void setLeft(double percentVolt) {
+		leftEncoder.atZero = false;
 		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
 	public void setRight(double percentVolt) {
+		rightEncoder.atZero = false;
 		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
