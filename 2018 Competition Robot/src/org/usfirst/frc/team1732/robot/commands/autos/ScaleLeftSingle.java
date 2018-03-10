@@ -3,7 +3,7 @@ package org.usfirst.frc.team1732.robot.commands.autos;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
@@ -22,7 +22,7 @@ public class ScaleLeftSingle extends CommandGroup {
 		double time;
 		double percent;
 
-		addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
+		// addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
 		// addParallel(new PreAuto(Arm.Positions.TUCK));
 
 		if (DriverStationData.scaleIsLeft) {
@@ -33,6 +33,7 @@ public class ScaleLeftSingle extends CommandGroup {
 				{
 					addParallel(new CommandGroup() {
 						{
+							addSequential(new ArmHoldPosition());
 							addSequential(new Wait(time * percent));
 							addSequential(
 									new ArmElevatorSetPosition(Arm.Positions.SCALE_HIGH,
@@ -46,6 +47,7 @@ public class ScaleLeftSingle extends CommandGroup {
 			// addSequential(new PreAuto(Arm.Positions.TUCK));
 			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
 			// Elevator.Positions.SCALE_HIGH));
+			addSequential(new Wait(0.5));
 			addSequential(new ManipAutoEject(0.5));
 		} else {
 			addSequential(new DriveTime(0.25, 0.25, NeutralMode.Brake, 5));

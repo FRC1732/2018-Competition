@@ -73,7 +73,7 @@ public class Arm extends Subsystem {
 
 		// set these in pulses
 		BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642), CLIMB(5000), START(4093), TUCK(
-				6432), SCALE_LOW(7622), SCALE_HIGH(6827);
+				6432), SCALE_LOW(7622), SCALE_HIGH(7622);
 
 		public final int value;
 
@@ -170,8 +170,8 @@ public class Arm extends Subsystem {
 		int currentPosition = encoder.getPulses();
 		int maxLow = Positions.TUCK.value;
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		if (desiredPosition > maxLow && currentPosition < maxLow) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
+		if (desiredPosition >= maxLow && currentPosition < maxLow) {
+			motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
 		} else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
 			motor.configMotionAcceleration((int) (magicAccel * 0.15), Robot.CONFIG_TIMEOUT); // 0.2
 			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT); // 0.5

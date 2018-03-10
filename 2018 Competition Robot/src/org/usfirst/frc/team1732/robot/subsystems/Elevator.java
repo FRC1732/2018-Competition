@@ -78,7 +78,7 @@ public class Elevator extends Subsystem {
 		// 3311
 		// set these in pulses
 		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
-				18389), MAX(30958);
+				22389), MAX(30958);
 
 		public final int value;
 
