@@ -6,7 +6,6 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingle;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingle;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveDistance;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
@@ -21,23 +20,23 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public final class AutoChooser {
 	public static enum AutoModes {
-		SWITCH_CENTER_FRONT(() -> new SwitchCenterFront()), ScaleLeftSingle(
-				() -> new ScaleLeftSingle()), ScaleRightSingle(() -> new ScaleRightSingle()), DRIVE30(
-						() -> new DriveDistance(30)), DRIVE60(() -> new DriveDistance(60)), DriveForwardMotion(() -> {
-							Path path;
-							double startingX = 0;
-							double startingY = 0;
-							path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-							double endingX = startingX;
-							double endingY = 50;
-							path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+		SWITCH_CENTER_FRONT(() -> new SwitchCenterFront()), //
+		ScaleLeftSingle(() -> new ScaleLeftSingle()), //
+		ScaleRightSingle(() -> new ScaleRightSingle()), //
+		DriveForwardMotion(() -> {
+			Path path;
+			double startingX = 0;
+			double startingY = 0;
+			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
+			double endingX = startingX;
+			double endingY = 50;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
-							path.generateProfile(50, 100);
-							return new FollowVelocityPath(
-									path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
-						}), DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5)), DRIVE_LEFT(
-								() -> new DriveTime(1, 0, NeutralMode.Coast, 10)), DRIVE_RIGHT(
-										() -> new DriveTime(0, 1, NeutralMode.Coast, 10));
+			path.generateProfile(50, 100);
+			return new FollowVelocityPath(
+					path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
+		}), //
+		DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5));
 
 		private final Supplier<Command> commandSupplier;
 
