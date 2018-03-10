@@ -73,7 +73,7 @@ public class Arm extends Subsystem {
 
 		// set these in pulses
 		BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642), CLIMB(5000), START(4093), TUCK(
-				6432), SCALE(7622);
+				6432), SCALE_LOW(7622), SCALE_HIGH(7027);
 
 		public final int value;
 

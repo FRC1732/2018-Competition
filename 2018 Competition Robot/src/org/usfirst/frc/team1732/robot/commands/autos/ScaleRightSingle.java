@@ -38,7 +38,8 @@ public class ScaleRightSingle extends CommandGroup {
 				addParallel(new CommandGroup() {
 					{
 						addSequential(new Wait(time * percent));
-						addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_HIGH));
+						addSequential(
+								new ArmElevatorSetPosition(Arm.Positions.SCALE_HIGH, Elevator.Positions.SCALE_HIGH));
 					}
 				});
 				addSequential(new FollowVelocityPath(profile));
