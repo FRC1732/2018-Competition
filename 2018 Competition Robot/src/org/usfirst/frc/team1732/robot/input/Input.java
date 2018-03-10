@@ -52,13 +52,14 @@ public class Input {
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
 
-		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
-		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
-		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden, manipLowSpeed.whenNotOverriden);
+		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
+		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
+		// ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden,
+		// manipLowSpeed.whenNotOverriden);
 
 		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
 		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
-		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
+		// ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
@@ -102,12 +103,14 @@ public class Input {
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
+		rockerUp.whenReleased(new ElevatorHoldPosition());
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
-		rocker.whenReleased(new ElevatorHoldPosition());
+		rockerDown.whenReleased(new ElevatorHoldPosition());
 
 		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
-		manipSpeed.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
-		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
+		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.2));
+		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
 
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
@@ -131,6 +134,7 @@ public class Input {
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));
+
 		// magicElevator.whenPressed(new ElevatorTest(0.3));
 		// magicArm.whenPressed(new ArmMagicPosition(-5000));
 		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));

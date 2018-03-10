@@ -91,11 +91,10 @@ public class RobotConfig {
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
-	private final int manipMasterID = 10;
-	private final boolean reverseManipMaster = false;
-	private final boolean reverseManipFollower = true;
-	public final CTREParam manipMaster = new CTREParam(manipMasterID, reverseManipMaster);
-	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
+	private final boolean reverseManipA = false;
+	private final boolean reverseManipB = true;
+	public final CTREParam manipA = new CTREParam(10, reverseManipA);
+	public final CTREParam manipB = new CTREParam(11, reverseManipB);
 	public double manipStopCurrent = 0;
 
 	// ramp

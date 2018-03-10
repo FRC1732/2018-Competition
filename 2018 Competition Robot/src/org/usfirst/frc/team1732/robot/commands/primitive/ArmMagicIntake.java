@@ -34,7 +34,7 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void initialize() {
 			Debugger.logStart(this);
 			parentCommand.hitButton = false;
-			int position = Positions.INTAKE.value;
+			int position = Positions.BUTTON_POS.value;
 			arm.useMagicControl(position);
 			arm.set(position);
 		}
