@@ -1,62 +1,123 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
-import org.usfirst.frc.team1732.robot.commands.DriveWithJoysticks;
+import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.commands.teleop.DriveWithJoysticks;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 import org.usfirst.frc.team1732.robot.drivercontrol.DifferentialDrive;
 import org.usfirst.frc.team1732.robot.sensors.encoders.EncoderReader;
 import org.usfirst.frc.team1732.robot.sensors.encoders.TalonEncoder;
+import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Subsystem to control the drivetrain
+ * 
+ * Manages 6 TalonSPXs (3 right, 3 left), and associated Encoders
+ * 
+ */
 public class Drivetrain extends Subsystem {
-
-	public TalonSRX leftMaster;
-	public TalonSRX rightMaster;
-
-	public DifferentialDrive drive;
-
-	private final TalonEncoder leftEncoder;
-	private final TalonEncoder rightEncoder;
-
-	public static final double INPUT_DEADBAND = 0.025; // 2.5%.
 	public static final double MIN_OUTPUT = 0.0;
 	public static final double MAX_OUTPUT = 1.0;
-	public static final double ENCODER_INCHES_PER_PULSE = 0.002099;
+
+	public final TalonSRX leftMaster;
+	public final TalonSRX rightMaster;
+
+	private final Solenoid shifter;
+	private final boolean highGearValue;
+
+	private final VictorSPX leftVictor1;
+	private final VictorSPX leftVictor2;
+	private final VictorSPX rightVictor1;
+	private final VictorSPX rightVictor2;
+
+	public final TalonEncoder leftEncoder;
+	public final TalonEncoder rightEncoder;
+
+	public final DifferentialDrive drive;
+
+	public final double inchesPerPulse;
+	public final double robotLength;
+	public final double robotWidth;
+	public final double effectiveRobotWidth;
+	public final double maxUnitsPer100Ms;
+
+	public final ClosedLoopProfile velocityGains;
 
 	public Drivetrain(RobotConfig config) {
-		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.leftFollower2, config.drivetrainConfig);
+		shifter = new Solenoid(config.shiftingSolenoidID);
+		highGearValue = config.highGearValue;
+
+		leftMaster = MotorUtils.makeTalon(config.leftMaster,
+				config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1,
+				config.drivetrainConfig, leftMaster);
+		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2,
+				config.drivetrainConfig, leftMaster);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower1, config.drivetrainConfig);
-		MotorUtils.makeTalon(config.rightFollower2, config.drivetrainConfig);
+		rightVictor1 = MotorUtils.makeVictorFollower(config.rightFollower1, config.drivetrainConfig, rightMaster);
+		rightVictor2 = MotorUtils.makeVictorFollower(config.rightFollower2, config.drivetrainConfig, rightMaster);
+
+		velocityGains = config.drivetrainVelocityPID;
+		velocityGains.applyToTalon(leftMaster, rightMaster);
+		maxUnitsPer100Ms = config.maxUnitsPer100Ms;
+
+		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
+		// motionGains.slotIdx, 1, leftMaster,
+		// rightMaster);
+		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
+		// velocityGains.slotIdx, 1, leftMaster,
+		// rightMaster);
+
+		inchesPerPulse = config.drivetrainInchesPerPulse;
+		robotLength = config.robotLength;
+		robotWidth = config.robotWidth;
+		effectiveRobotWidth = config.effectiveRobotWidth;
 
 		drive = new DifferentialDrive(leftMaster, rightMaster, ControlMode.PercentOutput, MIN_OUTPUT, MAX_OUTPUT,
-				INPUT_DEADBAND);
+				config.inputDeadband);
 
 		leftEncoder = new TalonEncoder(leftMaster, FeedbackDevice.QuadEncoder);
 		rightEncoder = new TalonEncoder(rightMaster, FeedbackDevice.QuadEncoder);
-		leftEncoder.setPhase(true);
-		rightEncoder.setPhase(true);
-		leftEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
-		rightEncoder.setDistancePerPulse(ENCODER_INCHES_PER_PULSE);
-		rightEncoder.zero();
 		leftEncoder.zero();
+		rightEncoder.zero();
+		leftEncoder.setPhase(config.reverseLeftSensor);
+		rightEncoder.setPhase(config.reverseRightSensor);
+		leftEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
+		rightEncoder.setDistancePerPulse(config.drivetrainInchesPerPulse);
+		shiftHigh();
+
+		Robot.dash.add("Left Pos", leftEncoder::getPosition);
+		Robot.dash.add("Left Pulses", leftEncoder::getPulses);
+		Robot.dash.add("Left Vel", leftEncoder::getRate);
+		Robot.dash.add("Left Rate", this::getLeftSensorVelocity);
+		Robot.dash.add("Right Pos", rightEncoder::getPosition);
+		Robot.dash.add("Right Pulses", rightEncoder::getPulses);
+		Robot.dash.add("Right Vel", rightEncoder::getRate);
+		Robot.dash.add("Right Rate", this::getRightSensorVelocity);
+	}
+
+	private double getLeftSensorVelocity() {
+		return leftMaster.getSelectedSensorVelocity(0);
+	}
+
+	private double getRightSensorVelocity() {
+		return rightMaster.getSelectedSensorVelocity(0);
 	}
 
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(new DriveWithJoysticks());
-	}
-
-	@Override
-	public void periodic() {
+		setDefaultCommand(new DriveWithJoysticks(drive));
 	}
 
 	public EncoderReader getRightEncoderReader() {
@@ -68,7 +129,53 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void setStop() {
-		drive.tankDrive(0, 0);
+		leftMaster.neutralOutput();
+		rightMaster.neutralOutput();
+	}
+
+	public void setNeutralMode(NeutralMode mode) {
+		leftMaster.setNeutralMode(mode);
+		rightMaster.setNeutralMode(mode);
+		leftVictor1.setNeutralMode(mode);
+		leftVictor2.setNeutralMode(mode);
+		rightVictor1.setNeutralMode(mode);
+		rightVictor2.setNeutralMode(mode);
+	}
+
+	public void setBrake() {
+		setNeutralMode(NeutralMode.Brake);
+	}
+
+	public void setCoast() {
+		setNeutralMode(NeutralMode.Coast);
+	}
+
+	public void setLeft(double percentVolt) {
+		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
+	}
+
+	public void setRight(double percentVolt) {
+		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
+	}
+
+	public void selectGains(ClosedLoopProfile gains) {
+		gains.selectGains(leftMaster, rightMaster);
+	}
+
+	public void shiftHigh() {
+		shifter.set(highGearValue);
+	}
+
+	public void shiftLow() {
+		shifter.set(!highGearValue);
+	}
+
+	public int velInToUnits(double desiredInPerSec) {
+		return (int) (desiredInPerSec / 10 / inchesPerPulse);
+	}
+
+	public double velUnitsToIn(double desiredUnitsPer100Ms) {
+		return desiredUnitsPer100Ms * 10 * inchesPerPulse;
 	}
 
 }

@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.config;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
@@ -30,6 +31,12 @@ public class MotorUtils {
 
 	public static VictorSPX makeVictor(CTREParam param, CTREConfig config) {
 		return configureBaseMotorController(new VictorSPX(param.id), param, config);
+	}
+	
+	public static VictorSPX makeVictorFollower(CTREParam param, CTREConfig config, IMotorController masterToFollow) {
+		VictorSPX v = configureBaseMotorController(new VictorSPX(param.id), param, config);
+		v.follow(masterToFollow);
+		return v;
 	}
 
 	private static <T extends BaseMotorController> T configureBaseMotorController(T motor, CTREParam param,
@@ -67,7 +74,7 @@ public class MotorUtils {
 
 		printError(motor.configVelocityMeasurementPeriod(config.velocityMeasurementPeriod, CTREConfig.CONFIG_TIMEOUT));
 		printError(motor.configVelocityMeasurementWindow(config.velocityMeasurementWindow, CTREConfig.CONFIG_TIMEOUT));
-
+		printError(motor.changeMotionControlFramePeriod(config.motionControlFramePeriod));
 		return motor;
 	}
 

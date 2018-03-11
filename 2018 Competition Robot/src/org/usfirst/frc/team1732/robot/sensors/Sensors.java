@@ -1,15 +1,20 @@
 package org.usfirst.frc.team1732.robot.sensors;
 
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.sensors.navx.NavX;
 
 import com.kauailabs.navx.frc.AHRS;
 
 public class Sensors {
 
-	public final AHRS navx;
+	public final NavX navx;
+	public final Limelight limelight;
 
 	public Sensors(RobotConfig robotConfig) {
-		navx = new AHRS(robotConfig.navxPort);
+		AHRS ahrs = new AHRS(robotConfig.navxPort, (byte) 200);
+		navx = new NavX(ahrs);
+		navx.zero();
+		limelight = new Limelight();
 	}
 
 	public static double convertTotalAngle(double angle) {
