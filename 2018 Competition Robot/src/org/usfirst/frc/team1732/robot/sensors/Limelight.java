@@ -1,37 +1,35 @@
 package org.usfirst.frc.team1732.robot.sensors;
 
-import java.util.function.Consumer;
-
 import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.EntryNotification;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
-	private static final String LED_MODE = "ledMode", CAM_MODE = "camMode";
+	private static final String LED_MODE = "ledMode", CAM_MODE = "camMode", STREAM_MODE = "stream";
 	private static final int BUFFER_SIZE = 10;
 
-	private final NetworkTable table;
+	private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-	private double horizontalOffsetAverage;
+	private double hOffAve;
 
 	public Limelight() {
-		table = NetworkTableInstance.getDefault().getTable("limelight");
-		table.getEntry("tx").addListener(new Consumer<EntryNotification>() {
-			public void accept(EntryNotification t) {
-				// calculate rolling average
-				horizontalOffsetAverage -= horizontalOffsetAverage / BUFFER_SIZE;
-				horizontalOffsetAverage += t.value.getDouble() / BUFFER_SIZE;
-			}
-		}, EntryListenerFlags.kUpdate);
+		// add listener to calculate rolling average
+		table.getEntry("tx").addListener(t -> hOffAve += (-hOffAve + t.value.getDouble()) / BUFFER_SIZE,
+				EntryListenerFlags.kUpdate);
 	}
 	// ----- SETTERS -----
 	public void setLEDMode(LEDMode mode) {
-		table.getEntry(LED_MODE).setNumber(mode.getVal());
+		table.getEntry(LED_MODE).setNumber(mode.val);
 	}
 	public void setCamMode(CamMode mode) {
-		table.getEntry(CAM_MODE).setNumber(mode.getVal());
+		table.getEntry(CAM_MODE).setNumber(mode.val);
+	}
+	public void setPipeline(int pipeline) {
+		table.getEntry("pipeline").setNumber(pipeline);
+	}
+	public void setStreamMode(StreamMode mode) {
+		table.getEntry(STREAM_MODE).setNumber(mode.val);
 	}
 	// ----- GETTERS -----
 	// returns the horizonatal offset of the target (between -27 and 27 degrees)
@@ -41,7 +39,7 @@ public class Limelight {
 	public double getRawHorizontalOffset(double defaultValue) {
 		return hasValidTargets() ? getRawHorizontalOffset() : defaultValue;
 	}
-	// returns horizontal offset between 0 and 1
+	// returns horizontal offset between -1 and 1
 	public double getNormalizedHorizontalOffset() {
 		return getRawHorizontalOffset() / 27;
 	}
@@ -50,7 +48,7 @@ public class Limelight {
 	}
 	// returns rolling-averaged horizontal offset
 	public double getHorizontalOffset() {
-		return horizontalOffsetAverage;
+		return hOffAve;
 	}
 	// returns the vertical offset of the target (between -20.5 and 20.5 degrees)
 	public double getVerticalOffset() {
@@ -114,24 +112,26 @@ public class Limelight {
 
 	public static enum LEDMode {
 		ON(0), OFF(1), BLINK(2);
-		private int val;
+		public int val;
 
 		private LEDMode(int n) {
 			val = n;
 		}
-		public int getVal() {
-			return val;
-		}
 	}
 	public static enum CamMode {
 		VISION_PROCESSOR(0), DRIVER_FEEDBACK(1);
-		private int val;
+		public int val;
 
 		private CamMode(int n) {
 			val = n;
 		}
-		public int getVal() {
-			return val;
+	}
+	public static enum StreamMode {
+		STANDARD(0), PIP_MAIN(1), PIP_SECONDARY(2);
+		public int val;
+
+		private StreamMode(int n) {
+			val = n;
 		}
 	}
 }

@@ -1,19 +1,40 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Subsystem to control the climber
+ * 
+ * Manages 2 motors
  */
 public class Climber extends Subsystem {
+	public final VictorSPX master;
 
-	// Put methods for controlling this subsystem
-	// here. Call these from Commands.
+	public Climber(RobotConfig config) {
+		master = MotorUtils.makeVictor(config.climberMaster, config.climberConfig);
+		MotorUtils.makeVictor(config.climberFollower, config.climberConfig);
+	}
 
-	public Climber(RobotConfig robotConfig) {
-		// TODO Auto-generated constructor stub
+	public void climb() {
+		master.set(ControlMode.PercentOutput, 1);
+	}
+
+	public void reverseClimb() {
+		master.set(ControlMode.PercentOutput, -0.5);
+	}
+
+	public void hold() {
+		// ???
+	}
+
+	public void stop() {
+		master.set(ControlMode.PercentOutput, 0);
 	}
 
 	@Override

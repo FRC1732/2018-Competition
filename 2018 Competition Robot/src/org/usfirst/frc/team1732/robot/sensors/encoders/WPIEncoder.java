@@ -22,7 +22,7 @@ public class WPIEncoder extends EncoderBase {
 	}
 
 	@Override
-	public double getPulses() {
+	public int getPulses() {
 		return wpiEncoder.getRaw();
 	}
 
