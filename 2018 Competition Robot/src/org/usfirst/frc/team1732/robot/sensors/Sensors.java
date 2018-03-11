@@ -11,7 +11,8 @@ public class Sensors {
 	public final Limelight limelight;
 
 	public Sensors(RobotConfig robotConfig) {
-		navx = new NavX(new AHRS(robotConfig.navxPort));
+		AHRS ahrs = new AHRS(robotConfig.navxPort, (byte) 200);
+		navx = new NavX(ahrs);
 		navx.zero();
 		limelight = new Limelight();
 	}

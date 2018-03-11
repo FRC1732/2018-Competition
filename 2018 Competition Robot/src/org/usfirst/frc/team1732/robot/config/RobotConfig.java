@@ -28,7 +28,7 @@ public class RobotConfig {
 	public final CTREConfig drivetrainConfig = CTREConfig.getDefaultConfig();
 
 	public final int shiftingSolenoidID = 0;
-	public final boolean highGearValue = true; // setting the shifter solenoid to this value should make the drivetrain
+	public final boolean highGearValue = false; // setting the shifter solenoid to this value should make the drivetrain
 												// go in high gear
 
 	private final int leftMasterID = 0;
@@ -40,7 +40,7 @@ public class RobotConfig {
 
 	private final int rightMasterID = 15;
 	private final boolean reverseRight = false;
-	public final boolean reverseRightSensor = true;
+	public final boolean reverseRightSensor = false;
 	public final CTREParam rightMaster = new CTREParam(rightMasterID, reverseRight);
 	public final CTREParam rightFollower1 = new CTREParam(14, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(13, reverseRight, rightMasterID);
@@ -58,6 +58,8 @@ public class RobotConfig {
 	public int armMagicVel = 0;
 	public int armMagicAccel = 0;
 	public final int armAllowedErrorCount = 80;
+	public final int armButtonDIO = 1;
+	public boolean reverseArmButton = true;
 
 	// climber
 	public final CTREConfig climberConfig = CTREConfig.getDefaultConfig();
@@ -84,14 +86,15 @@ public class RobotConfig {
 	public int elevatorMagicVel = 0;
 	public int elevatorMagicAccel = 0;
 	public final int elevatorAllowedErrorCount = 50;
+	public final int elevatorButtonDIO = 0;
+	public boolean reverseElevatorButton = false;
 
 	// cube manip (intake)
 	public final CTREConfig manipConfig = CTREConfig.getDefaultConfig();
-	private final int manipMasterID = 10;
-	private final boolean reverseManipMaster = false;
-	private final boolean reverseManipFollower = true;
-	public final CTREParam manipMaster = new CTREParam(manipMasterID, reverseManipMaster);
-	public final CTREParam manipFollower = new CTREParam(11, reverseManipFollower, manipMasterID);
+	private final boolean reverseManipA = false;
+	private final boolean reverseManipB = true;
+	public final CTREParam manipA = new CTREParam(10, reverseManipA);
+	public final CTREParam manipB = new CTREParam(11, reverseManipB);
 	public double manipStopCurrent = 0;
 
 	// ramp
@@ -104,7 +107,7 @@ public class RobotConfig {
 
 	public final Port navxPort = SPI.Port.kMXP;
 
-	public final double inputDeadband = 0.025; // 2.5%
+	public final double inputDeadband = 0.04; // 2.5%
 	public final int leftJoystickPort = 0;
 	public final int rightJoystickPort = 1;
 	public final int buttonJoystickPort = 2;

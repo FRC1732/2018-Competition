@@ -40,6 +40,7 @@ public class Arm extends Subsystem {
 	private final int magicAccel;
 
 	private final DigitalInput button;
+	private final boolean reverseButton;
 
 	public Arm(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.arm, config.armConfig);
@@ -57,21 +58,22 @@ public class Arm extends Subsystem {
 
 		allowedError = config.armAllowedErrorCount;
 
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
-		button = new DigitalInput(1);
+		button = new DigitalInput(config.armButtonDIO);
+		reverseButton = config.reverseArmButton;
 		Robot.dash.add("Arm Button Pressed", this::isButtonPressed);
 	}
 
 	public static enum Positions {
 
 		// set these in pulses
-		BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642), CLIMB(5000), START(6175), TUCK(
-				6432), SCALE(7622);
+		BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642), CLIMB(5000), START(4093), TUCK(
+				6432), SCALE_LOW(7622), SCALE_HIGH(7622);
 
 		public final int value;
 
@@ -168,19 +170,19 @@ public class Arm extends Subsystem {
 		int currentPosition = encoder.getPulses();
 		int maxLow = Positions.TUCK.value;
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		if (desiredPosition > maxLow && currentPosition < maxLow) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
-		} else if (desiredPosition < maxLow && currentPosition > maxLow) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT);
-			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT);
+		if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
+			motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
+		} else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
+			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT); // 0.2
+			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT); // 0.5
 		} else {
-			motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
+			motor.configMotionAcceleration((int) (magicAccel * 0.7), Robot.CONFIG_TIMEOUT);
 		}
 		magicGains.selectGains(motor);
 	}
 
 	public boolean isButtonPressed() {
-		return !button.get();
+		return !reverseButton == button.get();
 	}
 
 	public void resetArmPos() {

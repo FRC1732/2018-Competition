@@ -277,7 +277,8 @@ public final class Path {
 			while (iterator.hasNext()) {
 				PointPair<VelocityPoint> pair = iterator.next();
 				map.put(totalTimeSec, pair);
-				// System.out.println(pair.left.velocity + ", " + pair.right.velocity);
+				// System.out.println(totalTimeSec + ", " + pair.left.velocity + ", " +
+				// pair.right.velocity);
 				totalTimeSec += pointDurSec;
 			}
 		}
