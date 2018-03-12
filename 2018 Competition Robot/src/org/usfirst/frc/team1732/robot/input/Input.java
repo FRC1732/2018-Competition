@@ -11,9 +11,9 @@ import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
+import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRunManualSafe;
 import org.usfirst.frc.team1732.robot.commands.teleop.SetOuttakeSpeed;
 import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
@@ -52,13 +52,14 @@ public class Input {
 		OverrideButton greenButton1 = new OverrideButton(new JoystickButton(buttons, 9), override);
 		OverrideButton greenButton2 = new OverrideButton(new JoystickButton(buttons, 10), override);
 
-		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
-		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
-		ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden, manipLowSpeed.whenNotOverriden);
+		OverrideButton manipHiSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, -0.1), override);
+		OverrideButton manipLowSpeed = new OverrideButton(new JoystickRangeButton(buttons, 0, 0.1), override);
+		// ThreePosSwitch manipSpeed = new ThreePosSwitch(manipHiSpeed.whenNotOverriden,
+		// manipLowSpeed.whenNotOverriden);
 
 		JoystickButton rockerUp = new JoystickButton(autoDial, 11);
 		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
-		ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
+		// ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
 
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
@@ -70,8 +71,10 @@ public class Input {
 		JoystickButton limelightToggle = new JoystickButton(left, 7);
 
 		// Add commands here
+		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
+						Elevator.Positions.INTAKE));
 		posExchange.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
 		posHuman.whenNotOverriden
@@ -80,9 +83,9 @@ public class Input {
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
 		posTuck.whenNotOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 		posScaleLow.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_LOW));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_LOW));
 		posScaleHigh.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE, Elevator.Positions.SCALE_HIGH));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SCALE_HIGH, Elevator.Positions.SCALE_HIGH));
 
 		posIntake.whenOverriden.whenPressed(makeCommand(arm, () -> arm.setManual(-0.3)));
 		posIntake.whenOverriden.whenReleased(makeCommand(arm, arm::setStop));
@@ -100,12 +103,14 @@ public class Input {
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
+		rockerUp.whenReleased(new ElevatorHoldPosition());
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
-		rocker.whenReleased(new ElevatorHoldPosition());
+		rockerDown.whenReleased(new ElevatorHoldPosition());
 
 		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
-		manipSpeed.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
-		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
+		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.2));
+		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
 
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());
@@ -129,6 +134,7 @@ public class Input {
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));
+
 		// magicElevator.whenPressed(new ElevatorTest(0.3));
 		// magicArm.whenPressed(new ArmMagicPosition(-5000));
 		// magicElevator.whenPressed(new ElevatorMagicPosition(13000));

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1732.robot.util;
 
-import java.util.Arrays;
 import java.util.function.Function;
 
 public class Util {
@@ -127,7 +126,11 @@ public class Util {
 	}
 
 	public static void logForGraphing(Object... obs) {
-		Arrays.asList(obs).forEach(o -> Debugger.logDetailedInfo(o + ", "));
-		Debugger.logDetailedInfo("");
+		for (Object obj : obs) {
+			System.out.print(obj + "\t, ");
+		}
+		System.out.println();
+		// Arrays.asList(obs).forEach(o -> Debugger.logDetailedInfo(o + ", "));
+		// Debugger.logDetailedInfo("");
 	}
 }

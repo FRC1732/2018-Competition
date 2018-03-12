@@ -39,6 +39,7 @@ public class Elevator extends Subsystem {
 	private final int magicAccel;
 
 	private final DigitalInput button;
+	private final boolean reverseButton;
 
 	public Elevator(RobotConfig config) {
 		motor = MotorUtils.makeTalon(config.elevator, config.elevatorConfig);
@@ -56,15 +57,17 @@ public class Elevator extends Subsystem {
 
 		allowedError = config.elevatorAllowedErrorCount;
 
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
+		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Elevator Encoder Rate", encoder::getRate);
 		// holdPosition();
 
-		button = new DigitalInput(0);
+		button = new DigitalInput(config.elevatorButtonDIO);
+		reverseButton = config.reverseElevatorButton;
+
 		Robot.dash.add("Elevator Button Pressed", this::isButtonPressed);
 
 		setManual(0);
@@ -75,7 +78,7 @@ public class Elevator extends Subsystem {
 		// 3311
 		// set these in pulses
 		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
-				18389), MAX(30958);
+				22389), MAX(30958);
 
 		public final int value;
 
@@ -170,7 +173,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isButtonPressed() {
-		return !button.get();
+		return !reverseButton == button.get();
 	}
 
 	public void resetElevatorPos() {

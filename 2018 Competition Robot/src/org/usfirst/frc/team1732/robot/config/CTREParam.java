@@ -17,7 +17,7 @@ public class CTREParam {
 	}
 
 	public boolean isFollower() {
-		return id != masterID;
+		return id != masterID; // I am the master of my fate
 	}
 
 }

@@ -21,7 +21,7 @@ public class ArmMagicPosition extends Command {
 		this(position.value);
 	}
 
-	private ArmMagicPosition(int position) {
+	public ArmMagicPosition(int position) {
 		requires(Robot.arm);
 		this.position = position;
 		// timer = new Timer();

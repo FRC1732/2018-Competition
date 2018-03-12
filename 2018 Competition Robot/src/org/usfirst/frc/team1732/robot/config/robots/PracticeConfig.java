@@ -32,10 +32,10 @@ public class PracticeConfig extends RobotConfig {
 		armMagicPID.kD = 0;
 		armMagicPID.integralZone = 100;
 		armMagicPID.maxIntegralAccumulated = 100;
+		reverseArmButton = true;
 
 		// elevator
 		elevatorConfig.enableVoltageCompensation = true;
-
 		elevatorMagicVel = 3000;
 		elevatorMagicAccel = 3000;
 		elevatorMagicPID.kF = 1023 / 4366; // 1023 / max sensor units per 100 ms
@@ -44,6 +44,7 @@ public class PracticeConfig extends RobotConfig {
 		elevatorMagicPID.kD = 0;
 		elevatorMagicPID.integralZone = 0;
 		elevatorMagicPID.maxIntegralAccumulated = 0;
+		reverseElevatorButton = false;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

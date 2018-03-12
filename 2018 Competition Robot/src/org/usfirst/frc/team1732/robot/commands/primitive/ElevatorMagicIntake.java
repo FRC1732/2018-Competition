@@ -33,7 +33,7 @@ public class ElevatorMagicIntake extends CommandGroup {
 		protected void initialize() {
 			System.out.println("Running elevator intake command");
 			parentCommand.hitButton = false;
-			int position = Positions.INTAKE.value;
+			int position = Positions.BUTTON_POS.value;
 			elevator.useMagicControl(position);
 			elevator.set(position);
 		}
