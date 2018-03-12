@@ -116,6 +116,8 @@ public class Robot extends TimedRobot {
 		SensorChecker.addSensor(sensors.navx::isConnected, "NavX board");
 		SensorChecker.addSensor(drivetrain.leftEncoder::isConnected, "Left drivetrain encoder");
 		SensorChecker.addSensor(drivetrain.rightEncoder::isConnected, "Right drivetrain encoder");
+		new Thread(SensorChecker::run).start();
+		
 	}
 
 	@Override
