@@ -33,8 +33,7 @@ public final class AutoChooser {
 			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
 			path.generateProfile(50, 100);
-			return new FollowVelocityPath(
-					path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
+			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
 		}), //
 		DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5));
 

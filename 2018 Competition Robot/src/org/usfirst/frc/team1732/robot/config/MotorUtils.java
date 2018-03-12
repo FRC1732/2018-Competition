@@ -32,7 +32,7 @@ public class MotorUtils {
 	public static VictorSPX makeVictor(CTREParam param, CTREConfig config) {
 		return configureBaseMotorController(new VictorSPX(param.id), param, config);
 	}
-	
+
 	public static VictorSPX makeVictorFollower(CTREParam param, CTREConfig config, IMotorController masterToFollow) {
 		VictorSPX v = configureBaseMotorController(new VictorSPX(param.id), param, config);
 		v.follow(masterToFollow);

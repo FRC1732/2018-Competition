@@ -15,6 +15,7 @@ public class InstantLambda {
 			}
 		};
 	}
+
 	public static InstantCommand makeCommand(Runnable initialize) {
 		return new InstantCommand() {
 			protected void initialize() {

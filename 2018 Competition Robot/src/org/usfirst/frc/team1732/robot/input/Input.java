@@ -73,8 +73,7 @@ public class Input {
 		// Add commands here
 		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
-						Elevator.Positions.INTAKE));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		posExchange.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
 		posHuman.whenNotOverriden
