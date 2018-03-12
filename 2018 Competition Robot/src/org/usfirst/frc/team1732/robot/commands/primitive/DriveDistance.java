@@ -34,21 +34,26 @@ public class DriveDistance extends Command {
 			public double pidGet() {
 				return (l.getPosition() + r.getPosition()) * 0.5;
 			}
-		}, d -> {}, PERIOD_S);
+		}, d -> {
+		}, PERIOD_S);
 		rot = new PIDController(0.05, 0, 0, new DisplacementPIDSource() {
 			@Override
 			public double pidGet() {
 				return g.getTotalAngle();
 			}
-		}, d -> {}, PERIOD_S);
+		}, d -> {
+		}, PERIOD_S);
 	}
+
 	// Drive the reverse of what the encoders read
 	public DriveDistance(EncoderReader left, EncoderReader right) {
 		this(() -> (left.getPosition() + right.getPosition()) * -0.5);
 	}
+
 	public DriveDistance(Supplier<Double> dist) {
 		this(dist, drivetrain.getLeftEncoderReader(), drivetrain.getRightEncoderReader());
 	}
+
 	public DriveDistance(double dist) {
 		this(() -> dist);
 	}

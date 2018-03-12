@@ -118,6 +118,5 @@ public class NavX extends GyroBase {
 	public boolean isConnected() {
 		return navx.isConnected();
 	}
-	
-	
+
 }

@@ -37,8 +37,7 @@ public class ScaleLeftSingle extends CommandGroup {
 							addSequential(new ArmHoldPosition());
 							addSequential(new Wait(time * percent));
 							addSequential(
-									new ArmElevatorSetPosition(Arm.Positions.TUCK,
-											Elevator.Positions.SCALE_HIGH));
+									new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_HIGH));
 						}
 					});
 					addSequential(new FollowVelocityPath(profile));
@@ -59,9 +58,7 @@ public class ScaleLeftSingle extends CommandGroup {
 				{
 					addSequential(new ArmHoldPosition());
 					addSequential(new Wait(time * percent));
-					addSequential(
-							new ArmElevatorSetPosition(Arm.Positions.TUCK,
-									Elevator.Positions.INTAKE));
+					addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 				}
 			});
 			addSequential(new FollowVelocityPath(profile));

@@ -49,17 +49,7 @@ public class TalonEncoder extends EncoderBase {
 
 	@Override
 	public void zero() {
-		atZero = true;
 		talon.setSelectedSensorPosition(0, 0, Robot.CONFIG_TIMEOUT);
-	}
-	
-	public boolean atZero = true;
-	public boolean isConnected() {
-		if(atZero) {
-			return true;
-		}else {
-			return getPosition() != 0;
-		}
 	}
 
 }

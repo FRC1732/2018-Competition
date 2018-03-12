@@ -57,12 +57,9 @@ public class Drivetrain extends Subsystem {
 		shifter = new Solenoid(config.shiftingSolenoidID);
 		highGearValue = config.highGearValue;
 
-		leftMaster = MotorUtils.makeTalon(config.leftMaster,
-				config.drivetrainConfig);
-		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1,
-				config.drivetrainConfig, leftMaster);
-		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2,
-				config.drivetrainConfig, leftMaster);
+		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1, config.drivetrainConfig, leftMaster);
+		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2, config.drivetrainConfig, leftMaster);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
 		rightVictor1 = MotorUtils.makeVictorFollower(config.rightFollower1, config.drivetrainConfig, rightMaster);
@@ -151,12 +148,10 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void setLeft(double percentVolt) {
-		leftEncoder.atZero = false;
 		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
 	public void setRight(double percentVolt) {
-		rightEncoder.atZero = false;
 		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 

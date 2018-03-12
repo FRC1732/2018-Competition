@@ -12,8 +12,6 @@ import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class FollowVelocityPath extends NotifierCommand {
 
 	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
@@ -42,7 +40,7 @@ public class FollowVelocityPath extends NotifierCommand {
 		// timer = new Timer();
 	}
 
-	private Timer timer;
+	// private Timer timer;
 
 	@Override
 	protected void init() {

@@ -31,10 +31,12 @@ public class DriveDistanceNoStop extends Command {
 			public double pidGet() {
 				return g.getTotalAngle();
 			}
-		}, d -> {}, PERIOD_S);
+		}, d -> {
+		}, PERIOD_S);
 		rot.setSetpoint(0);
 		rot.setAbsoluteTolerance(1);
 	}
+
 	protected void initialize() {
 		l.zero();
 		r.zero();
@@ -43,13 +45,16 @@ public class DriveDistanceNoStop extends Command {
 		drivetrain.setBrake();
 		Debugger.logStart(this, "Dist = %.2f, End Speed = %.2f", distance, endSpeed);
 	}
+
 	protected void execute() {
 		double percentDone = ((l.getPosition() + r.getPosition()) / 2) / distance;
 		drivetrain.drive.arcadeDrive(Util.cerp(1, endSpeed, percentDone), rot.get(), false);
 	}
+
 	protected boolean isFinished() {
 		return ((l.getPosition() + r.getPosition()) / 2) >= distance;
 	}
+
 	protected void end() {
 		Debugger.logEnd(this, "%.2f inches", (l.getPosition() + r.getPosition()) / 2);
 	}
