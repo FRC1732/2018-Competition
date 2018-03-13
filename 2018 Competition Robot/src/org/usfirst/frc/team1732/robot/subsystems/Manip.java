@@ -36,7 +36,8 @@ public class Manip extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
-	// might end up using a sensor for this
+	// might end up using a sensor for this (cube detection)
+
 	public boolean aboveStopCurrent() {
 		return false;
 		// return victor.getOutputCurrent() > stopCurrent;
