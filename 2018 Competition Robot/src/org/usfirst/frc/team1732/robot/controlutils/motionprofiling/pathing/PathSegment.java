@@ -14,7 +14,8 @@ public class PathSegment {
 		this.start = start;
 		this.end = end;
 		this.curve = curve;
-		this.noAccel = noAccel && Util.epsilonEquals(start.vel, end.vel);
+		this.noAccel = noAccel && Util.epsilonEquals(start.vel, end.vel) && !Util.epsilonEquals(start.vel, 0)
+				&& !Util.epsilonEquals(end.vel, 0);
 	}
 
 }
