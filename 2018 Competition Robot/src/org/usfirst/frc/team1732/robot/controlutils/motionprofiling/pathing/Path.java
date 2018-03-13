@@ -55,10 +55,18 @@ public final class Path {
 	}
 
 	public void addWaypoint(Waypoint w) {
-		addWaypoint(w, 0.5);
+		addWaypoint(w, false);
 	}
 
 	public void addWaypoint(Waypoint w, double midControlPercent) {
+		addWaypoint(w, midControlPercent, false);
+	}
+
+	public void addWaypoint(Waypoint w, boolean noAccel) {
+		addWaypoint(w, 0.5, noAccel);
+	}
+
+	public void addWaypoint(Waypoint w, double midControlPercent, boolean noAccel) {
 		// System.out.println("ADDING WAYPOINT: " + w.toString());
 		double theta1 = prev.heading.getAbsoluteAngle();
 		double theta2 = w.heading.getAbsoluteAngle();
@@ -90,7 +98,7 @@ public final class Path {
 			System.err.println("INVALID WAYPOINT/BAD PATH");
 		}
 		if (curve != null) {
-			segments.add(new PathSegment(prev, w, curve));
+			segments.add(new PathSegment(prev, w, curve, noAccel));
 			prev = w;
 		}
 	}
@@ -160,7 +168,7 @@ public final class Path {
 			}
 		}
 		MotionProfileConstraints constraints = new MotionProfileConstraints(maxVelocity, maxAcceleration);
-
+		MotionProfileConstraints noAccel = new MotionProfileConstraints(maxVelocity, 0);
 		MotionState previousState = new MotionState(0, 0, 0, maxAcceleration);
 
 		// System.out.println("Total length: " +
@@ -177,8 +185,14 @@ public final class Path {
 		for (int i = 1; i < segments.size(); i++) {
 			goalPos = segments.get(i).curve.getTotalArcLength() + previousState.pos();
 			goalState = new MotionProfileGoal(goalPos, segments.get(i).end.vel, CompletionBehavior.VIOLATE_MAX_ACCEL);
-			currentProfile.appendProfile(
-					GenerateMotionProfile.generateStraightMotionProfile(constraints, goalState, previousState));
+			MotionProfile tempProfile;
+			if (segments.get(i).noAccel) {
+				tempProfile = GenerateMotionProfile.generateStraightMotionProfile(noAccel, goalState, previousState);
+			} else {
+				tempProfile = GenerateMotionProfile.generateStraightMotionProfile(constraints, goalState,
+						previousState);
+			}
+			currentProfile.appendProfile(tempProfile);
 			previousState = currentProfile.endState();
 		}
 		profile = currentProfile;
