@@ -47,7 +47,7 @@ public class ScaleRightSingle extends CommandGroup {
 			// addSequential(new PreAuto(Arm.Positions.TUCK));
 			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
 			// Elevator.Positions.SCALE_HIGH));
-			addSequential(new Wait(0.5));
+			// addSequential(new Wait(0.5));
 			addSequential(new ManipAutoEject(0.5));
 			addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
 		} else if (!DriverStationData.closeSwitchIsLeft) {

@@ -59,7 +59,7 @@ public class Paths {
 		// path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.5);
 		double endingX = Field.Switch.BOUNDARY.getX();
 		double endingY = Field.Switch.BOUNDARY.getY();
-		path.addWaypoint(new Waypoint(endingX - 5, endingY + 10, Math.PI / 2, 5);
+		path.addWaypoint(new Waypoint(endingX - 5, endingY + 10, Math.PI / 2, 5));
 		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
