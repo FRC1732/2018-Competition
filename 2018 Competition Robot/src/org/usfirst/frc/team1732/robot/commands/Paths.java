@@ -28,10 +28,10 @@ public class Paths {
 		scaleRightSingleRightProfile = makeScaleRightSingleRightProfile();
 		scaleLeftSwitchProfile = makeScaleLeftSwitchProfile();
 		scaleRightSwitchProfile = makeScaleRightSwitchProfile();
-		leftLeftSecondCubeGrab = makeLeftLeftSecondCubeGrab();
-		rightRightSecondCubeGrab = makeRightRightSecondCubeGrab();
-		leftRightSecondCubeGrab = makeLeftRightSecondCubeGrab();
-		rightLeftSecondCubeGrab = makeRightLeftSecondCubeGrab();
+		leftSecondCubeGrab = makeLeftSecondCubeGrab();
+		rightSecondCubeGrab = makeRightSecondCubeGrab();
+		leftReturnToScale = makeLeftReturnToScale();
+		rightReturnToScale = makeRightReturnToScale();
 	}
 
 	// naming convention is [autoName][side]Profile
@@ -206,9 +206,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile leftLeftSecondCubeGrab;
+	public final PointProfile leftSecondCubeGrab;
 
-	public PointProfile makeLeftLeftSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeLeftSecondCubeGrab() { // these ones will be all fudging
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
@@ -221,9 +221,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile rightRightSecondCubeGrab;
+	public final PointProfile rightSecondCubeGrab;
 
-	public PointProfile makeRightRightSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeRightSecondCubeGrab() { // these ones will be all fudging
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
@@ -236,33 +236,34 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile leftRightSecondCubeGrab;
+	public final PointProfile leftReturnToScale;
 
-	public PointProfile makeLeftRightSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeLeftReturnToScale() {
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = 0;
-		double endingY = -40;
+		double endingY = 40;
 		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile rightLeftSecondCubeGrab;
+	public final PointProfile rightReturnToScale;
 
-	public PointProfile makeRightLeftSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeRightReturnToScale() {
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = 0;
-		double endingY = -40;
+		double endingY = 40;
 		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);
 	}
+
 }
