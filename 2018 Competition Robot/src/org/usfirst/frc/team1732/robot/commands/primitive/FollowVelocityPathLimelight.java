@@ -71,6 +71,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 			headingError = desiredHeading - currentHeading;
 		} else {
 			headingError = 0; // get heading error from limelight
+			// might have to negate from what you would expect
 		}
 		double headingAdjustment = headingError * HEADING_P;
 
@@ -78,8 +79,8 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		double rightVel = right.velocity;
 		// double leftNew = leftVel + leftVel * headingAdjustment;
 		// double rightNew = rightVel - rightVel * headingAdjustment;
-		double leftNew = leftVel + Math.signum(leftVel) * headingAdjustment;
-		double rightNew = rightVel - Math.signum(rightVel) * headingAdjustment;
+		double leftNew = leftVel + headingAdjustment;
+		double rightNew = rightVel - headingAdjustment;
 
 		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
 		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
