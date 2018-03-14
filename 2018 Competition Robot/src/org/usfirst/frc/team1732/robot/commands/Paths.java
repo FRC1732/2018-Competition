@@ -100,9 +100,16 @@ public class Paths {
 		double startingY = robotLength / 2.0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 
+		double turnVel = maxVelocity * 0.7;
+
+		double middle0X = startingX;
+		double middle0Y = Field.Switch.BOUNDARY.getMaxY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(middle0X, middle0Y, Math.PI / 2, turnVel));
+
 		double middle1X = Field.Scale.PLATFORM.getX() + robotLength / 2.0;
 		double middle1Y = Field.Scale.PLATFORM.getY() - robotWidth / 2.0;
-		path.addWaypoint(new Waypoint(middle1X, middle1Y, 0, maxVelocity));
+		path.addWaypoint(new Waypoint(middle1X, middle1Y, 0, turnVel), true);
+		// don't accelerate through this ^ turn to cross
 
 		double middle2X = Field.Scale.PLATFORM.getMaxX() - robotLength / 2.0;
 		double middle2Y = middle1Y;
@@ -121,17 +128,26 @@ public class Paths {
 	public PointProfile makeScaleRightSingleLeftProfile() {
 		Path path;
 
+		double maxVelocity = this.maxVelocity;
+
 		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 5;
 		double startingY = robotLength / 2.0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 
+		double turnVel = maxVelocity * 0.7;
+
+		double middle0X = startingX;
+		double middle0Y = Field.Switch.BOUNDARY.getMaxY() - robotLength / 2.0;
+		path.addWaypoint(new Waypoint(middle0X, middle0Y, Math.PI / 2, turnVel));
+
 		double middle1X = Field.Scale.PLATFORM.getMaxX() - robotLength / 2.0;
 		double middle1Y = Field.Scale.PLATFORM.getY() - robotWidth / 2.0;
-		path.addWaypoint(new Waypoint(middle1X, middle1Y, Math.PI, maxVelocity));
+		path.addWaypoint(new Waypoint(middle1X, middle1Y, Math.PI, turnVel), true);
+		// don't accelerate through this ^ turn to cross
 
 		double middle2X = Field.Scale.PLATFORM.getX() + robotLength / 2.0;
 		double middle2Y = middle1Y;
-		path.addWaypoint(new Waypoint(middle2X, middle2Y, Math.PI, maxVelocity));
+		path.addWaypoint(new Waypoint(middle2X, middle2Y, Math.PI, maxVelocity)); // waypoint before we turn to scale
 
 		double endingX = Field.Scale.LEFT_PLATE.getX() + 5;
 		double endingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
