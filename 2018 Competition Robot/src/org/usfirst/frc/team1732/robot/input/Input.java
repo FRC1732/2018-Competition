@@ -108,7 +108,7 @@ public class Input {
 
 		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
 		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
-		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.2));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
 		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
 
 		leftTrigger.whenPressed(new ManipSetIn());
