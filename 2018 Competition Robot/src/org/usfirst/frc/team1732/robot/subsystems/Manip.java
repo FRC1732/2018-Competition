@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Manip extends Subsystem {
 
 	public static final double STOP_TIME = 0.25;
-	public static final double A_BASE_IN_SPEED = 0.9;
-	public static final double B_BASE_IN_SPEED = 0.5;
+	public static final double A_BASE_IN_SPEED = 1;
+	public static final double B_BASE_IN_SPEED = 1;
 	public static final double BASE_OUT_SPEED = 0.5;
 
 	public final VictorSPX victorA;
