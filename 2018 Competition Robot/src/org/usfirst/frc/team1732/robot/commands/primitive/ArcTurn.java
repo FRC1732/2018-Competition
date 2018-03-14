@@ -52,6 +52,7 @@ public class ArcTurn extends Command {
 		}
 	}
 
+	@Override
 	protected void initialize() {
 		g.zero();
 		l.zero();
@@ -60,6 +61,7 @@ public class ArcTurn extends Command {
 		Debugger.logStart(this, "R = %.3f, T = %.3f", R, Math.toDegrees(T));
 	}
 
+	@Override
 	protected void execute() {
 		double innerDist = left ? l.getPosition() : r.getPosition();
 		double outerDist = left ? r.getPosition() : l.getPosition();
@@ -75,10 +77,12 @@ public class ArcTurn extends Command {
 			drivetrain.drive.tankDrive(outer, inner);
 	}
 
+	@Override
 	protected boolean isFinished() {
 		return abs(g.getTotalAngle() - sign * toDegrees(T)) <= 2;
 	}
 
+	@Override
 	protected void end() {
 		// drivetrain.setStop();
 		drivetrain.leftMaster.set(ControlMode.Velocity, 0);

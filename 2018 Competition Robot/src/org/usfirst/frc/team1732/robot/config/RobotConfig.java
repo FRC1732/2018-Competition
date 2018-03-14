@@ -132,7 +132,7 @@ public class RobotConfig {
 	public static RobotConfig getConfig() {
 		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
 		Preferences.getInstance().putString(PREF_KEY, robot);
-		RobotConfig config = ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
+		RobotConfig config = Enum.valueOf(ROBOTS.class, robot).getConfig();
 		System.out.println("Loaded robot: " + config.getClass().getName());
 		return config;
 	}

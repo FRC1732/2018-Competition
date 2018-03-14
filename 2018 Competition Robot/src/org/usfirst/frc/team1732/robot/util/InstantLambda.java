@@ -10,6 +10,7 @@ public class InstantLambda {
 				requires(dependancy);
 			}
 
+			@Override
 			protected void initialize() {
 				initialize.run();
 			}
@@ -18,6 +19,7 @@ public class InstantLambda {
 
 	public static InstantCommand makeCommand(Runnable initialize) {
 		return new InstantCommand() {
+			@Override
 			protected void initialize() {
 				initialize.run();
 			}
