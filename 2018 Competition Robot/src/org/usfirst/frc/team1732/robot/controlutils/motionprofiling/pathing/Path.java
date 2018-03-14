@@ -169,11 +169,11 @@ public final class Path {
 		}
 		MotionProfileConstraints constraints = new MotionProfileConstraints(maxVelocity, maxAcceleration);
 		MotionProfileConstraints noAccel = new MotionProfileConstraints(maxVelocity, 0);
-		MotionState previousState = new MotionState(0, 0, 0, maxAcceleration);
+		MotionState previousState = new MotionState(0, 0, segments.get(0).start.vel, maxAcceleration);
 
 		// System.out.println("Total length: " +
 		// segments.get(0).curve.getTotalArcLength());
-		double goalPos = segments.get(0).curve.getTotalArcLength() + previousState.pos();
+		double goalPos = segments.get(0).curve.getTotalArcLength();
 
 		MotionProfileGoal goalState = new MotionProfileGoal(goalPos, Math.abs(segments.get(0).end.vel),
 				CompletionBehavior.VIOLATE_MAX_ACCEL); // necessary because we restrict profiles to only moving forwards
