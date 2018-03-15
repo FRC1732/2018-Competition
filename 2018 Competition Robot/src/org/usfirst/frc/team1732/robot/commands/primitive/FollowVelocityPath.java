@@ -60,8 +60,7 @@ public class FollowVelocityPath extends NotifierCommand {
 		navx.zero();
 		leftE.zero();
 		rightE.zero();
-		Debugger.logStart(this, "Initial heading: %.3f, Final Center Pos: %.3f", profile.initialHeading,
-				profile.finalAbsCenterPos);
+		Debugger.logStart(this, "Final Center Pos: %.3f", profile.finalAbsCenterPos);
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
 		// timer.reset();
 		// timer.start();
@@ -75,11 +74,11 @@ public class FollowVelocityPath extends NotifierCommand {
 		PointPair<VelocityPoint> pair = profile.getCeilingPoint(timeSinceStarted());
 		VelocityPoint left = pair.left;
 		VelocityPoint right = pair.right;
-		double desiredHeading = left.headingDeg - profile.initialHeading;
+		double desiredHeading = left.headingDeg;
 		if (mirror)
 			desiredHeading = -desiredHeading;
-		double currentHeading = navx.getTotalAngle();
-		double headingError = desiredHeading - currentHeading;
+		double currentHeading = navx.getAngle();
+		double headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
 		double headingAdjustment = headingError * HEADING_P;
 
 		double leftVel;
@@ -102,10 +101,12 @@ public class FollowVelocityPath extends NotifierCommand {
 
 		System.out.println();
 		Util.logForGraphing("heading", desiredHeading, currentHeading, headingError, headingAdjustment);
-		Util.logForGraphing("left", Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
-				Robot.drivetrain.leftMaster.getClosedLoopError(0));
-		Util.logForGraphing("right", Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
-				Robot.drivetrain.rightMaster.getClosedLoopError(0));
+		// Util.logForGraphing("left",
+		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
+		// Robot.drivetrain.leftMaster.getClosedLoopError(0));
+		// Util.logForGraphing("right",
+		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
+		// Robot.drivetrain.rightMaster.getClosedLoopError(0));
 		Util.logForGraphing("left", leftE.getRate(), leftVel, leftNew, leftSensor,
 				Robot.drivetrain.leftMaster.getClosedLoopTarget(0), Robot.drivetrain.leftMaster.getClosedLoopError(0),
 				rightE.getPosition());

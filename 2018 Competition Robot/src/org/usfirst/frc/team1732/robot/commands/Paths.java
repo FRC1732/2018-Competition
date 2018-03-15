@@ -239,9 +239,9 @@ public class Paths {
 
 	public PointProfile makeLeftCubeGrabAfterSwitch() { // these ones will be all fudging
 		Path path;
-		double startingX = 0;
-		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
+		double startingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 + 10;
+		double startingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
+		path = new Path(new Waypoint(startingX, startingY, Math.toRadians(120), 0), false);
 		double endingX = 0;
 		double endingY = -40;
 		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));

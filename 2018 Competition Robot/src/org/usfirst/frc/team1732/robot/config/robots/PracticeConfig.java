@@ -13,7 +13,7 @@ public class PracticeConfig extends RobotConfig {
 		drivetrainConfig.enableVoltageCompensation = true;
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityPID.kP = 0.5/* 0.4 */;
+		drivetrainVelocityPID.kP = 0.35/* 0.4 */;
 		drivetrainVelocityPID.kI = 1;// 0.5;
 		drivetrainVelocityPID.kD = 0;
 		drivetrainVelocityPID.kF = 1023 / 7500/* 5000 */;
@@ -26,8 +26,8 @@ public class PracticeConfig extends RobotConfig {
 		armConfig.enableVoltageCompensation = true;
 		armMagicVel = 1203;
 		armMagicAccel = 1200;
-		armMagicPID.kF = 1023 / 1378; // 1023 / max sensor units per 100 ms
-		armMagicPID.kP = 4.1;
+		armMagicPID.kF = 1023 / 978; // 1023 / max sensor units per 100 ms
+		armMagicPID.kP = 6.1;
 		armMagicPID.kI = 0.1;
 		armMagicPID.kD = 0;
 		armMagicPID.integralZone = 100;
@@ -44,7 +44,7 @@ public class PracticeConfig extends RobotConfig {
 		elevatorMagicPID.kD = 0;
 		elevatorMagicPID.integralZone = 0;
 		elevatorMagicPID.maxIntegralAccumulated = 0;
-		reverseElevatorButton = false;
+		reverseElevatorButton = true;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

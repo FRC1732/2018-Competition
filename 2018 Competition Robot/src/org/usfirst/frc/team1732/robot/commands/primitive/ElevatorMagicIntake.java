@@ -44,9 +44,10 @@ public class ElevatorMagicIntake extends CommandGroup {
 				parentCommand.hitButton = elevator.isButtonPressed();
 			}
 
-			Util.logForGraphing(elevator.getEncoderPulses(), elevator.getDesiredPosition(),
-					elevator.motor.getClosedLoopTarget(0), elevator.motor.getClosedLoopError(0),
-					elevator.motor.getMotorOutputPercent());
+			// Util.logForGraphing(elevator.getEncoderPulses(),
+			// elevator.getDesiredPosition(),
+			// elevator.motor.getClosedLoopTarget(0), elevator.motor.getClosedLoopError(0),
+			// elevator.motor.getMotorOutputPercent());
 		}
 
 		@Override

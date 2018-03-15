@@ -62,8 +62,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		navx.zero();
 		leftE.zero();
 		rightE.zero();
-		Debugger.logStart(this, "Initial heading: %.3f, Final Center Pos: %.3f", profile.initialHeading,
-				profile.finalAbsCenterPos);
+		Debugger.logStart(this, "Final Center Pos: %.3f", profile.finalAbsCenterPos);
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
 		// timer.reset();
 		// timer.start();
@@ -79,14 +78,13 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		VelocityPoint right = pair.right;
 		double headingError;
 		if (super.timeSinceStarted() > percentToStartUsingLimelight * profile.totalTimeSec) {
-			double desiredHeading = left.headingDeg - profile.initialHeading;
+			double desiredHeading = left.headingDeg;
 			if (mirror)
 				desiredHeading = -desiredHeading;
 			double currentHeading = navx.getTotalAngle();
-			headingError = desiredHeading - currentHeading;
+			headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
 		} else {
 			headingError = Robot.sensors.limelight.getRawHorizontalOffset(); // get heading error from limelight
-			// might have to negate from what you would expect
 		}
 		double headingAdjustment = headingError * HEADING_P;
 
