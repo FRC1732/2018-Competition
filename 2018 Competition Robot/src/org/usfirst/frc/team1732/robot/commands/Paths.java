@@ -20,18 +20,18 @@ public class Paths {
 		effectiveWidth = Robot.drivetrain.effectiveRobotWidth;
 
 		defaultDriveStraight = makeDefaultDriveStraight();
-		switchCenterFrontLeftProfile = makeSwitchCenterFrontLeftProfile();
-		switchCenterFrontStraightProfile = makeSwitchCenterFrontStraightProfile();
-		scaleLeftSingleLeftProfile = makeScaleLeftSingleLeftProfile();
-		scaleLeftSingleRightProfile = makeScaleLeftSingleRightProfile();
-		scaleRightSingleLeftProfile = makeScaleRightSingleLeftProfile();
-		scaleRightSingleRightProfile = makeScaleRightSingleRightProfile();
-		scaleLeftSwitchProfile = makeScaleLeftSwitchProfile();
-		scaleRightSwitchProfile = makeScaleRightSwitchProfile();
-		leftSecondCubeGrab = makeLeftSecondCubeGrab();
-		rightSecondCubeGrab = makeRightSecondCubeGrab();
+		switchCenterFrontLeft = makeSwitchCenterFrontLeft();
+		switchCenterFrontStraight = makeSwitchCenterFrontStraight();
+		scaleLeftStraight = makeScaleLeftStraight();
+		scaleLeftCross = makeScaleLeftCross();
+		scaleRightCross = makeScaleRightCross();
+		scaleRightStraight = makeScaleRightStraight();
+		scaleLeftSwitch = makeScaleLeftSwitch();
+		scaleRightSwitch = makeScaleRightSwitch();
+		leftCubeGrabStraight = makeLeftCubeGrabStraight();
+		leftCubeGrabRightSwitch = makeLeftCubeGrabRightSwitch();
+		leftCubeGrabAfterSwitch = makeLeftCubeGrabAfterSwitch();
 		leftReturnToScale = makeLeftReturnToScale();
-		rightReturnToScale = makeRightReturnToScale();
 	}
 
 	// naming convention is [autoName][side]Profile
@@ -51,9 +51,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile switchCenterFrontLeftProfile;
+	public final PointProfile switchCenterFrontLeft;
 
-	public PointProfile makeSwitchCenterFrontLeftProfile() {
+	public PointProfile makeSwitchCenterFrontLeft() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
 		double startingY = robotLength / 2.0;
@@ -68,9 +68,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile switchCenterFrontStraightProfile;
+	public final PointProfile switchCenterFrontStraight;
 
-	public PointProfile makeSwitchCenterFrontStraightProfile() {
+	public PointProfile makeSwitchCenterFrontStraight() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() - robotWidth / 2.0;
 		double startingY = robotLength / 2.0;
@@ -81,9 +81,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleLeftSingleLeftProfile;
+	public final PointProfile scaleLeftStraight;
 
-	public PointProfile makeScaleLeftSingleLeftProfile() {
+	public PointProfile makeScaleLeftStraight() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 - 5;
 		double startingY = robotLength / 2.0;
@@ -96,9 +96,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleLeftSingleRightProfile;
+	public final PointProfile scaleLeftCross;
 
-	public PointProfile makeScaleLeftSingleRightProfile() {
+	public PointProfile makeScaleLeftCross() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 - 5;
 		double startingY = robotLength / 2.0;
@@ -127,9 +127,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleRightSingleLeftProfile;
+	public final PointProfile scaleRightCross;
 
-	public PointProfile makeScaleRightSingleLeftProfile() {
+	public PointProfile makeScaleRightCross() {
 		Path path;
 
 		double maxVelocity = this.maxVelocity;
@@ -161,9 +161,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleRightSingleRightProfile;
+	public final PointProfile scaleRightStraight;
 
-	public PointProfile makeScaleRightSingleRightProfile() {
+	public PointProfile makeScaleRightStraight() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 5;
 		double startingY = robotLength / 2.0;
@@ -176,9 +176,9 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleRightSwitchProfile;
+	public final PointProfile scaleRightSwitch;
 
-	public PointProfile makeScaleRightSwitchProfile() {
+	public PointProfile makeScaleRightSwitch() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 5;
 		double startingY = robotLength / 2.0;
@@ -191,24 +191,24 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile scaleLeftSwitchProfile;
+	public final PointProfile scaleLeftSwitch;
 
-	public PointProfile makeScaleLeftSwitchProfile() {
+	public PointProfile makeScaleLeftSwitch() {
 		Path path;
 		double startingX = Field.Switch.BOUNDARY.getMinX() + robotWidth / 2.0 - 5;
 		double startingY = robotLength / 2.0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0;
+		double endingX = Field.Switch.BOUNDARY.getX() - robotWidth / 2.0 + 10;
 		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX - 5, endingY + 70, Math.toRadians(20), 5));
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(120), 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile leftSecondCubeGrab;
+	public final PointProfile leftCubeGrabStraight;
 
-	public PointProfile makeLeftSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeLeftCubeGrabStraight() { // these ones will be all fudging
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
@@ -221,16 +221,31 @@ public class Paths {
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
-	public final PointProfile rightSecondCubeGrab;
+	public final PointProfile leftCubeGrabRightSwitch;
 
-	public PointProfile makeRightSecondCubeGrab() { // these ones will be all fudging
+	public PointProfile makeLeftCubeGrabRightSwitch() { // these ones will be all fudging
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, 4 * Math.PI / 7, 0), false);
+		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
 		double endingX = 0;
 		double endingY = -40;
-		path.addWaypoint(new Waypoint(endingX, endingY, 3 * Math.PI / 7, 0));
+		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
+
+		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
+	public final PointProfile leftCubeGrabAfterSwitch;
+
+	public PointProfile makeLeftCubeGrabAfterSwitch() { // these ones will be all fudging
+		Path path;
+		double startingX = 0;
+		double startingY = 0;
+		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
+		double endingX = 0;
+		double endingY = -40;
+		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);
@@ -239,21 +254,6 @@ public class Paths {
 	public final PointProfile leftReturnToScale;
 
 	public PointProfile makeLeftReturnToScale() {
-		Path path;
-		double startingX = 0;
-		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = 0;
-		double endingY = 40;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
-
-		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
-		return path.getVelocityProfile(effectiveWidth);
-	}
-
-	public final PointProfile rightReturnToScale;
-
-	public PointProfile makeRightReturnToScale() {
 		Path path;
 		double startingX = 0;
 		double startingY = 0;

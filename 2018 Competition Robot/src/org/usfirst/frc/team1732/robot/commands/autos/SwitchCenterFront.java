@@ -19,9 +19,9 @@ public class SwitchCenterFront extends CommandGroup {
 		addParallel(new ArmHoldPosition());
 
 		if (DriverStationData.closeSwitchIsLeft) {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontLeftProfile));
+			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontLeft));
 		} else {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontStraightProfile));
+			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontStraight));
 		}
 		addParallel(new CommandGroup() {
 			{

@@ -23,6 +23,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 	private final EncoderReader rightE;
 	private final PointProfile profile;
 	private final double percentToStartUsingLimelight;
+	private final boolean mirror;
 
 	/**
 	 * 
@@ -32,6 +33,17 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 	 *            initial heading of the robot according to the path
 	 */
 	public FollowVelocityPathLimelight(PointProfile profile, double percentToStartUsingLimelight) {
+		this(profile, percentToStartUsingLimelight, false);
+	}
+
+	/**
+	 * 
+	 * @param iterator
+	 *            point supplier
+	 * @param initialHeading
+	 *            initial heading of the robot according to the path
+	 */
+	public FollowVelocityPathLimelight(PointProfile profile, double percentToStartUsingLimelight, boolean mirror) {
 		super(5);
 		requires(Robot.drivetrain);
 		this.navx = Robot.sensors.navx.makeReader();
@@ -40,6 +52,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		this.profile = profile;
 		this.percentToStartUsingLimelight = percentToStartUsingLimelight;
 		// timer = new Timer();
+		this.mirror = mirror;
 	}
 
 	// private Timer timer;
@@ -67,6 +80,8 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		double headingError;
 		if (super.timeSinceStarted() > percentToStartUsingLimelight * profile.totalTimeSec) {
 			double desiredHeading = left.headingDeg - profile.initialHeading;
+			if (mirror)
+				desiredHeading = -desiredHeading;
 			double currentHeading = navx.getTotalAngle();
 			headingError = desiredHeading - currentHeading;
 		} else {
@@ -75,8 +90,15 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		}
 		double headingAdjustment = headingError * HEADING_P;
 
-		double leftVel = left.velocity;
-		double rightVel = right.velocity;
+		double leftVel;
+		double rightVel;
+		if (mirror) {
+			leftVel = right.velocity;
+			rightVel = left.velocity;
+		} else {
+			leftVel = left.velocity;
+			rightVel = right.velocity;
+		}
 		// double leftNew = leftVel + leftVel * headingAdjustment;
 		// double rightNew = rightVel - rightVel * headingAdjustment;
 		double leftNew = leftVel + headingAdjustment;

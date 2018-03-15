@@ -16,9 +16,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class ScaleLeftSingle extends CommandGroup {
+public class ScaleLeftSingleStraight extends CommandGroup {
 
-	public ScaleLeftSingle() {
+	public ScaleLeftSingleStraight() {
 		PointProfile profile;
 		double time;
 		double percent;
@@ -27,7 +27,7 @@ public class ScaleLeftSingle extends CommandGroup {
 		// addParallel(new PreAuto(Arm.Positions.TUCK));
 
 		if (DriverStationData.scaleIsLeft) {
-			profile = Robot.paths.scaleLeftSingleLeftProfile;
+			profile = Robot.paths.scaleLeftStraight;
 			time = profile.getTotalTimeSec();
 			percent = 0.7;
 			addSequential(new CommandGroup() {
@@ -51,7 +51,7 @@ public class ScaleLeftSingle extends CommandGroup {
 			addSequential(new ManipAutoEject(0.5));
 			addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
 		} else if (DriverStationData.closeSwitchIsLeft) {
-			profile = Robot.paths.scaleLeftSwitchProfile;
+			profile = Robot.paths.scaleLeftSwitch;
 			time = profile.getTotalTimeSec();
 			percent = 0.5;
 			addParallel(new CommandGroup() {

@@ -3,8 +3,8 @@ package org.usfirst.frc.team1732.robot.autotools;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingle;
-import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingle;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingleStraight;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public final class AutoChooser {
 	public static enum AutoModes {
 		SWITCH_CENTER_FRONT(() -> new SwitchCenterFront()), //
-		ScaleLeftSingle(() -> new ScaleLeftSingle()), //
-		ScaleRightSingle(() -> new ScaleRightSingle()), //
+		ScaleLeftSingle(() -> new ScaleLeftSingleStraight()), //
+		ScaleRightSingle(() -> new ScaleRightSingleStraight()), //
 		DriveForwardMotion(() -> {
 			Path path;
 			double startingX = 0;

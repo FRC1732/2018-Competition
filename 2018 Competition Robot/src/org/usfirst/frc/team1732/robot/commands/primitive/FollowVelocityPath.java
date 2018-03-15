@@ -22,6 +22,7 @@ public class FollowVelocityPath extends NotifierCommand {
 	private final EncoderReader leftE;
 	private final EncoderReader rightE;
 	private final PointProfile profile;
+	private final boolean mirror;
 
 	/**
 	 * 
@@ -31,6 +32,17 @@ public class FollowVelocityPath extends NotifierCommand {
 	 *            initial heading of the robot according to the path
 	 */
 	public FollowVelocityPath(PointProfile profile) {
+		this(profile, false);
+	}
+
+	/**
+	 * 
+	 * @param iterator
+	 *            point supplier
+	 * @param initialHeading
+	 *            initial heading of the robot according to the path
+	 */
+	public FollowVelocityPath(PointProfile profile, boolean mirror) {
 		super(5);
 		requires(Robot.drivetrain);
 		this.navx = Robot.sensors.navx.makeReader();
@@ -38,6 +50,7 @@ public class FollowVelocityPath extends NotifierCommand {
 		rightE = Robot.drivetrain.getRightEncoderReader();
 		this.profile = profile;
 		// timer = new Timer();
+		this.mirror = mirror;
 	}
 
 	// private Timer timer;
@@ -63,12 +76,22 @@ public class FollowVelocityPath extends NotifierCommand {
 		VelocityPoint left = pair.left;
 		VelocityPoint right = pair.right;
 		double desiredHeading = left.headingDeg - profile.initialHeading;
+		if (mirror)
+			desiredHeading = -desiredHeading;
 		double currentHeading = navx.getTotalAngle();
 		double headingError = desiredHeading - currentHeading;
 		double headingAdjustment = headingError * HEADING_P;
 
-		double leftVel = left.velocity;
-		double rightVel = right.velocity;
+		double leftVel;
+		double rightVel;
+		if (mirror) {
+			leftVel = right.velocity;
+			rightVel = left.velocity;
+		} else {
+			leftVel = left.velocity;
+			rightVel = right.velocity;
+		}
+
 		// double leftNew = leftVel + leftVel * headingAdjustment;
 		// double rightNew = rightVel - rightVel * headingAdjustment;
 		double leftNew = leftVel + headingAdjustment;
