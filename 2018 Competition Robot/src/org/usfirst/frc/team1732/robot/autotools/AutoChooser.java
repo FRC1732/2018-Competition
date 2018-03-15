@@ -9,6 +9,7 @@ import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
+import org.usfirst.frc.team1732.robot.commands.testing.TestGyroReader;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
@@ -84,6 +85,8 @@ public final class AutoChooser {
 
 			path.generateProfile(100, 100);
 			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), true);
+		}), TEST_GYRO_READER(() -> {
+			return new TestGyroReader();
 		});
 
 		private final Supplier<Command> commandSupplier;
