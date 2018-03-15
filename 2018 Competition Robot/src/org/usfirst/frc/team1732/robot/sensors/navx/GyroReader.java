@@ -16,7 +16,7 @@ public class GyroReader {
 	 * @return current angle from -180 to 180 degrees. Does not get zeroed.
 	 */
 	public double getAngle() {
-		return Util.getContinuousError(continuousAngle, gyro.getAngle(), 360);
+		return Util.getContinuousError(gyro.getAngle(), continuousAngle, 360);
 	}
 
 	/**
