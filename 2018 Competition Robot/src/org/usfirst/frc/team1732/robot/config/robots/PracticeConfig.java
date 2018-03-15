@@ -25,7 +25,7 @@ public class PracticeConfig extends RobotConfig {
 		// arm
 		armConfig.enableVoltageCompensation = true;
 		armMagicVel = 1203;
-		armMagicAccel = 1200;
+		armMagicAccel = 800;
 		armMagicPID.kF = 1023 / 978; // 1023 / max sensor units per 100 ms
 		armMagicPID.kP = 6.1;
 		armMagicPID.kI = 0.1;

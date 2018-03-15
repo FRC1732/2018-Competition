@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -33,8 +32,6 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
-
-	private static final String key = "Arm Starting Count";
 
 	private final int magicVel;
 	private final int magicAccel;
@@ -57,9 +54,6 @@ public class Arm extends Subsystem {
 		encoder.setPhase(config.reverseArmSensor);
 
 		allowedError = config.armAllowedErrorCount;
-
-		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
@@ -94,10 +88,10 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+
+		int currentPosition = encoder.getPulses();
 		if (autoControl) {
-			if (desiredPosition > Positions.TUCK.value) {
+			if (desiredPosition > Positions.TUCK.value && currentPosition < Positions.TUCK.value + allowedError) {
 				if (!Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 					motor.set(ControlMode.MotionMagic, Positions.TUCK.value);
 					desiredIsSet = false;
@@ -107,16 +101,18 @@ public class Arm extends Subsystem {
 					desiredIsSet = true;
 				}
 			}
-			if (desiredPosition < Positions.INTAKE.value + 10) {
-				if (!Robot.elevator.isArmSafeToGoDown() && desiredIsSet) {
-					motor.set(ControlMode.MotionMagic, Positions.EXCHANGE.value);
-					desiredIsSet = false;
-				}
-				if (Robot.elevator.isArmSafeToGoDown() && !desiredIsSet) {
-					motor.set(ControlMode.MotionMagic, desiredPosition);
-					desiredIsSet = true;
-				}
-			}
+			// this was because the ramps interfered
+			// if (desiredPosition < Positions.INTAKE.value && currentPosition >
+			// Positions.INTAKE.value - allowedError) {
+			// if (!Robot.elevator.isArmSafeToGoDown() && desiredIsSet) {
+			// motor.set(ControlMode.MotionMagic, Positions.EXCHANGE.value);
+			// desiredIsSet = false;
+			// }
+			// if (Robot.elevator.isArmSafeToGoDown() && !desiredIsSet) {
+			// motor.set(ControlMode.MotionMagic, desiredPosition);
+			// desiredIsSet = true;
+			// }
+			// }
 		}
 
 	}
@@ -158,7 +154,7 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPulses() - allowedError < Positions.TUCK.value;
+		return encoder.getPulses() < Positions.TUCK.value + allowedError;
 	}
 
 	public int getEncoderPulses() {
@@ -170,17 +166,21 @@ public class Arm extends Subsystem {
 	}
 
 	public void useMagicControl(int desiredPosition) {
-		int currentPosition = encoder.getPulses();
-		int maxLow = Positions.TUCK.value;
+		// int currentPosition = encoder.getPulses();
+		// int maxLow = Positions.TUCK.value;
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
-		} else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT); // 0.2
-			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT); // 0.5
-		} else {
-			motor.configMotionAcceleration((int) (magicAccel * 0.7), Robot.CONFIG_TIMEOUT);
-		}
+		// if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
+		// motor.configMotionAcceleration((int) (magicAccel * 0.4),
+		// Robot.CONFIG_TIMEOUT);
+		// } else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
+		// motor.configMotionAcceleration((int) (magicAccel * 0.2),
+		// Robot.CONFIG_TIMEOUT); // 0.2
+		// motor.configMotionCruiseVelocity((int) (magicVel * 0.5),
+		// Robot.CONFIG_TIMEOUT); // 0.5
+		// } else {
+		// motor.configMotionAcceleration((int) (magicAccel * 0.7),
+		// Robot.CONFIG_TIMEOUT);
+		// }
 		magicGains.selectGains(motor);
 	}
 
