@@ -85,7 +85,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 			double currentHeading = navx.getTotalAngle();
 			headingError = desiredHeading - currentHeading;
 		} else {
-			headingError = 0; // get heading error from limelight
+			headingError = Robot.sensors.limelight.getHorizontalOffset(); // get heading error from limelight
 			// might have to negate from what you would expect
 		}
 		double headingAdjustment = headingError * HEADING_P;
