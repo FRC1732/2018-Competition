@@ -100,24 +100,18 @@ public class FollowVelocityPath extends NotifierCommand {
 		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
 		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
 
-		// System.out.println();
-		// Util.logForGraphing("heading", desiredHeading, currentHeading, headingError,
-		// headingAdjustment);
-		// Util.logForGraphing("left",
-		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.leftMaster.getClosedLoopError(0));
-		// Util.logForGraphing("right",
-		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.rightMaster.getClosedLoopError(0));
-		// Util.logForGraphing("left", leftE.getRate(), leftVel, leftNew, leftSensor,
-		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.leftMaster.getClosedLoopError(0),
-		// rightE.getPosition());
-		// Util.logForGraphing("right", rightE.getRate(), rightVel, rightNew,
-		// rightSensor,
-		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.rightMaster.getClosedLoopError(0),
-		// rightE.getPosition());
+		System.out.println();
+		Util.logForGraphing("heading", desiredHeading, currentHeading, headingError, headingAdjustment);
+		Util.logForGraphing("left", Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
+				Robot.drivetrain.leftMaster.getClosedLoopError(0));
+		Util.logForGraphing("right", Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
+				Robot.drivetrain.rightMaster.getClosedLoopError(0));
+		Util.logForGraphing("left", leftE.getRate(), leftVel, leftNew, leftSensor,
+				Robot.drivetrain.leftMaster.getClosedLoopTarget(0), Robot.drivetrain.leftMaster.getClosedLoopError(0),
+				rightE.getPosition());
+		Util.logForGraphing("right", rightE.getRate(), rightVel, rightNew, rightSensor,
+				Robot.drivetrain.rightMaster.getClosedLoopTarget(0), Robot.drivetrain.rightMaster.getClosedLoopError(0),
+				rightE.getPosition());
 
 		Robot.drivetrain.leftMaster.set(ControlMode.Velocity, leftSensor);
 		Robot.drivetrain.rightMaster.set(ControlMode.Velocity, rightSensor);

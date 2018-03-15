@@ -8,6 +8,7 @@ import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
+import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
@@ -29,13 +30,61 @@ public final class AutoChooser {
 			double startingY = 0;
 			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 			double endingX = startingX;
-			double endingY = 50;
+			double endingY = 100;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+
+			path.generateProfile(100, 100);
+			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
+		}), //
+		DriveBackwardMotion(() -> {
+			Path path;
+			double startingX = 0;
+			double startingY = 0;
+			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			double endingX = startingX;
+			double endingY = -100;
 			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
 			path.generateProfile(50, 100);
 			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
 		}), //
-		DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5));
+		DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5)), //
+		TEST_CUBE_GETTING(() -> {
+			Path path;
+			double startingX = 0;
+			double startingY = 0;
+			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			double endingX = -50;
+			double endingY = -50;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
+
+			path.generateProfile(100, 100);
+			return new FollowVelocityPathLimelight(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), 0.5);
+		}), //
+		CUBE_GET_NO_LIMELIGHT(() -> {
+			Path path;
+			double startingX = 0;
+			double startingY = 0;
+			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			double endingX = -50;
+			double endingY = -50;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
+
+			path.generateProfile(100, 100);
+			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
+		}), //
+		TEST_MIRROR(() -> {
+			Path path;
+			double startingX = 0;
+			double startingY = 0;
+			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			double endingX = -50;
+			double endingY = -50;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
+
+			path.generateProfile(100, 100);
+			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), true);
+		});
 
 		private final Supplier<Command> commandSupplier;
 

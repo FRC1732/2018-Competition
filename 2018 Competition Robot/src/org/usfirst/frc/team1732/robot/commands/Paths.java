@@ -31,7 +31,6 @@ public class Paths {
 		leftCubeGrabStraight = makeLeftCubeGrabStraight();
 		leftCubeGrabRightSwitch = makeLeftCubeGrabRightSwitch();
 		leftCubeGrabAfterSwitch = makeLeftCubeGrabAfterSwitch();
-		leftReturnToScale = makeLeftReturnToScale();
 	}
 
 	// naming convention is [autoName][side]Profile
@@ -210,8 +209,8 @@ public class Paths {
 
 	public PointProfile makeLeftCubeGrabStraight() { // these ones will be all fudging
 		Path path;
-		double startingX = 0;
-		double startingY = 0;
+		double startingX = Field.Scale.LEFT_PLATE.getCenterX() - robotWidth / 2.0;
+		double startingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
 		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
 		double endingX = 0;
 		double endingY = -40;
@@ -246,21 +245,6 @@ public class Paths {
 		double endingX = 0;
 		double endingY = -40;
 		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
-
-		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
-		return path.getVelocityProfile(effectiveWidth);
-	}
-
-	public final PointProfile leftReturnToScale;
-
-	public PointProfile makeLeftReturnToScale() {
-		Path path;
-		double startingX = 0;
-		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = 0;
-		double endingY = 40;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);

@@ -426,7 +426,12 @@ public final class Path {
 				double endVel = currentEndState.vel();
 				// double endVel = profile.velocityByTimeClamped((i) * pointDurationSec);
 				double endHeading = Math.toDegrees(currentSegment.curve.getHeadingAtArcLength(endArcLength));
-
+				if (!driveForwards) { // don't do modulus here
+					if (endHeading > 0)
+						endHeading -= 180;
+					else
+						endHeading += 180;
+				}
 				leftPoint.headingDeg = endHeading;
 				rightPoint.headingDeg = endHeading;
 
