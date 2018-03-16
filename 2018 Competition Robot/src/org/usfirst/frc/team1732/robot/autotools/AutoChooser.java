@@ -3,22 +3,33 @@ package org.usfirst.frc.team1732.robot.autotools;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.commands.autos.ManipAutoEject;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
+import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
+import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
 import org.usfirst.frc.team1732.robot.commands.testing.TestGyroReader;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
+import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
+import org.usfirst.frc.team1732.robot.subsystems.Arm;
+import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public final class AutoChooser {
 	public static enum AutoModes {
@@ -63,43 +74,43 @@ public final class AutoChooser {
 			return new FollowVelocityPathLimelight(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), 0.5);
 		}), //
 		TEST_CUBE_GRAB_AND_SHOOT(() -> {
-			return null;
-			// return new CommandGroup() {
-			// {
-			// Path path;
-			// double startingX = 0;
-			// double startingY = 0;
-			// path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
-			// double endingX = -50;
-			// double endingY = -100;
-			// path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
-			//
-			// path.generateProfile(100, 50);
-			// PointProfile profile2 =
-			// path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth)
-			// double time2 = profile2.getTotalTimeSec();
-			// double percent2 = 0.1;
-			// addSequential(new CommandGroup() {
-			// {
-			// addParallel(new CommandGroup() {
-			// {
-			// addSequential(new Wait(time2 * percent2));
-			// addSequential(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
-			// Elevator.Positions.INTAKE));
-			// addSequential(new ManipSetIn());
-			// }
-			// });
-			// addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
-			// }
-			// });
-			// // score in switch
-			// addSequential(new ManipSetStop());
-			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH,
-			// Elevator.Positions.INTAKE));
-			// addSequential(new Wait(0.2));
-			// addSequential(new ManipAutoEject(0.5));
-			// }
-			// };
+			// return null;
+			return new CommandGroup() {
+				{
+					Path path;
+					double startingX = 0;
+					double startingY = 0;
+					path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
+					double endingX = -50;
+					double endingY = -100;
+					path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
+					//
+					path.generateProfile(100, 50);
+					PointProfile profile2 = path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth);
+					double time2 = profile2.getTotalTimeSec();
+					double percent2 = 0.1;
+					addSequential(new ManipSetOut(0));
+					addSequential(new CommandGroup() {
+						{
+							addParallel(new CommandGroup() {
+								{
+									addSequential(new Wait(time2 * percent2));
+									addSequential(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
+											Elevator.Positions.INTAKE));
+									addSequential(new ManipSetIn());
+								}
+							});
+							addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
+							addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
+						}
+					});
+					// // score in switch
+					addSequential(new ManipSetStop());
+					addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
+					addSequential(new Wait(0.2));
+					addSequential(new ManipAutoEject(0.5));
+				}
+			};
 		}), //
 		TEST_MIRROR(() -> {
 			Path path;

@@ -82,7 +82,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 			headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
 		} else if (Robot.sensors.limelight.getTargetArea() < 80) {
 			// System.out.println("using limelight");
-			headingError = Robot.sensors.limelight.getHorizontalOffset(); // get heading error from limelight
+			headingError = Robot.sensors.limelight.getFilteredHorizontalOffset(); // get heading error from limelight
 		} else {
 			headingError = 0;
 		}

@@ -20,6 +20,11 @@ public class ArmMagicIntake extends CommandGroup {
 		addSequential(new ArmUntilButton(this));
 	}
 
+	@Override
+	protected void end() {
+		System.out.println("Ended Arm Intake Command");
+	}
+
 	private static class ArmMagicIntakeUntilButton extends Command {
 
 		private final ArmMagicIntake parentCommand;

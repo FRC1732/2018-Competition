@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1732.robot.sensors;
 
+import org.usfirst.frc.team1732.robot.Robot;
+
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -13,10 +15,19 @@ public class Limelight {
 
 	private double hOffAve;
 
+	private static final double alpha = 0.7;
+	private double filteredOut;
+	private double previousFiltered = 0;
+
 	public Limelight() {
 		// add listener to calculate rolling average
 		table.getEntry("tx").addListener(t -> hOffAve += (-hOffAve + t.value.getDouble()) / BUFFER_SIZE,
 				EntryListenerFlags.kUpdate);
+		table.getEntry("tx").addListener(t -> {
+			filteredOut = getRawHorizontalOffset() * alpha + previousFiltered * (1 - alpha);
+			previousFiltered = filteredOut;
+		}, EntryListenerFlags.kUpdate);
+		Robot.dash.add("Limelight offset", this::getFilteredHorizontalOffset);
 	}
 
 	// ----- SETTERS -----
@@ -40,6 +51,10 @@ public class Limelight {
 	// returns the horizonatal offset of the target (between -27 and 27 degrees)
 	public double getRawHorizontalOffset() {
 		return table.getEntry("tx").getNumber(0).doubleValue();
+	}
+
+	public double getFilteredHorizontalOffset() {
+		return filteredOut;
 	}
 
 	public double getRawHorizontalOffset(double defaultValue) {
