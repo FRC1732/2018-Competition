@@ -54,25 +54,52 @@ public final class AutoChooser {
 			Path path;
 			double startingX = 0;
 			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
 			double endingX = -50;
-			double endingY = -50;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
+			double endingY = -100;
+			path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
 
-			path.generateProfile(100, 100);
+			path.generateProfile(100, 50);
 			return new FollowVelocityPathLimelight(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), 0.5);
 		}), //
-		CUBE_GET_NO_LIMELIGHT(() -> {
-			Path path;
-			double startingX = 0;
-			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
-			double endingX = -50;
-			double endingY = -50;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
-
-			path.generateProfile(100, 100);
-			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
+		TEST_CUBE_GRAB_AND_SHOOT(() -> {
+			return null;
+			// return new CommandGroup() {
+			// {
+			// Path path;
+			// double startingX = 0;
+			// double startingY = 0;
+			// path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
+			// double endingX = -50;
+			// double endingY = -100;
+			// path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
+			//
+			// path.generateProfile(100, 50);
+			// PointProfile profile2 =
+			// path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth)
+			// double time2 = profile2.getTotalTimeSec();
+			// double percent2 = 0.1;
+			// addSequential(new CommandGroup() {
+			// {
+			// addParallel(new CommandGroup() {
+			// {
+			// addSequential(new Wait(time2 * percent2));
+			// addSequential(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
+			// Elevator.Positions.INTAKE));
+			// addSequential(new ManipSetIn());
+			// }
+			// });
+			// addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
+			// }
+			// });
+			// // score in switch
+			// addSequential(new ManipSetStop());
+			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH,
+			// Elevator.Positions.INTAKE));
+			// addSequential(new Wait(0.2));
+			// addSequential(new ManipAutoEject(0.5));
+			// }
+			// };
 		}), //
 		TEST_MIRROR(() -> {
 			Path path;
@@ -83,7 +110,7 @@ public final class AutoChooser {
 			double endingY = -50;
 			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
 
-			path.generateProfile(100, 100);
+			path.generateProfile(100, 50);
 			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), true);
 		}), TEST_GYRO_READER(() -> {
 			return new TestGyroReader();

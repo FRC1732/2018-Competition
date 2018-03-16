@@ -11,6 +11,8 @@ public class NavX extends GyroBase {
 
 	public NavX(AHRS navx) {
 		this.navx = navx;
+		Robot.dash.add("NavX Yaw", () -> navx.getYaw());
+		Robot.dash.add("NavX Total yaw", () -> navx.getAngle());
 	}
 
 	@Override

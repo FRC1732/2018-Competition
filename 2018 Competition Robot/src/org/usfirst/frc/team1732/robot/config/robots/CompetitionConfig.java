@@ -44,6 +44,7 @@ public class CompetitionConfig extends RobotConfig {
 		elevatorMagicPID.integralZone = 0;
 		elevatorMagicPID.maxIntegralAccumulated = 0;
 		reverseElevatorButton = true;
+		reverseElevatorSensor = true;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

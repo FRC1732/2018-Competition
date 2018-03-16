@@ -19,7 +19,6 @@ import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
-import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -106,10 +105,10 @@ public class Input {
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rockerDown.whenReleased(new ElevatorHoldPosition());
 
-		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
-		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
-		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.3));
-		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
+		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(1));
+		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.4));
+		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
 
 		leftTrigger.whenPressed(new ManipSetIn());
 		leftTrigger.whenReleased(new ManipSetStop());

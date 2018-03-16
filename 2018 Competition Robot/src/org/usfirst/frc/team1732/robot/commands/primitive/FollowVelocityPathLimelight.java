@@ -51,21 +51,17 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		rightE = Robot.drivetrain.getRightEncoderReader();
 		this.profile = profile;
 		this.percentToStartUsingLimelight = percentToStartUsingLimelight;
-		// timer = new Timer();
 		this.mirror = mirror;
 	}
-
-	// private Timer timer;
 
 	@Override
 	protected void init() {
 		navx.zero();
 		leftE.zero();
 		rightE.zero();
-		Debugger.logStart(this, "Final Center Pos: %.3f", profile.finalAbsCenterPos);
+		System.out.println(profile.totalTimeSec);
+		Debugger.logStart(this, "%.3f, Final Center Pos: %.3f", profile.totalTimeSec, profile.finalAbsCenterPos);
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
-		// timer.reset();
-		// timer.start();
 	}
 
 	@Override
@@ -77,14 +73,18 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		VelocityPoint left = pair.left;
 		VelocityPoint right = pair.right;
 		double headingError;
-		if (super.timeSinceStarted() > percentToStartUsingLimelight * profile.totalTimeSec) {
+		if (timeSinceStarted() < percentToStartUsingLimelight * profile.totalTimeSec) {
+			// System.out.println("using navx");
 			double desiredHeading = left.headingDeg;
 			if (mirror)
 				desiredHeading = -desiredHeading;
 			double currentHeading = navx.getTotalAngle();
 			headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
+		} else if (Robot.sensors.limelight.getTargetArea() < 80) {
+			// System.out.println("using limelight");
+			headingError = Robot.sensors.limelight.getHorizontalOffset(); // get heading error from limelight
 		} else {
-			headingError = Robot.sensors.limelight.getRawHorizontalOffset(); // get heading error from limelight
+			headingError = 0;
 		}
 		double headingAdjustment = headingError * HEADING_P;
 
@@ -105,6 +105,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
 		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
 
+		// Util.logForGraphing(headingError);
 		// System.out.println();
 		// Util.logForGraphing("heading", desiredHeading, currentHeading, headingError,
 		// headingAdjustment);

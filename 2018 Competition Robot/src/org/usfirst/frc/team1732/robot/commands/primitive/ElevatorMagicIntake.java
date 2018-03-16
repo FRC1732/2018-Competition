@@ -3,7 +3,6 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 import static org.usfirst.frc.team1732.robot.Robot.elevator;
 
 import org.usfirst.frc.team1732.robot.subsystems.Elevator.Positions;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -83,9 +82,10 @@ public class ElevatorMagicIntake extends CommandGroup {
 
 		@Override
 		protected void execute() {
-			Util.logForGraphing(elevator.getEncoderPulses(), elevator.getDesiredPosition(),
-					elevator.motor.getClosedLoopTarget(0), elevator.motor.getClosedLoopError(0),
-					elevator.motor.getMotorOutputPercent());
+			// Util.logForGraphing(elevator.getEncoderPulses(),
+			// elevator.getDesiredPosition(),
+			// elevator.motor.getClosedLoopTarget(0), elevator.motor.getClosedLoopError(0),
+			// elevator.motor.getMotorOutputPercent());
 			if (!parentCommand.hitButton) {
 				parentCommand.hitButton = elevator.isButtonPressed();
 			}

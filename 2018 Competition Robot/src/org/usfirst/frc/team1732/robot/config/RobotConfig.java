@@ -79,7 +79,7 @@ public class RobotConfig {
 		elevatorConfig.openLoopRamp = elevatorRampTime;
 	}
 	private final boolean reverseElevator = true;
-	public final boolean reverseElevatorSensor = true;
+	public boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorMagicPID = new ClosedLoopProfile("Elevator Magic PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);

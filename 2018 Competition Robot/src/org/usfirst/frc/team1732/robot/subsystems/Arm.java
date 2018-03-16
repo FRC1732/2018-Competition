@@ -166,21 +166,20 @@ public class Arm extends Subsystem {
 	}
 
 	public void useMagicControl(int desiredPosition) {
-		// int currentPosition = encoder.getPulses();
-		// int maxLow = Positions.TUCK.value;
+		int currentPosition = encoder.getPulses();
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		// if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
-		// motor.configMotionAcceleration((int) (magicAccel * 0.4),
-		// Robot.CONFIG_TIMEOUT);
-		// } else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
-		// motor.configMotionAcceleration((int) (magicAccel * 0.2),
-		// Robot.CONFIG_TIMEOUT); // 0.2
-		// motor.configMotionCruiseVelocity((int) (magicVel * 0.5),
-		// Robot.CONFIG_TIMEOUT); // 0.5
-		// } else {
-		// motor.configMotionAcceleration((int) (magicAccel * 0.7),
-		// Robot.CONFIG_TIMEOUT);
-		// }
+		if (Robot.manip.assumedCube()) {
+			System.out.println("ASSUMING WE HAVE CUBE");
+			if (desiredPosition > currentPosition) {
+				motor.configMotionAcceleration((int) (magicAccel * 0.8), Robot.CONFIG_TIMEOUT);
+			} else {
+				motor.configMotionAcceleration((int) (magicAccel * 0.5), Robot.CONFIG_TIMEOUT);
+			}
+		} else {
+			System.out.println("ASSUMING WE DON'T HAVE CUBE");
+			// use normal accel
+			motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
+		}
 		magicGains.selectGains(motor);
 	}
 

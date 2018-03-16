@@ -35,8 +35,8 @@ public class ElevatorRunManualSafe extends Command {
 			Robot.elevator.useMagicControl(val);
 			Robot.elevator.set(val);
 		}
-		if (Robot.elevator.getEncoderPulses() < Elevator.Positions.RADIO.value
-				&& Robot.arm.getEncoderPulses() > Arm.Positions.TUCK.value + range) {
+		if (Robot.elevator.getEncoderPulses() < Elevator.Positions.RADIO.value + range
+				&& Robot.arm.getEncoderPulses() > Arm.Positions.TUCK.value - range) {
 			int val = Elevator.Positions.RADIO.value + adjust;
 			Robot.elevator.useMagicControl(val);
 			Robot.elevator.set(val);

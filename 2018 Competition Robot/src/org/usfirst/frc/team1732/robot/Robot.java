@@ -13,6 +13,7 @@ import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
 import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
@@ -116,7 +117,7 @@ public class Robot extends TimedRobot {
 		SensorChecker.addSensor(sensors.navx::isConnected, "NavX board");
 		SensorChecker.addSensor(drivetrain.leftEncoder::isConnected, "Left drivetrain encoder");
 		SensorChecker.addSensor(drivetrain.rightEncoder::isConnected, "Right drivetrain encoder");
-
+		Robot.sensors.limelight.setLEDMode(LEDMode.OFF);
 	}
 
 	@Override
@@ -202,6 +203,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+		// System.out.println("limelight: " +
+		// Robot.sensors.limelight.getRawHorizontalOffset());
 	}
 
 	@Override

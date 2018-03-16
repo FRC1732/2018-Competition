@@ -289,7 +289,8 @@ public final class Path {
 				PointPair<VelocityPoint> pair = iterator.next();
 				map.put(totalTimeSec, pair);
 				// System.out.println(totalTimeSec + ", " + pair.left.velocity + ", " +
-				// pair.right.velocity);
+				// pair.right.velocity + ", "
+				// + pair.left.headingDeg);
 				totalTimeSec += pointDurSec;
 			}
 		}
@@ -406,6 +407,8 @@ public final class Path {
 				double endVel = currentEndState.vel();
 				// double endVel = profile.velocityByTimeClamped((i) * pointDurationSec);
 				double endAngle = Math.toDegrees(currentSegment.curve.getTangentAngleAtArcLength(endArcLength));
+				// the following arguements are in the correct order because angle increased in
+				// the opposite direction to heading
 				double endHeading = Util.getContinuousError(startAngle, endAngle, 360);
 
 				leftPoint.headingDeg = endHeading;
