@@ -420,8 +420,8 @@ public final class Path {
 				} else { // if curving
 					double curvature = currentSegment.curve.getCurvatureAtArcLength(endArcLength);
 					double r = 1 / curvature;
-					double lR = Math.abs(r - robotWidth / 2);
-					double rR = Math.abs(r + robotWidth / 2);
+					double lR = Math.abs(r) - robotWidth / 2 * Math.signum(r);
+					double rR = Math.abs(r) + robotWidth / 2 * Math.signum(r);
 					r = Math.abs(r);
 					double lK = lR / r;
 					double rK = rR / r;
