@@ -71,9 +71,9 @@ public class ScaleLeftSingleStraight extends CommandGroup {
 					addSequential(new ManipAutoEject(0.5));
 				}
 			});
-			addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4));
+			addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4, 0));
 		} else {
-			addSequential(new DriveTime(0.25, 0.25, NeutralMode.Brake, 5));
+			addSequential(new DriveTime(0.25, 0.25, NeutralMode.Brake, 5, 0));
 		}
 
 		// makes sure it propertly waits before shooting cube

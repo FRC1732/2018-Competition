@@ -31,6 +31,7 @@ public class Paths {
 		leftCubeGrabStraight = makeLeftCubeGrabStraight();
 		leftCubeGrabRightSwitch = makeLeftCubeGrabRightSwitch();
 		leftCubeGrabAfterSwitch = makeLeftCubeGrabAfterSwitch();
+		driveBackwardSlightly = makeDriveBackwardSlightly();
 	}
 
 	// naming convention is [autoName][side]Profile
@@ -62,7 +63,7 @@ public class Paths {
 		// path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0), 0.5);
 		double endingX = Field.Switch.BOUNDARY.getX();
 		double endingY = Field.Switch.BOUNDARY.getY();
-		path.addWaypoint(new Waypoint(endingX - 5, endingY + 10, Math.PI / 2, 5));
+		path.addWaypoint(new Waypoint(endingX - 5, endingY + 10, Math.PI / 2, 0));
 		path.generateProfile(maxVelocity * 0.5, maxAcceleration * 0.5);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -75,7 +76,7 @@ public class Paths {
 		double startingY = robotLength / 2.0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingY = Field.Switch.BOUNDARY.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(startingX, endingY + 35, Math.PI / 2, 5));
+		path.addWaypoint(new Waypoint(startingX, endingY + 35, Math.PI / 2, 0));
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);
 	}
@@ -89,9 +90,9 @@ public class Paths {
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = Field.Scale.LEFT_PLATE.getCenterX() - robotWidth / 2.0;
 		double endingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX + 5 + 35, endingY + 90, 3 * Math.PI / 7, 0));
+		path.addWaypoint(new Waypoint(endingX + 5 + 25, endingY + 90, 3 * Math.PI / 7, 0));
 
-		path.generateProfile(maxVelocity, maxAcceleration * 0.9);
+		path.generateProfile(maxVelocity, maxAcceleration * 0.80);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
@@ -209,14 +210,14 @@ public class Paths {
 
 	public PointProfile makeLeftCubeGrabStraight() { // these ones will be all fudging
 		Path path;
-		double startingX = Field.Scale.LEFT_PLATE.getCenterX() - robotWidth / 2.0;
-		double startingY = Field.Scale.LEFT_PLATE.getY() - robotLength / 2.0;
-		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
-		double endingX = 0;
-		double endingY = -40;
-		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
+		double startingX = 0;
+		double startingY = 0;
+		path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
+		double endingX = 35;
+		double endingY = -55;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-40), 0));
 
-		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
+		path.generateProfile(maxVelocity, maxAcceleration * 0.2);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
@@ -226,12 +227,15 @@ public class Paths {
 		Path path;
 		double startingX = 0;
 		double startingY = 0;
-		path = new Path(new Waypoint(startingX, startingY, 3 * Math.PI / 7, 0), false);
-		double endingX = 0;
-		double endingY = -40;
-		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
+		path = new Path(new Waypoint(startingX, startingY, Math.toRadians(-100), 0), false);
+		double middleX = 60;
+		double middleY = -38;
+		path.addWaypoint(new Waypoint(middleX, middleY, 0, maxVelocity));
+		double endingX = 180;
+		double endingY = -70;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-50), 0));
 
-		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
+		path.generateProfile(maxVelocity, maxAcceleration * 0.3);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
@@ -245,6 +249,19 @@ public class Paths {
 		double endingX = 0;
 		double endingY = -40;
 		path.addWaypoint(new Waypoint(endingX, endingY, 4 * Math.PI / 7, 0));
+
+		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
+		return path.getVelocityProfile(effectiveWidth);
+	}
+
+	public final PointProfile driveBackwardSlightly;
+
+	public final PointProfile makeDriveBackwardSlightly() {
+		Path path;
+		path = new Path(new Waypoint(0, 0, Math.toRadians(-90), 0), false);
+		double endingX = 0;
+		double endingY = -15;
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-90), 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.4);
 		return path.getVelocityProfile(effectiveWidth);

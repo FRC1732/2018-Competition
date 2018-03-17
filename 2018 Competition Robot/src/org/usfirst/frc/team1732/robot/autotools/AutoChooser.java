@@ -3,39 +3,32 @@ package org.usfirst.frc.team1732.robot.autotools;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.Robot;
-import org.usfirst.frc.team1732.robot.commands.autos.ManipAutoEject;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftDouble;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingleStraight;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightDouble;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
-import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
-import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
-import org.usfirst.frc.team1732.robot.commands.testing.TestGyroReader;
+import org.usfirst.frc.team1732.robot.commands.testing.TestCubePickup;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
 import org.usfirst.frc.team1732.robot.input.Input;
-import org.usfirst.frc.team1732.robot.subsystems.Arm;
-import org.usfirst.frc.team1732.robot.subsystems.Elevator;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public final class AutoChooser {
 	public static enum AutoModes {
 		SWITCH_CENTER_FRONT(() -> new SwitchCenterFront()), //
 		ScaleLeftSingle(() -> new ScaleLeftSingleStraight()), //
 		ScaleRightSingle(() -> new ScaleRightSingleStraight()), //
+		ScaleLeftDouble(() -> new ScaleLeftDouble()), //
+		ScaleRightDouble(() -> new ScaleRightDouble()), //
+		TestCubePickup(() -> new TestCubePickup()), //
 		DriveForwardMotion(() -> {
 			Path path;
 			double startingX = 0;
@@ -48,83 +41,30 @@ public final class AutoChooser {
 			path.generateProfile(100, 100);
 			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
 		}), //
-		DriveBackwardMotion(() -> {
-			Path path;
-			double startingX = 0;
-			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
-			double endingX = startingX;
-			double endingY = -100;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
-
-			path.generateProfile(50, 100);
-			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
-		}), //
-		DRIVE_TIME(() -> new DriveTime(0.25, 0.25, NeutralMode.Brake, 5)), //
-		TEST_CUBE_GETTING(() -> {
+		DRIVE_TIME(() -> new DriveTime(-0.5, 0.5, NeutralMode.Brake, 20, 2)), //
+		TEST_MIRROR_UNMIRRORED(() -> {
 			Path path;
 			double startingX = 0;
 			double startingY = 0;
 			path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
 			double endingX = -50;
-			double endingY = -100;
-			path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
+			double endingY = -50;
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-135), 0));
 
 			path.generateProfile(100, 50);
-			return new FollowVelocityPathLimelight(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), 0.5);
+			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), false);
 		}), //
-		TEST_CUBE_GRAB_AND_SHOOT(() -> {
-			// return null;
-			return new CommandGroup() {
-				{
-					Path path;
-					double startingX = 0;
-					double startingY = 0;
-					path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
-					double endingX = -50;
-					double endingY = -100;
-					path.addWaypoint(new Waypoint(endingX, endingY, 5 * Math.PI / 4, 0));
-					//
-					path.generateProfile(100, 50);
-					PointProfile profile2 = path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth);
-					double time2 = profile2.getTotalTimeSec();
-					double percent2 = 0.1;
-					addSequential(new ManipSetOut(0));
-					addSequential(new CommandGroup() {
-						{
-							addParallel(new CommandGroup() {
-								{
-									addSequential(new Wait(time2 * percent2));
-									addSequential(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
-											Elevator.Positions.INTAKE));
-									addSequential(new ManipSetIn());
-								}
-							});
-							addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
-							addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
-						}
-					});
-					// // score in switch
-					addSequential(new ManipSetStop());
-					addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.INTAKE));
-					addSequential(new Wait(0.2));
-					addSequential(new ManipAutoEject(0.5));
-				}
-			};
-		}), //
-		TEST_MIRROR(() -> {
+		TEST_MIRROR_MIRRORED(() -> {
 			Path path;
 			double startingX = 0;
 			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), false);
+			path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
 			double endingX = -50;
 			double endingY = -50;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 4, 0));
+			path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-135), 0));
 
 			path.generateProfile(100, 50);
 			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), true);
-		}), TEST_GYRO_READER(() -> {
-			return new TestGyroReader();
 		});
 
 		private final Supplier<Command> commandSupplier;
@@ -136,6 +76,7 @@ public final class AutoChooser {
 		public Command getCommand() {
 			return commandSupplier.get();
 		}
+
 	}
 
 	private AutoChooser() {

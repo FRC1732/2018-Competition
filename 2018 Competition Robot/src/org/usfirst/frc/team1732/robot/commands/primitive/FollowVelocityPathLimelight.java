@@ -64,6 +64,8 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
 	}
 
+	private boolean hasSeenCube = false;
+
 	@Override
 	protected void exec() {
 		// Debugger.logDetailedInfo("Time: " + timer.get());
@@ -73,14 +75,17 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		VelocityPoint left = pair.left;
 		VelocityPoint right = pair.right;
 		double headingError;
-		if (timeSinceStarted() < percentToStartUsingLimelight * profile.totalTimeSec) {
+		double targetArea = Robot.sensors.limelight.getTargetArea();
+		if (timeSinceStarted() < percentToStartUsingLimelight * profile.totalTimeSec
+				|| (targetArea < 0.1 && !hasSeenCube)) {
 			// System.out.println("using navx");
 			double desiredHeading = left.headingDeg;
 			if (mirror)
 				desiredHeading = -desiredHeading;
 			double currentHeading = navx.getTotalAngle();
 			headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
-		} else if (Robot.sensors.limelight.getTargetArea() < 80) {
+		} else if (targetArea < 80 && targetArea > 0.1) {
+			hasSeenCube = true;
 			// System.out.println("using limelight");
 			headingError = Robot.sensors.limelight.getFilteredHorizontalOffset(); // get heading error from limelight
 		} else {

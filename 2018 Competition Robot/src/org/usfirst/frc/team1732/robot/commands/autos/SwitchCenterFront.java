@@ -30,6 +30,6 @@ public class SwitchCenterFront extends CommandGroup {
 				addSequential(new ManipAutoEject(0.7));
 			}
 		});
-		addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4));
+		addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4, 0));
 	}
 }

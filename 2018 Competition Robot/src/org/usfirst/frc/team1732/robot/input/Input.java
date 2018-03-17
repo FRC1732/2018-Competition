@@ -129,6 +129,7 @@ public class Input {
 		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
 		greenButton2.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
 
+		greenButton2.whenNotOverriden.whenPressed(makeCommand(arm, arm::holdPosition));
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));

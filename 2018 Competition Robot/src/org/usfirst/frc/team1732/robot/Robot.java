@@ -226,4 +226,5 @@ public class Robot extends TimedRobot {
 	private void protectRobot() {
 		Scheduler.getInstance().removeAll();
 	}
+
 }
