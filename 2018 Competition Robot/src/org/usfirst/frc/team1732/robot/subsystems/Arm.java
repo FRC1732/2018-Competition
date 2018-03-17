@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmResetPos;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -69,7 +70,7 @@ public class Arm extends Subsystem {
 		// BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642),
 		// CLIMB(5000), START(4093), TUCK(
 		// 6432), SCALE_LOW(7622), SCALE_HIGH(7622);
-		BUTTON_POS(0), INTAKE(0), EXCHANGE(179), HUMAN_PLAYER(380), SWITCH(1716), CLIMB(3333), START(2729), TUCK(
+		BUTTON_POS(0), INTAKE(0), EXCHANGE(179), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(3333), START(2729), TUCK(
 				4288), SCALE_LOW(5081), SCALE_HIGH(5081);
 
 		public final int value;
@@ -88,7 +89,6 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-
 		int currentPosition = encoder.getPulses();
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && currentPosition < Positions.TUCK.value + allowedError) {
@@ -119,6 +119,7 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void initDefaultCommand() {
+		setDefaultCommand(new ArmResetPos());
 	}
 
 	public void set(int position) {
@@ -189,5 +190,13 @@ public class Arm extends Subsystem {
 
 	public void resetArmPos() {
 		motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
+	}
+
+	public void resetArmPos(int pos) {
+		motor.setSelectedSensorPosition(pos, 0, Robot.CONFIG_TIMEOUT);
+	}
+
+	public boolean isAutoControl() {
+		return autoControl;
 	}
 }

@@ -2,6 +2,7 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.arm;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm.Positions;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ArmMagicIntake extends CommandGroup {
 
 	private boolean hitButton = false;
+	private int minPosition = Integer.MAX_VALUE;
 
 	public ArmMagicIntake() {
 		addSequential(new ArmMagicIntakeUntilButton(this));
@@ -61,9 +63,6 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void end() {
-			if (parentCommand.hitButton) {
-				arm.resetArmPos();
-			}
 			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 		}
 
@@ -92,6 +91,7 @@ public class ArmMagicIntake extends CommandGroup {
 			if (!parentCommand.hitButton) {
 				parentCommand.hitButton = arm.isButtonPressed();
 			}
+			parentCommand.minPosition = Math.min(parentCommand.minPosition, Robot.arm.getEncoderPulses());
 		}
 
 		@Override
@@ -103,7 +103,8 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void end() {
 			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 			if (parentCommand.hitButton) {
-				arm.resetArmPos();
+				int currentPositionRelativeToButton = Robot.arm.getEncoderPulses() - parentCommand.minPosition;
+				arm.resetArmPos(currentPositionRelativeToButton);
 			}
 			int position = Positions.INTAKE.value;
 			arm.useMagicControl(position);
