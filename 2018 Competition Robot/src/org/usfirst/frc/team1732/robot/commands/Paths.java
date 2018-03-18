@@ -108,20 +108,20 @@ public class Paths {
 
 		double middle0X = startingX;
 		double middle0Y = Field.Switch.BOUNDARY.getMaxY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(middle0X, middle0Y, Math.PI / 2, turnVel));
+		path.addWaypoint(new Waypoint(middle0X, middle0Y + 70, Math.PI / 2, turnVel));
 
 		double middle1X = Field.Scale.PLATFORM.getX() + robotLength / 2.0;
 		double middle1Y = Field.Scale.PLATFORM.getY() - robotWidth / 2.0;
-		path.addWaypoint(new Waypoint(middle1X, middle1Y, 0, turnVel), true);
+		path.addWaypoint(new Waypoint(middle1X, middle1Y + 70, 0, turnVel));
 		// don't accelerate through this ^ turn to cross
 
 		double middle2X = Field.Scale.PLATFORM.getMaxX() - robotLength / 2.0;
 		double middle2Y = middle1Y;
-		path.addWaypoint(new Waypoint(middle2X, middle2Y, 0, maxVelocity));
+		path.addWaypoint(new Waypoint(middle2X + 100, middle2Y + 70, 0, maxVelocity));
 
 		double endingX = Field.Scale.RIGHT_PLATE.getMaxX() - 5;
 		double endingY = Field.Scale.RIGHT_PLATE.getY() - robotLength / 2.0;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+		path.addWaypoint(new Waypoint(endingX + 135, endingY + 125, 4 * Math.PI / 7, 0));
 
 		path.generateProfile(maxVelocity, maxAcceleration * 0.9);
 		return path.getVelocityProfile(effectiveWidth);

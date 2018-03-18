@@ -9,10 +9,8 @@ import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightDouble;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
-import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.commands.testing.TestCubePickup;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path;
-import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Waypoint;
+import org.usfirst.frc.team1732.robot.commands.testing.TestProfile;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
@@ -23,49 +21,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public final class AutoChooser {
 	public static enum AutoModes {
-		SWITCH_CENTER_FRONT(() -> new SwitchCenterFront()), //
+		SwitchCenterFront(() -> new SwitchCenterFront()), //
 		ScaleLeftSingle(() -> new ScaleLeftSingleStraight()), //
 		ScaleRightSingle(() -> new ScaleRightSingleStraight()), //
 		ScaleLeftDouble(() -> new ScaleLeftDouble()), //
 		ScaleRightDouble(() -> new ScaleRightDouble()), //
-		TestCubePickup(() -> new TestCubePickup()), //
-		DriveForwardMotion(() -> {
-			Path path;
-			double startingX = 0;
-			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-			double endingX = startingX;
-			double endingY = 100;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
-
-			path.generateProfile(100, 100);
-			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth));
-		}), //
-		DRIVE_TIME(() -> new DriveTime(-0.5, 0.5, NeutralMode.Brake, 20, 2)), //
-		TEST_MIRROR_UNMIRRORED(() -> {
-			Path path;
-			double startingX = 0;
-			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
-			double endingX = -50;
-			double endingY = -50;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-135), 0));
-
-			path.generateProfile(100, 50);
-			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), false);
-		}), //
-		TEST_MIRROR_MIRRORED(() -> {
-			Path path;
-			double startingX = 0;
-			double startingY = 0;
-			path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
-			double endingX = -50;
-			double endingY = -50;
-			path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-135), 0));
-
-			path.generateProfile(100, 50);
-			return new FollowVelocityPath(path.getVelocityProfile(Robot.drivetrain.effectiveRobotWidth), true);
-		});
+		TestProfile(() -> new TestProfile()), TestCubePickup(() -> new TestCubePickup()), //
+		DriveTime(() -> new DriveTime(-0.5, 0.5, NeutralMode.Brake, 20, 2)); //
 
 		private final Supplier<Command> commandSupplier;
 
@@ -84,10 +46,10 @@ public final class AutoChooser {
 
 	public static void addListener(Input joysticks) {
 		int first = (int) Util.limit(joysticks.autoDial.get(), 0, AutoModes.values().length - 1);
-		System.err.println("ERROR 0 AUTO: " + AutoModes.values()[first]);
+		System.err.println("ERROR " + first + " AUTO: " + AutoModes.values()[first]);
 		joysticks.autoDial.addValueChangeListener(d -> {
 			int i = (int) Util.limit(d, 0, AutoModes.values().length - 1);
-			System.err.println("ERROR 0 AUTO: " + AutoModes.values()[i]);
+			System.err.println("ERROR " + i + " AUTO: " + AutoModes.values()[i]);
 		});
 	}
 

@@ -56,6 +56,7 @@ public class Arm extends Subsystem {
 
 		allowedError = config.armAllowedErrorCount;
 
+		Robot.dash.add("Arm motor current", motor::getOutputCurrent);
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
@@ -70,7 +71,7 @@ public class Arm extends Subsystem {
 		// BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642),
 		// CLIMB(5000), START(4093), TUCK(
 		// 6432), SCALE_LOW(7622), SCALE_HIGH(7622);
-		BUTTON_POS(0), INTAKE(0), EXCHANGE(179), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(3333), START(2729), TUCK(
+		BUTTON_POS(0), INTAKE(0), EXCHANGE(159), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(3333), START(2729), TUCK(
 				4288), SCALE_LOW(5081), SCALE_HIGH(5081);
 
 		public final int value;
@@ -102,17 +103,16 @@ public class Arm extends Subsystem {
 				}
 			}
 			// this was because the ramps interfered
-			// if (desiredPosition < Positions.INTAKE.value && currentPosition >
-			// Positions.INTAKE.value - allowedError) {
-			// if (!Robot.elevator.isArmSafeToGoDown() && desiredIsSet) {
-			// motor.set(ControlMode.MotionMagic, Positions.EXCHANGE.value);
-			// desiredIsSet = false;
-			// }
-			// if (Robot.elevator.isArmSafeToGoDown() && !desiredIsSet) {
-			// motor.set(ControlMode.MotionMagic, desiredPosition);
-			// desiredIsSet = true;
-			// }
-			// }
+			if (desiredPosition < Positions.EXCHANGE.value && currentPosition > Positions.INTAKE.value - allowedError) {
+				if (!Robot.elevator.isArmSafeToGoDown() && desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, Positions.SWITCH.value);
+					desiredIsSet = false;
+				}
+				if (Robot.elevator.isArmSafeToGoDown() && !desiredIsSet) {
+					motor.set(ControlMode.MotionMagic, desiredPosition);
+					desiredIsSet = true;
+				}
+			}
 		}
 
 	}
@@ -179,7 +179,11 @@ public class Arm extends Subsystem {
 		} else {
 			System.out.println("ASSUMING WE DON'T HAVE CUBE");
 			// use normal accel
-			motor.configMotionAcceleration(magicAccel, Robot.CONFIG_TIMEOUT);
+			if (desiredPosition > currentPosition) {
+				motor.configMotionAcceleration((magicAccel), Robot.CONFIG_TIMEOUT);
+			} else {
+				motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
+			}
 		}
 		magicGains.selectGains(motor);
 	}

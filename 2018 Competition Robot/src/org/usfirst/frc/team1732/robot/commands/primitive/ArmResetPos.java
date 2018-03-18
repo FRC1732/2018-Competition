@@ -29,7 +29,7 @@ public class ArmResetPos extends Command {
 		if (Robot.arm.isButtonPressed()
 				&& Util.epsilonEquals(Robot.arm.getDesiredPosition(), Positions.INTAKE.value, 100)
 				&& Robot.arm.isAutoControl()) {
-			Robot.arm.set(Arm.Positions.INTAKE.value + 70);
+			Robot.arm.set(Arm.Positions.INTAKE.value + 50);
 			Robot.arm.resetArmPos();
 		}
 		if (!Robot.arm.isButtonPressed()

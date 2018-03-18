@@ -74,7 +74,7 @@ public class Elevator extends Subsystem {
 		// 3311
 		// set these in pulses
 		BUTTON_POS(2025), INTAKE(2025), SWITCH_AUTO(18000), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(
-				13840), SCALE_HIGH(28389), MAX(30958);
+				13840), SCALE_HIGH(28389), MAX(27271);// MAX(30958);
 
 		public final int value;
 
@@ -155,7 +155,7 @@ public class Elevator extends Subsystem {
 		if (encoder.getPulses() < Positions.HIT_RAMP.value + allowedError)
 			return true;
 		else // only if the above is false
-			return !(getDesiredPosition() < Positions.HIT_RAMP.value);
+			return getDesiredPosition() > Positions.HIT_RAMP.value;
 	}
 
 	public int getEncoderPulses() {
