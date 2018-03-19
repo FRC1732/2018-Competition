@@ -6,11 +6,13 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftDouble;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleLeftSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightDouble;
+import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightDoubleScale;
 import org.usfirst.frc.team1732.robot.commands.autos.ScaleRightSingleStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.testing.TestCubePickup;
 import org.usfirst.frc.team1732.robot.commands.testing.TestProfile;
+import org.usfirst.frc.team1732.robot.commands.testing.TestVelocityFollowing;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
@@ -26,8 +28,11 @@ public final class AutoChooser {
 		ScaleRightSingle(() -> new ScaleRightSingleStraight()), //
 		ScaleLeftDouble(() -> new ScaleLeftDouble()), //
 		ScaleRightDouble(() -> new ScaleRightDouble()), //
-		TestProfile(() -> new TestProfile()), TestCubePickup(() -> new TestCubePickup()), //
-		DriveTime(() -> new DriveTime(-0.5, 0.5, NeutralMode.Brake, 20, 2)); //
+		ScaleRightDoubleScale(() -> new ScaleRightDoubleScale()), //
+		TestProfile(() -> new TestProfile()), //
+		TestCubePickup(() -> new TestCubePickup()), //
+		DriveTime(() -> new DriveTime(-0.7, -0.7, NeutralMode.Brake, 20, 100)), //
+		DriveVelocity(() -> new TestVelocityFollowing(75, 75)); //
 
 		private final Supplier<Command> commandSupplier;
 

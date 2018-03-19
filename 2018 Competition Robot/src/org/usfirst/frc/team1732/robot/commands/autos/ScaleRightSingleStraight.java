@@ -29,7 +29,7 @@ public class ScaleRightSingleStraight extends CommandGroup {
 		if (!DriverStationData.scaleIsLeft) {
 			profile = Robot.paths.scaleRightStraight;
 			time = profile.getTotalTimeSec();
-			percent = 0.7;
+			percent = 0.5;
 			addSequential(new CommandGroup() {
 				{
 					addParallel(new CommandGroup() {
@@ -37,7 +37,7 @@ public class ScaleRightSingleStraight extends CommandGroup {
 							addSequential(new ArmHoldPosition());
 							addSequential(new Wait(time * percent));
 							addSequential(
-									new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_HIGH));
+									new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_AUTO));
 						}
 					});
 					addSequential(new FollowVelocityPath(profile));

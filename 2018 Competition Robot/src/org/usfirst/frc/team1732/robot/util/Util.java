@@ -127,7 +127,7 @@ public class Util {
 
 	public static void logForGraphing(Object... obs) {
 		for (Object obj : obs) {
-			System.out.print(obj + "\t, ");
+			System.out.print(obj + ", ");
 		}
 		System.out.println();
 		// Arrays.asList(obs).forEach(o -> Debugger.logDetailedInfo(o + ", "));

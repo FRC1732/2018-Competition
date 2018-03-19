@@ -425,8 +425,14 @@ public final class Path {
 					r = Math.abs(r);
 					double lK = lR / r;
 					double rK = rR / r;
-					leftPoint.velocity = endVel * lK;
-					rightPoint.velocity = endVel * rK;
+					if (driveForwards) {
+						leftPoint.velocity = endVel * lK;
+						rightPoint.velocity = endVel * rK;
+					} else {
+						rightPoint.velocity = endVel * lK;
+						leftPoint.velocity = endVel * rK;
+					}
+
 				}
 				i++;
 				return new PointPair<VelocityPoint>(leftPoint, rightPoint);

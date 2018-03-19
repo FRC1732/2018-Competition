@@ -16,7 +16,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 
 	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
 	// degrees, use 20% of velocity
-	private static final double HEADING_P = 2;
+	private static final double HEADING_P = 1;
 
 	private final GyroReader navx;
 	private final EncoderReader leftE;
@@ -61,7 +61,8 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 		rightE.zero();
 		System.out.println(profile.totalTimeSec);
 		Debugger.logStart(this, "%.3f, Final Center Pos: %.3f", profile.totalTimeSec, profile.finalAbsCenterPos);
-		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
+		Robot.drivetrain.velocityGainsLeft.selectGains(Robot.drivetrain.leftMaster);
+		Robot.drivetrain.velocityGainsRight.selectGains(Robot.drivetrain.rightMaster);
 	}
 
 	private boolean hasSeenCube = false;

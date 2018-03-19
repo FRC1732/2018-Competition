@@ -45,9 +45,10 @@ public class RobotConfig {
 	public final CTREParam rightFollower1 = new CTREParam(14, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(13, reverseRight, rightMasterID);
 
-	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
+	public ClosedLoopProfile drivetrainVelocityLeftPID = new ClosedLoopProfile("Drivetrain Velocity Left PID",
 			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
+	public ClosedLoopProfile drivetrainVelocityRightPID = new ClosedLoopProfile("Drivetrain Velocity Right PID",
+			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
 	private final boolean reverseArm = true;

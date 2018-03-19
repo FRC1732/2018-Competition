@@ -63,7 +63,8 @@ public class TurnAngleOvercomplicated extends NotifierCommand {
 		navx.zero();
 		// pid.setSetpoint(goalAngle);
 		drivetrain.setBrake();
-		Robot.drivetrain.velocityGains.selectGains(drivetrain.leftMaster, drivetrain.rightMaster);
+		Robot.drivetrain.velocityGainsLeft.selectGains(Robot.drivetrain.leftMaster);
+		Robot.drivetrain.velocityGainsRight.selectGains(Robot.drivetrain.rightMaster);
 		Debugger.logStart(this, goalAngle + " degrees");
 		Debugger.logDetailedInfo("Endzone : " + endZone);
 	}

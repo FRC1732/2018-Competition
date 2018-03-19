@@ -62,12 +62,12 @@ public class ClosedLoopProfile {
 		for (TalonSRX talon : talons) {
 			talon.selectProfileSlot(slotIdx, pidIdx);
 			talon.configSelectedFeedbackSensor(feedback, pidIdx, Robot.CONFIG_TIMEOUT);
-			talon.config_IntegralZone(slotIdx, integralZone, Robot.CONFIG_TIMEOUT);
+			talon.config_kF(slotIdx, kF, Robot.CONFIG_TIMEOUT);
 			talon.config_kP(slotIdx, kP, Robot.CONFIG_TIMEOUT);
 			talon.config_kI(slotIdx, kI, Robot.CONFIG_TIMEOUT);
 			talon.config_kD(slotIdx, kD, Robot.CONFIG_TIMEOUT);
-			talon.config_kF(slotIdx, kF, Robot.CONFIG_TIMEOUT);
 			talon.configAllowableClosedloopError(slotIdx, allowableError, Robot.CONFIG_TIMEOUT);
+			talon.config_IntegralZone(slotIdx, integralZone, Robot.CONFIG_TIMEOUT);
 			talon.configMaxIntegralAccumulator(slotIdx, maxIntegralAccumulated, Robot.CONFIG_TIMEOUT);
 			talon.configClosedloopRamp(secondsFromNeutralToFull, Robot.CONFIG_TIMEOUT);
 		}

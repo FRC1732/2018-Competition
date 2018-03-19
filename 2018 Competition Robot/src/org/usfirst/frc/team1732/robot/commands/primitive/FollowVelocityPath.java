@@ -14,9 +14,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class FollowVelocityPath extends NotifierCommand {
 
-	// private static final double HEADING_P = 0.2 / 5; // with an error of 5
+	// private static final double HEADING_P = 0.3 / 5;
+
+	private static final double HEADING_P = 1;// 0.1 / 5; // with an error of 5
 	// degrees, use 20% of velocity
-	private static final double HEADING_P = 2;
+
+	// private static final double HEADING_P = 3;
 
 	private final GyroReader navx;
 	private final EncoderReader leftE;
@@ -61,7 +64,8 @@ public class FollowVelocityPath extends NotifierCommand {
 		leftE.zero();
 		rightE.zero();
 		Debugger.logStart(this, "Final Center Pos: %.3f", profile.finalAbsCenterPos);
-		Robot.drivetrain.velocityGains.selectGains(Robot.drivetrain.leftMaster, Robot.drivetrain.rightMaster);
+		Robot.drivetrain.velocityGainsLeft.selectGains(Robot.drivetrain.leftMaster);
+		Robot.drivetrain.velocityGainsRight.selectGains(Robot.drivetrain.rightMaster);
 		// timer.reset();
 		// timer.start();
 	}
@@ -89,32 +93,26 @@ public class FollowVelocityPath extends NotifierCommand {
 			rightVel = right.velocity;
 		}
 
-		// double leftNew = leftVel + leftVel * headingAdjustment;
-		// double rightNew = rightVel - rightVel * headingAdjustment;
 		double leftNew = leftVel + headingAdjustment;
 		double rightNew = rightVel - headingAdjustment;
+
+		// double leftNew = leftVel + headingAdjustment * Math.abs(leftVel);
+		// double rightNew = rightVel - headingAdjustment * Math.abs(rightVel);
 
 		int leftSensor = Robot.drivetrain.velInToUnits(leftNew);
 		int rightSensor = Robot.drivetrain.velInToUnits(rightNew);
 
 		// System.out.println();
-		// Util.logForGraphing("heading", desiredHeading, currentHeading, headingError,
-		// headingAdjustment);
-		// Util.logForGraphing("left",
-		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.leftMaster.getClosedLoopError(0));
-		// Util.logForGraphing("right",
-		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
-		// Robot.drivetrain.rightMaster.getClosedLoopError(0));
+		Util.logForGraphing("heading", desiredHeading, currentHeading, headingError, headingAdjustment);
 		// Util.logForGraphing("left", leftE.getRate(), leftVel, leftNew, leftSensor,
 		// Robot.drivetrain.leftMaster.getClosedLoopTarget(0),
 		// Robot.drivetrain.leftMaster.getClosedLoopError(0),
-		// rightE.getPosition());
+		// Robot.drivetrain.leftMaster.getMotorOutputPercent());
 		// Util.logForGraphing("right", rightE.getRate(), rightVel, rightNew,
 		// rightSensor,
 		// Robot.drivetrain.rightMaster.getClosedLoopTarget(0),
 		// Robot.drivetrain.rightMaster.getClosedLoopError(0),
-		// rightE.getPosition());
+		// Robot.drivetrain.rightMaster.getMotorOutputPercent());
 
 		Robot.drivetrain.leftMaster.set(ControlMode.Velocity, leftSensor);
 		Robot.drivetrain.rightMaster.set(ControlMode.Velocity, rightSensor);
