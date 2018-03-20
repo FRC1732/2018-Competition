@@ -22,13 +22,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class ScaleRightDoubleScale extends CommandGroup {
+public class RightScaleScale extends CommandGroup {
 
-	public ScaleRightDoubleScale() {
+	public RightScaleScale() {
 		addSequential(new ArmHoldPosition(15));
 		addSequential(new ManipSetIn());
 		addSequential(new ManipSetStop());
-		if (DriverStationData.scaleIsLeft) {
+		if (DriverStationData.scaleIsLeft) { // 2x left scale
 			System.out.println("Scale left");
 			PointProfile profile1 = Robot.paths.scaleRightCross;
 			double time1 = profile1.getTotalTimeSec();
@@ -47,7 +47,7 @@ public class ScaleRightDoubleScale extends CommandGroup {
 				}
 			});
 			addSequential(new ManipAutoEject(0.5));
-		} else if (!DriverStationData.scaleIsLeft) {
+		} else { // 2x right scale
 			// score in the right scale, score in the right switch
 			System.out.println("Scale straight");
 			PointProfile profile1 = Robot.paths.scaleRightStraight;
@@ -80,9 +80,6 @@ public class ScaleRightDoubleScale extends CommandGroup {
 					addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 				}
 			});
-		} else {
-			// should never get here - it hopefully isn't possible
-			// put in a drive forward just in case
 		}
 	}
 }

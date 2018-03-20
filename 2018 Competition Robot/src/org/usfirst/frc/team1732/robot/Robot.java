@@ -135,6 +135,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		hooks.setDown();
+		ramp.setIn();
 		protectRobot();
 	}
 

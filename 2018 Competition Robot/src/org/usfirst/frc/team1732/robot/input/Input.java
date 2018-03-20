@@ -95,10 +95,9 @@ public class Input {
 		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
 		posSwitch.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
 
-		posScaleHigh.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.MAX));
+		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SCALE_HIGH));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.SCALE_HIGH));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerUp.whenReleased(new ElevatorHoldPosition());
@@ -120,16 +119,16 @@ public class Input {
 
 		shifting.whileHeld(new TeleopShift());
 
-		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
-		greenButton1.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
-		posTuck.whenOverriden.whenPressed(makeCommand(hooks, hooks::setDown));
-
 		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
 		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
-		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
-		greenButton2.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
+		posTuck.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
+		posTuck.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
 
-		greenButton2.whenNotOverriden.whenPressed(makeCommand(arm, arm::holdPosition));
+		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
+		// greenButton1.whenOverriden.whenReleased(makeCommand(hooks, hooks::setDown));
+		greenButton2.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
+		greenButton2.whenOverriden.whenReleased(makeCommand(ramp, ramp::setIn));
+
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));
