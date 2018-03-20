@@ -97,7 +97,7 @@ public class Input {
 
 		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.SCALE_HIGH));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.CLIMB));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerUp.whenReleased(new ElevatorHoldPosition());
@@ -110,10 +110,9 @@ public class Input {
 		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
 
 		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop());
+		leftTrigger.whenReleased(new ManipSetStop(0.5));
 		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
 		rightTrigger.whenReleased(new ManipSetStop());
-
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 

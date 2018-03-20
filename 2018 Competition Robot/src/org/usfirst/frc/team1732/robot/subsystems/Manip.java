@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
@@ -52,6 +53,7 @@ public class Manip extends Subsystem {
 
 	public void setOutVariable() {
 		System.out.println("variable out set: " + absVariableOut);
+		setRampTime(0);
 		setOut(absVariableOut);
 	}
 
@@ -72,6 +74,11 @@ public class Manip extends Subsystem {
 	public void setStop() {
 		victorA.neutralOutput();
 		victorB.neutralOutput();
+	}
+
+	public void setRampTime(double rampTime) {
+		victorA.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
+		victorB.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 	}
 
 	public boolean assumedCube() {

@@ -10,12 +10,20 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  */
 public class ManipSetIn extends InstantCommand {
 
-	public ManipSetIn() {
+	private double rampTime;
+
+	public ManipSetIn(double rampTime) {
 		requires(Robot.manip);
+		this.rampTime = rampTime;
+	}
+
+	public ManipSetIn() {
+		this(0);
 	}
 
 	@Override
 	protected void initialize() {
+		Robot.manip.setRampTime(rampTime);
 		Robot.manip.setIn();
 		Debugger.logStart(this);
 	}
