@@ -19,6 +19,7 @@ import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -110,7 +111,7 @@ public class Input {
 		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
 
 		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop(0.5));
+		leftTrigger.whenReleased(new ManipSetStop(Manip.RAMP_TIME));
 		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
 		rightTrigger.whenReleased(new ManipSetStop());
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));

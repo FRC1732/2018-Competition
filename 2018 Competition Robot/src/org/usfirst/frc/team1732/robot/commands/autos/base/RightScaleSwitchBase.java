@@ -29,6 +29,7 @@ public class RightScaleSwitchBase extends CommandGroup {
 		double time1 = profile1.getTotalTimeSec();
 		double percent1 = 0.5;
 		// score in the scale
+		addSequential(new PreAuto());
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new CommandGroup() {
@@ -62,12 +63,12 @@ public class RightScaleSwitchBase extends CommandGroup {
 		PointProfile profile3 = Robot.paths.driveForwardSlightly;
 		addSequential(new CommandGroup() {
 			{
-				addParallel(new CommandGroup() {
-					{
-						addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.HUMAN));
-						addSequential(new ManipSetStop());
-					}
-				});
+				// addParallel(new CommandGroup() {
+				// {
+				addParallel(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.HUMAN));
+				// addSequential(new ManipSetStop());
+				// }
+				// });
 				// addSequential(new ArmElevatorSetPosition(Arm.Positions.SWITCH,
 				// Elevator.Positions.HUMAN));
 				// addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
@@ -80,5 +81,6 @@ public class RightScaleSwitchBase extends CommandGroup {
 		addSequential(new FollowVelocityPath(profile4));
 		addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 		addSequential(new ManipAutoEject(0.5));
+		addSequential(new PostAuto());
 	}
 }

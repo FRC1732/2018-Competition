@@ -22,6 +22,7 @@ public class RightSwitchRightSide extends CommandGroup {
 		double time1 = profile1.getTotalTimeSec();
 		double percent1 = 0.7;
 		// score in the scale
+		addSequential(new PreAuto());
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new CommandGroup() {
@@ -35,5 +36,6 @@ public class RightSwitchRightSide extends CommandGroup {
 		});
 		addSequential(new Wait(2));
 		addSequential(new ManipAutoEject(1, 0.4));
+		addSequential(new PostAuto());
 	}
 }

@@ -31,6 +31,7 @@ public class RightScaleLeftTwice extends CommandGroup {
 		// double percent11 = 0.70;
 		double percent1 = 0.97;
 		// score in the scale
+		addSequential(new PreAuto());
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new CommandGroup() {
@@ -77,5 +78,6 @@ public class RightScaleLeftTwice extends CommandGroup {
 			}
 		});
 		addSequential(new ManipAutoEject(0.4));
+		addSequential(new PostAuto());
 	}
 }

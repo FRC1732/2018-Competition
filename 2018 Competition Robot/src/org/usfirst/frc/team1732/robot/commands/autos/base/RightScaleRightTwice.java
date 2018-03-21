@@ -29,6 +29,7 @@ public class RightScaleRightTwice extends CommandGroup {
 		double time1 = profile1.getTotalTimeSec();
 		double percent1 = 0.5;
 		// score in the scale
+		addSequential(new PreAuto());
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new CommandGroup() {
@@ -67,5 +68,6 @@ public class RightScaleRightTwice extends CommandGroup {
 			}
 		});
 		addSequential(new ManipAutoEject(1));
+		addSequential(new PostAuto());
 	}
 }

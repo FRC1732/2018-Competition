@@ -3,6 +3,7 @@ package org.usfirst.frc.team1732.robot.commands.autos;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.autos.base.ManipAutoEject;
+import org.usfirst.frc.team1732.robot.commands.autos.base.PostAuto;
 import org.usfirst.frc.team1732.robot.commands.autos.base.PreAuto;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
@@ -31,5 +32,6 @@ public class SwitchCenterFront extends CommandGroup {
 			}
 		});
 		addSequential(new DriveTime(0.2, 0.2, NeutralMode.Coast, 2, 0));
+		addSequential(new PostAuto());
 	}
 }
