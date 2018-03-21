@@ -33,6 +33,7 @@ public class RightSwitchRightSide extends CommandGroup {
 				addSequential(new FollowVelocityPath(profile1));
 			}
 		});
-		addSequential(new ManipAutoEject(1, 0.5));
+		addSequential(new Wait(2));
+		addSequential(new ManipAutoEject(1, 0.4));
 	}
 }

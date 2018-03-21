@@ -62,10 +62,10 @@ public class RightScaleRightTwice extends CommandGroup {
 		PointProfile profile3 = Robot.paths.rightScaleRightReturn;
 		addSequential(new CommandGroup() {
 			{
-				addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_AUTO));
+				addParallel(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 				addSequential(new FollowVelocityPath(profile3));
 			}
 		});
-		addSequential(new ManipAutoEject(0.4));
+		addSequential(new ManipAutoEject(1));
 	}
 }
