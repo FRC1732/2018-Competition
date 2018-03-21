@@ -19,81 +19,81 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ScaleRightSingleStraight extends CommandGroup {
 
 	public ScaleRightSingleStraight() {
-		PointProfile profile;
-		double time;
-		double percent;
-
-		// addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
-		// addParallel(new PreAuto(Arm.Positions.TUCK));
-
-		if (!DriverStationData.scaleIsLeft) {
-			profile = Robot.paths.rightScaleStraight;
-			time = profile.getTotalTimeSec();
-			percent = 0.5;
-			addSequential(new CommandGroup() {
-				{
-					addParallel(new CommandGroup() {
-						{
-							addSequential(new ArmHoldPosition());
-							addSequential(new Wait(time * percent));
-							addSequential(
-									new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_AUTO));
-						}
-					});
-					addSequential(new FollowVelocityPath(profile));
-				}
-			});
-
-			// addSequential(new PreAuto(Arm.Positions.TUCK));
-			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
-			// Elevator.Positions.SCALE_HIGH));
-			// addSequential(new Wait(0.5));
-			addSequential(new ManipAutoEject(0.5));
-			addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
-		} else if (!DriverStationData.closeSwitchIsLeft) {
-			profile = Robot.paths.rightSwitchRightSide;
-			time = profile.getTotalTimeSec();
-			percent = 0.5;
-			addParallel(new CommandGroup() {
-				{
-					addSequential(new ArmHoldPosition());
-					addSequential(new Wait(time * percent));
-					addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
-				}
-			});
-			addSequential(new FollowVelocityPath(profile));
-			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
-			// Elevator.Positions.SCALE_HIGH));
-			addParallel(new CommandGroup() {
-				{
-					addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
-					addSequential(new Wait(2));
-					addSequential(new ManipAutoEject(0.5));
-				}
-			});
-			addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4, 0));
-		} else {
-			addSequential(new DriveTime(0.25, 0.25, NeutralMode.Brake, 5, 0));
-		}
-
-		// // makes sure it propertly waits before shooting cube
-		// addSequential(new CommandGroup() {
-		// {
-		// addParallel(new CommandGroup() {
-		// {
-		// addSequential(new Wait(time * percent));
-		// addSequential(
-		// new ArmElevatorSetPosition(Arm.Positions.SCALE_HIGH,
-		// Elevator.Positions.SCALE_HIGH));
-		// }
-		// });
-		// addSequential(new FollowVelocityPath(profile));
-		// }
-		// });
-		//
-		// // addSequential(new PreAuto(Arm.Positions.TUCK));
-		// // addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
-		// // Elevator.Positions.SCALE_HIGH));
-		// addSequential(new ManipAutoEject(0.5));
+//		PointProfile profile;
+//		double time;
+//		double percent;
+//
+//		// addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
+//		// addParallel(new PreAuto(Arm.Positions.TUCK));
+//
+//		if (!DriverStationData.scaleIsLeft) {
+//			profile = Robot.paths.rightScaleStraight;
+//			time = profile.getTotalTimeSec();
+//			percent = 0.5;
+//			addSequential(new CommandGroup() {
+//				{
+//					addParallel(new CommandGroup() {
+//						{
+//							addSequential(new ArmHoldPosition());
+//							addSequential(new Wait(time * percent));
+//							addSequential(
+//									new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_AUTO));
+//						}
+//					});
+//					addSequential(new FollowVelocityPath(profile));
+//				}
+//			});
+//
+//			// addSequential(new PreAuto(Arm.Positions.TUCK));
+//			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+//			// Elevator.Positions.SCALE_HIGH));
+//			// addSequential(new Wait(0.5));
+//			addSequential(new ManipAutoEject(0.5));
+//			addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
+//		} else if (!DriverStationData.closeSwitchIsLeft) {
+//			profile = Robot.paths.rightSwitchRightSide;
+//			time = profile.getTotalTimeSec();
+//			percent = 0.5;
+//			addParallel(new CommandGroup() {
+//				{
+//					addSequential(new ArmHoldPosition());
+//					addSequential(new Wait(time * percent));
+//					addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+//				}
+//			});
+//			addSequential(new FollowVelocityPath(profile));
+//			// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+//			// Elevator.Positions.SCALE_HIGH));
+//			addParallel(new CommandGroup() {
+//				{
+//					addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
+//					addSequential(new Wait(2));
+//					addSequential(new ManipAutoEject(0.5));
+//				}
+//			});
+//			addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4, 0));
+//		} else {
+//			addSequential(new DriveTime(0.25, 0.25, NeutralMode.Brake, 5, 0));
+//		}
+//
+//		// // makes sure it propertly waits before shooting cube
+//		// addSequential(new CommandGroup() {
+//		// {
+//		// addParallel(new CommandGroup() {
+//		// {
+//		// addSequential(new Wait(time * percent));
+//		// addSequential(
+//		// new ArmElevatorSetPosition(Arm.Positions.SCALE_HIGH,
+//		// Elevator.Positions.SCALE_HIGH));
+//		// }
+//		// });
+//		// addSequential(new FollowVelocityPath(profile));
+//		// }
+//		// });
+//		//
+//		// // addSequential(new PreAuto(Arm.Positions.TUCK));
+//		// // addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE,
+//		// // Elevator.Positions.SCALE_HIGH));
+//		 // addSequential(new ManipAutoEject(0.5));
 	}
 }

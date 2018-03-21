@@ -3,7 +3,7 @@ package org.usfirst.frc.team1732.robot.commands.autos;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.autos.base.ManipAutoEject;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.autos.base.PreAuto;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SwitchCenterFront extends CommandGroup {
 
 	public SwitchCenterFront() {
-		addParallel(new ArmHoldPosition());
-
+		addSequential(new PreAuto());
 		if (DriverStationData.closeSwitchIsLeft) {
 			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontLeft));
 		} else {
