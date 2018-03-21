@@ -18,7 +18,7 @@ public class ManipAutoEject extends CommandGroup {
 	}
 
 	public ManipAutoEject(double manipSpeed) {
-		this(0.25, manipSpeed);
+		this(0.3, manipSpeed);
 	}
 
 }

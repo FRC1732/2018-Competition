@@ -172,10 +172,10 @@ public class Paths {
 		double startingY = 0;
 		path = new Path(new Waypoint(startingX, startingY, -Math.PI / 2, 0), false);
 		double endingX = 0;
-		double endingY = -45;
+		double endingY = -57;
 		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-90), 0));
 
-		path.generateProfile(maxVelocity * 0.8, maxAcceleration * 0.15);
+		path.generateProfile(maxVelocity * 0.8, maxAcceleration * 0.2);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 
@@ -201,11 +201,11 @@ public class Paths {
 		double startingX = 0;
 		double startingY = 0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = -4;
+		double endingX = 0;
 		double endingY = 45;
-		path.addWaypoint(new Waypoint(endingX, endingY, Math.PI / 2, 0));
+		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(75), 0));
 
-		path.generateProfile(maxVelocity * 0.8, maxAcceleration * 0.15);
+		path.generateProfile(maxVelocity * 0.8, maxAcceleration * 0.35);
 		return path.getVelocityProfile(effectiveWidth);
 	}
 

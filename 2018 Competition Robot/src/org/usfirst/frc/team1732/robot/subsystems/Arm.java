@@ -172,7 +172,7 @@ public class Arm extends Subsystem {
 		if (Robot.manip.assumedCube()) {
 			System.out.println("ASSUMING WE HAVE CUBE");
 			if (desiredPosition > currentPosition) {
-				motor.configMotionAcceleration((int) (magicAccel * 0.7), Robot.CONFIG_TIMEOUT);
+				motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
 			} else {
 				motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
 			}

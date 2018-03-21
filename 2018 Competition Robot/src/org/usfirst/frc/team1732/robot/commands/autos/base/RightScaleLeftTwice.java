@@ -26,27 +26,31 @@ public class RightScaleLeftTwice extends CommandGroup {
 		// score in the left scale 2x
 		System.out.println("Left scale 2x");
 		PointProfile profile1 = Robot.paths.rightScaleCross;
-		// double time1 = profile1.getTotalTimeSec();
+		double time1 = profile1.getTotalTimeSec();
 		// double percent10 = 0.40;
 		// double percent11 = 0.70;
+		double percent1 = 0.97;
 		// score in the scale
-		// addSequential(new CommandGroup() {
-		// {
-		// addParallel(new CommandGroup() {
-		// {
-		// addSequential(new Wait(time1 * percent10));
-		// addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK,
-		// Elevator.Positions.INTAKE));
-		// addSequential(new Wait(time1 * percent11));
+		addSequential(new CommandGroup() {
+			{
+				addParallel(new CommandGroup() {
+					{
+						// addSequential(new Wait(time1 * percent10));
+						// addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK,
+						// Elevator.Positions.INTAKE));
+						// addSequential(new Wait(time1 * percent11));
+						// addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK,
+						// Elevator.Positions.SCALE_AUTO));
+						addSequential(new Wait(time1 * percent1));
+						addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_AUTO));
+					}
+				});
+				addSequential(new FollowVelocityPath(profile1));
+			}
+		});
+		// addSequential(new FollowVelocityPath(profile1));
 		// addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK,
 		// Elevator.Positions.SCALE_AUTO));
-		// }
-		// });
-		// addSequential(new FollowVelocityPath(profile1));
-		// }
-		// });
-		addSequential(new FollowVelocityPath(profile1));
-		addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_AUTO));
 		addSequential(new ManipAutoEject(0.5));
 		// get cube
 		PointProfile profile2 = Robot.paths.rightCubeGrabStraightLeft;
@@ -72,6 +76,6 @@ public class RightScaleLeftTwice extends CommandGroup {
 				addSequential(new FollowVelocityPath(profile3));
 			}
 		});
-		addSequential(new ManipAutoEject(0.4));
+		addSequential(new ManipAutoEject(0.5));
 	}
 }
