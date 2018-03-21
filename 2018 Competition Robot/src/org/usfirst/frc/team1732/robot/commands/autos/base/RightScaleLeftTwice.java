@@ -76,6 +76,6 @@ public class RightScaleLeftTwice extends CommandGroup {
 				addSequential(new FollowVelocityPath(profile3));
 			}
 		});
-		addSequential(new ManipAutoEject(0.5));
+		addSequential(new ManipAutoEject(0.4));
 	}
 }

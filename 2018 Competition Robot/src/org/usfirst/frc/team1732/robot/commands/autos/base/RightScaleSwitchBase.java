@@ -20,9 +20,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class RightScaleSwitch extends CommandGroup {
+public class RightScaleSwitchBase extends CommandGroup {
 
-	public RightScaleSwitch() {
+	public RightScaleSwitchBase() {
 		// score in the right scale, score in the right switch
 		System.out.println("Right scale straight, switch straight");
 		PointProfile profile1 = Robot.paths.rightScaleStraight;

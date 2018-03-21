@@ -20,7 +20,7 @@ public class RightScaleSwitchNoCross extends CommandGroup {
 			} else {
 				addSequential(new RightSwitchRightSide());
 			}
-		} else if (!DriverStationData.scaleIsLeft) {
+		} else {
 			if (DriverStationData.closeSwitchIsLeft) {
 				addSequential(new RightScaleRightTwice());
 			} else {

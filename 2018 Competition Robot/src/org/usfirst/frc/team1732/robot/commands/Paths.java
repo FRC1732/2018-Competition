@@ -201,8 +201,8 @@ public class Paths {
 		double startingX = 0;
 		double startingY = 0;
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
-		double endingX = 0;
-		double endingY = 45;
+		double endingX = 5;
+		double endingY = 47;
 		path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(75), 0));
 
 		path.generateProfile(maxVelocity * 0.8, maxAcceleration * 0.35);
