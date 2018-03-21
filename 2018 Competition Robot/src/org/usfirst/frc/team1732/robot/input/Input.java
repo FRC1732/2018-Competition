@@ -119,9 +119,9 @@ public class Input {
 		shifting.whileHeld(new TeleopShift());
 
 		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
-		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
+		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
 		posTuck.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
-		posTuck.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
+		posTuck.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
 
 		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
 		// greenButton1.whenOverriden.whenReleased(makeCommand(hooks, hooks::setDown));

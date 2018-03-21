@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class PreAuto extends CommandGroup {
 
 	public PreAuto() { // Arm.Positions armPos) {
-		addSequential(new ArmHoldPosition(35));
 		addSequential(new ManipSetIn());
 		addSequential(new ManipSetStop());
+		addSequential(new ArmHoldPosition(35));
 		// addSequential(new ArmMagicPosition(Arm.Positions.START));
 		// addParallel(new CommandGroup() {
 		// {

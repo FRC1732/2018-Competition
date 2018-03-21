@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
 		SensorChecker.addSensor(drivetrain.leftEncoder::isConnected, "Left drivetrain encoder");
 		SensorChecker.addSensor(drivetrain.rightEncoder::isConnected, "Right drivetrain encoder");
 		Robot.sensors.limelight.setLEDMode(LEDMode.OFF);
+		protectRobot();
 	}
 
 	@Override
@@ -135,8 +136,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		hooks.setDown();
-		ramp.setIn();
 		protectRobot();
 	}
 
@@ -197,10 +196,6 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		protectRobot();
 		Debugger.disable();
-		// cancel auto command here
-		arm.setManual(0);
-		elevator.setManual(0);
-		drivetrain.setCoast();
 	}
 
 	@Override
@@ -227,6 +222,14 @@ public class Robot extends TimedRobot {
 	 */
 	private void protectRobot() {
 		Scheduler.getInstance().removeAll();
+		arm.setStop();
+		elevator.setStop();
+		drivetrain.setCoast();
+		drivetrain.setStop();
+		manip.setStop();
+		climber.setStop();
+		hooks.setDown();
+		ramp.setIn();
 	}
 
 }

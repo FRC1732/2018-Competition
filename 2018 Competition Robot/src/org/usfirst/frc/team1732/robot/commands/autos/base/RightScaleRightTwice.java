@@ -6,7 +6,6 @@ import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
-import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
@@ -48,8 +47,12 @@ public class RightScaleRightTwice extends CommandGroup {
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
-				addSequential(new ManipSetOut(0)); // if we don't have this command, it will assume we have cube
-				addSequential(new ManipSetIn());
+				addParallel(new CommandGroup() {
+					{
+						addSequential(new Wait(0.25));
+						addSequential(new ManipSetIn());
+					}
+				});
 				// addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
 				addSequential(new FollowVelocityPathLimelight(profile2, 0.4));
 				addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
