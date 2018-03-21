@@ -12,6 +12,7 @@ import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -27,7 +28,7 @@ public class RightScaleLeftTwice extends CommandGroup {
 		System.out.println("Left scale 2x");
 		PointProfile profile1 = Robot.paths.rightScaleCross;
 		double time1 = profile1.getTotalTimeSec();
-		double percent1 = 0.8;
+		double percent1 = 0.70;
 		// score in the scale
 		addSequential(new CommandGroup() {
 			{
@@ -43,17 +44,24 @@ public class RightScaleLeftTwice extends CommandGroup {
 		addSequential(new ManipAutoEject(0.5));
 		// get cube
 		PointProfile profile2 = Robot.paths.rightCubeGrabStraightLeft;
-		// addSequential(new ManipSetOut(0));
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
-				addSequential(new ManipSetOut(0));
+				addSequential(new ManipSetOut(0)); // if we don't have this command, it will assume we have cube
 				addSequential(new ManipSetIn());
 				// addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
-				addSequential(new FollowVelocityPathLimelight(profile2, 0.4));
+				addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
 				addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
-				addSequential(new ManipSetStop(0.5));
 			}
 		});
+		addSequential(new ManipSetStop(Manip.RAMP_TIME));
+		PointProfile profile3 = Robot.paths.rightScaleLeftReturn;
+		addSequential(new CommandGroup() {
+			{
+				addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_LOW));
+				addSequential(new FollowVelocityPath(profile3));
+			}
+		});
+		addSequential(new ManipAutoEject(0.4));
 	}
 }

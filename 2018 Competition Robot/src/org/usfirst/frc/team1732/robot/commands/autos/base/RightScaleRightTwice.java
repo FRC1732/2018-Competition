@@ -12,6 +12,7 @@ import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
 import org.usfirst.frc.team1732.robot.controlutils.motionprofiling.pathing.Path.PointProfile;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -47,13 +48,21 @@ public class RightScaleRightTwice extends CommandGroup {
 		addSequential(new CommandGroup() {
 			{
 				addParallel(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
-				addSequential(new ManipSetOut(0));
+				addSequential(new ManipSetOut(0)); // if we don't have this command, it will assume we have cube
 				addSequential(new ManipSetIn());
 				// addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
 				addSequential(new FollowVelocityPathLimelight(profile2, 0.4));
 				addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
-				addSequential(new ManipSetStop(0.5));
 			}
 		});
+		addSequential(new ManipSetStop(Manip.RAMP_TIME));
+		PointProfile profile3 = Robot.paths.rightScaleRightReturn;
+		addSequential(new CommandGroup() {
+			{
+				addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_AUTO));
+				addSequential(new FollowVelocityPath(profile3));
+			}
+		});
+		addSequential(new ManipAutoEject(0.4));
 	}
 }
