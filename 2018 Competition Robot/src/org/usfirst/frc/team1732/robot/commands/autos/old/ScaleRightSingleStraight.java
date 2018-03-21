@@ -27,7 +27,7 @@ public class ScaleRightSingleStraight extends CommandGroup {
 		// addParallel(new PreAuto(Arm.Positions.TUCK));
 
 		if (!DriverStationData.scaleIsLeft) {
-			profile = Robot.paths.scaleRightStraight;
+			profile = Robot.paths.rightScaleStraight;
 			time = profile.getTotalTimeSec();
 			percent = 0.5;
 			addSequential(new CommandGroup() {
@@ -51,7 +51,7 @@ public class ScaleRightSingleStraight extends CommandGroup {
 			addSequential(new ManipAutoEject(0.5));
 			addSequential(new ArmMagicPosition(Arm.Positions.SWITCH));
 		} else if (!DriverStationData.closeSwitchIsLeft) {
-			profile = Robot.paths.scaleRightSwitch;
+			profile = Robot.paths.rightSwitchRightSide;
 			time = profile.getTotalTimeSec();
 			percent = 0.5;
 			addParallel(new CommandGroup() {

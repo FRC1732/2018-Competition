@@ -2,6 +2,7 @@ package org.usfirst.frc.team1732.robot.commands.autos;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.autos.base.ManipAutoEject;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
@@ -19,9 +20,9 @@ public class SwitchCenterFront extends CommandGroup {
 		addParallel(new ArmHoldPosition());
 
 		if (DriverStationData.closeSwitchIsLeft) {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontLeft));
+			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontLeft));
 		} else {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontStraight));
+			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontStraight));
 		}
 		addParallel(new CommandGroup() {
 			{

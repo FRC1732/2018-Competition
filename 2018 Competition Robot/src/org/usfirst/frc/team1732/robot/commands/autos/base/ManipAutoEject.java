@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.commands.autos;
+package org.usfirst.frc.team1732.robot.commands.autos.base;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;

@@ -1,7 +1,8 @@
-package org.usfirst.frc.team1732.robot.commands.autos;
+package org.usfirst.frc.team1732.robot.commands.autos.old;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
+import org.usfirst.frc.team1732.robot.commands.autos.base.ManipAutoEject;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
