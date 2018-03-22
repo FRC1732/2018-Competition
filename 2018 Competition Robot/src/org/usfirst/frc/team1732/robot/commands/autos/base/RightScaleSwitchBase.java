@@ -81,6 +81,6 @@ public class RightScaleSwitchBase extends CommandGroup {
 		addSequential(new FollowVelocityPath(profile4));
 		addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 		addSequential(new ManipAutoEject(0.5));
-		addSequential(new PostAuto());
+		// addSequential(new PostAuto());
 	}
 }

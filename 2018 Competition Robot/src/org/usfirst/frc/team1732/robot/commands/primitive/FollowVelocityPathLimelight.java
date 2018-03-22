@@ -85,7 +85,7 @@ public class FollowVelocityPathLimelight extends NotifierCommand {
 				desiredHeading = -desiredHeading;
 			double currentHeading = navx.getTotalAngle();
 			headingError = Util.getContinuousError(desiredHeading, currentHeading, 360);
-		} else if (targetArea < 80 && targetArea > 0.1) {
+		} else if (targetArea < 70 && targetArea > 0.1) {
 			hasSeenCube = true;
 			// System.out.println("using limelight");
 			headingError = Robot.sensors.limelight.getFilteredHorizontalOffset(); // get heading error from limelight

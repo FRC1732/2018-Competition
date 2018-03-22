@@ -29,7 +29,7 @@ public class RightScaleLeftTwice extends CommandGroup {
 		double time1 = profile1.getTotalTimeSec();
 		// double percent10 = 0.40;
 		// double percent11 = 0.70;
-		double percent1 = 0.97;
+		double percent1 = 0.90;
 		// score in the scale
 		addSequential(new PreAuto());
 		addSequential(new CommandGroup() {
@@ -65,7 +65,7 @@ public class RightScaleLeftTwice extends CommandGroup {
 					}
 				});
 				// addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
-				addSequential(new FollowVelocityPathLimelight(profile2, 0.5));
+				addSequential(new FollowVelocityPathLimelight(profile2, 0.4));
 				addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 			}
 		});
@@ -73,11 +73,19 @@ public class RightScaleLeftTwice extends CommandGroup {
 		PointProfile profile3 = Robot.paths.rightScaleLeftReturn;
 		addSequential(new CommandGroup() {
 			{
+				// addParallel(new CommandGroup() {
+				// {
 				addParallel(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_LOW));
+				// }
+				// });
 				addSequential(new FollowVelocityPath(profile3));
 			}
 		});
 		addSequential(new ManipAutoEject(0.4));
 		addSequential(new PostAuto());
+
+		// addParallel(new FollowVelocityPath(profile3));
+		// addSequential(new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW,
+		// Elevator.Positions.SCALE_LOW));
 	}
 }
