@@ -8,7 +8,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
-	private static final String LED_MODE = "ledMode", CAM_MODE = "camMode", STREAM_MODE = "stream";
+	private static final String LED_MODE = "ledMode", CAM_MODE = "camMode", STREAM_MODE = "stream",
+			SNAPSHOT = "snapshot";
 	private static final int BUFFER_SIZE = 10;
 
 	private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -132,6 +133,11 @@ public class Limelight {
 	public void toggleCamMode() {
 		NetworkTableEntry cam = table.getEntry(CAM_MODE);
 		cam.setNumber(cam.getNumber(1).intValue() == 0 ? 1 : 0);
+	}
+
+	public void takeSnapshot() {
+		NetworkTableEntry snap = table.getEntry(SNAPSHOT);
+		snap.setNumber(1);// limelight will take screenshot then set this number to zero
 	}
 
 	public static enum LEDMode {
