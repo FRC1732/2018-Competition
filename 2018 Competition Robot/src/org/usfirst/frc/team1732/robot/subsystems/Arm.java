@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmResetPos;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
@@ -13,7 +14,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -33,8 +33,6 @@ public class Arm extends Subsystem {
 	private boolean autoControl = false;
 
 	private final int allowedError;
-
-	private static final String key = "Arm Starting Count";
 
 	private final int magicVel;
 	private final int magicAccel;
@@ -58,9 +56,7 @@ public class Arm extends Subsystem {
 
 		allowedError = config.armAllowedErrorCount;
 
-		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		// Preferences.getInstance().putDouble(key, startingCount);
-
+		Robot.dash.add("Arm motor current", motor::getOutputCurrent);
 		Robot.dash.add("Arm Encoder Position", encoder::getPosition);
 		Robot.dash.add("Arm Encoder Pulses", encoder::getPulses);
 		Robot.dash.add("Arm Encoder Rate", encoder::getRate);
@@ -72,8 +68,11 @@ public class Arm extends Subsystem {
 	public static enum Positions {
 
 		// set these in pulses
-		BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642), CLIMB(5000), START(4093), TUCK(
-				6432), SCALE_LOW(7622), SCALE_HIGH(7622);
+		// BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642),
+		// CLIMB(5000), START(4093), TUCK(
+		// 6432), SCALE_LOW(7622), SCALE_HIGH(7622);
+		BUTTON_POS(-55), INTAKE(-55), EXCHANGE(159), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(2833), START(2729), TUCK(
+				4288), SCALE_LOW(5081), SCALE_HIGH(5081);
 
 		public final int value;
 
@@ -91,10 +90,9 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		int currentPosition = encoder.getPulses();
 		if (autoControl) {
-			if (desiredPosition > Positions.TUCK.value) {
+			if (desiredPosition > Positions.TUCK.value && currentPosition < Positions.TUCK.value + allowedError) {
 				if (!Robot.elevator.isArmSafeToGoUp() && desiredIsSet) {
 					motor.set(ControlMode.MotionMagic, Positions.TUCK.value);
 					desiredIsSet = false;
@@ -104,9 +102,10 @@ public class Arm extends Subsystem {
 					desiredIsSet = true;
 				}
 			}
-			if (desiredPosition < Positions.INTAKE.value + 10) {
+			// this was because the ramps interfered
+			if (desiredPosition < Positions.EXCHANGE.value && currentPosition > Positions.INTAKE.value - allowedError) {
 				if (!Robot.elevator.isArmSafeToGoDown() && desiredIsSet) {
-					motor.set(ControlMode.MotionMagic, Positions.EXCHANGE.value);
+					motor.set(ControlMode.MotionMagic, Positions.SWITCH.value);
 					desiredIsSet = false;
 				}
 				if (Robot.elevator.isArmSafeToGoDown() && !desiredIsSet) {
@@ -120,6 +119,7 @@ public class Arm extends Subsystem {
 
 	@Override
 	public void initDefaultCommand() {
+		setDefaultCommand(new ArmResetPos());
 	}
 
 	public void set(int position) {
@@ -155,7 +155,7 @@ public class Arm extends Subsystem {
 	}
 
 	public boolean isElevatorSafeToGoDown() {
-		return encoder.getPulses() - allowedError < Positions.TUCK.value;
+		return encoder.getPulses() < Positions.TUCK.value + allowedError;
 	}
 
 	public int getEncoderPulses() {
@@ -168,15 +168,22 @@ public class Arm extends Subsystem {
 
 	public void useMagicControl(int desiredPosition) {
 		int currentPosition = encoder.getPulses();
-		int maxLow = Positions.TUCK.value;
 		// motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
-		if (desiredPosition >= maxLow && currentPosition < maxLow + 100) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
-		} else if (desiredPosition <= maxLow && currentPosition > maxLow - 100) {
-			motor.configMotionAcceleration((int) (magicAccel * 0.2), Robot.CONFIG_TIMEOUT); // 0.2
-			motor.configMotionCruiseVelocity((int) (magicVel * 0.5), Robot.CONFIG_TIMEOUT); // 0.5
+		if (Robot.manip.assumedCube()) {
+			System.out.println("ASSUMING WE HAVE CUBE");
+			if (desiredPosition > currentPosition) {
+				motor.configMotionAcceleration((int) (magicAccel * 0.6), Robot.CONFIG_TIMEOUT);
+			} else {
+				motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
+			}
 		} else {
-			motor.configMotionAcceleration((int) (magicAccel * 0.7), Robot.CONFIG_TIMEOUT);
+			System.out.println("ASSUMING WE DON'T HAVE CUBE");
+			// use normal accel
+			if (desiredPosition > currentPosition) {
+				motor.configMotionAcceleration((magicAccel), Robot.CONFIG_TIMEOUT);
+			} else {
+				motor.configMotionAcceleration((int) (magicAccel * 0.4), Robot.CONFIG_TIMEOUT);
+			}
 		}
 		magicGains.selectGains(motor);
 	}
@@ -187,5 +194,13 @@ public class Arm extends Subsystem {
 
 	public void resetArmPos() {
 		motor.setSelectedSensorPosition(Positions.BUTTON_POS.value, 0, Robot.CONFIG_TIMEOUT);
+	}
+
+	public void resetArmPos(int pos) {
+		motor.setSelectedSensorPosition(pos, 0, Robot.CONFIG_TIMEOUT);
+	}
+
+	public boolean isAutoControl() {
+		return autoControl;
 	}
 }

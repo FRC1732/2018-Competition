@@ -3,7 +3,6 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.util.Debugger;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -47,9 +46,11 @@ public class ArmMagicPosition extends Command {
 		// timer.stop();
 		// startedTimer = false;
 		// }
-		Util.logForGraphing(Robot.arm.getEncoderPulses(), Robot.arm.getDesiredPosition(),
-				Robot.arm.motor.getClosedLoopTarget(0), Robot.arm.motor.getClosedLoopError(0),
-				Robot.arm.motor.getMotorOutputPercent());
+		// Util.logForGraphing(Robot.arm.getEncoderPulses(),
+		// Robot.arm.getDesiredPosition(),
+		// Robot.arm.motor.getClosedLoopTarget(0),
+		// Robot.arm.motor.getClosedLoopError(0),
+		// Robot.arm.motor.getMotorOutputPercent());
 	}
 
 	@Override

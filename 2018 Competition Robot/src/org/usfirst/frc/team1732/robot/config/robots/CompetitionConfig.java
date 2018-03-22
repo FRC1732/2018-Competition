@@ -12,14 +12,15 @@ public class CompetitionConfig extends RobotConfig {
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityPID.kP = 0.45/* 0.4 */;
-		drivetrainVelocityPID.kI = 1;// 0.5;
-		drivetrainVelocityPID.kD = 0;
-		drivetrainVelocityPID.kF = 1023 / 7500/* 5000 */;
-		drivetrainVelocityPID.integralZone = 100;// zone is sensor units per 100m
-		drivetrainVelocityPID.allowableError = 0;
-		drivetrainVelocityPID.maxIntegralAccumulated = 100;
-		drivetrainVelocityPID.secondsFromNeutralToFull = 0;
+		drivetrainVelocityLeftPID.kP = 0.45/* 0.4 */;
+		drivetrainVelocityLeftPID.kI = 1;// 0.5;
+		drivetrainVelocityLeftPID.kD = 0;
+		drivetrainVelocityLeftPID.kF = 1023 / 7500/* 5000 */;
+		drivetrainVelocityLeftPID.integralZone = 100;// zone is sensor units per 100m
+		drivetrainVelocityLeftPID.allowableError = 0;
+		drivetrainVelocityLeftPID.maxIntegralAccumulated = 100;
+		drivetrainVelocityLeftPID.secondsFromNeutralToFull = 0;
+		drivetrainVelocityRightPID = drivetrainVelocityLeftPID.clone();
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
@@ -44,6 +45,7 @@ public class CompetitionConfig extends RobotConfig {
 		elevatorMagicPID.integralZone = 0;
 		elevatorMagicPID.maxIntegralAccumulated = 0;
 		reverseElevatorButton = true;
+		reverseElevatorSensor = true;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

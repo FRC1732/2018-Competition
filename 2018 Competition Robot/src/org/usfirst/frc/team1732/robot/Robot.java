@@ -13,9 +13,8 @@ import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.input.Input;
-import org.usfirst.frc.team1732.robot.sensors.Limelight.CamMode;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
-import org.usfirst.frc.team1732.robot.sensors.Limelight.StreamMode;
+import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
@@ -104,7 +103,7 @@ public class Robot extends TimedRobot {
 		joysticks = new Input(robotConfig);
 		AutoChooser.addListener(joysticks);
 		// tracker = new Tracking(drivetrain.leftEncoder, drivetrain.rightEncoder);
-		sensors.navx.addToDashboard();
+
 		defaultAuto = new DefaultDriveForward();
 		gameDataWaiter = new BooleanTimer(10, DriverStationData::gotPlatePositions);
 		// gameDataWaiter will either start the auto if game data is received before 10
@@ -115,6 +114,11 @@ public class Robot extends TimedRobot {
 		// dash.add("Robot x", tracker::getX);
 		// dash.add("Robot y", tracker::getY);
 		// dash.add("Robot heading", tracker::getHeading);
+		SensorChecker.addSensor(sensors.navx::isConnected, "NavX board");
+		SensorChecker.addSensor(drivetrain.leftEncoder::isConnected, "Left drivetrain encoder");
+		SensorChecker.addSensor(drivetrain.rightEncoder::isConnected, "Right drivetrain encoder");
+		Robot.sensors.limelight.setLEDMode(LEDMode.OFF);
+		protectRobot();
 	}
 
 	@Override
@@ -143,10 +147,6 @@ public class Robot extends TimedRobot {
 		if (elevator.isButtonPressed()) {
 			elevator.resetElevatorPos();
 		}
-		// System.out.println("left vel: " + drivetrain.leftEncoder.getRate());
-		// System.out.println("right vel: " + drivetrain.rightEncoder.getRate());
-		// System.out.println("arm enc: " + arm.getEncoderPulses());
-		// System.out.println("elevator enc: " + elevator.getEncoderPulses());
 	}
 
 	private boolean autoStarted = false;
@@ -195,18 +195,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		protectRobot();
-		Debugger.enableDetailed();
-		// cancel auto command here
-		sensors.limelight.setLEDMode(LEDMode.OFF);
-		sensors.limelight.setCamMode(CamMode.DRIVER_FEEDBACK);
-		sensors.limelight.setStreamMode(StreamMode.PIP_SECONDARY);
-		arm.setManual(0);
-		elevator.setManual(0);
-		drivetrain.setCoast();
+		Debugger.disable();
 	}
 
 	@Override
 	public void teleopPeriodic() {
+		// System.out.println("limelight: " +
+		// Robot.sensors.limelight.getRawHorizontalOffset());
 	}
 
 	@Override
@@ -227,5 +222,14 @@ public class Robot extends TimedRobot {
 	 */
 	private void protectRobot() {
 		Scheduler.getInstance().removeAll();
+		arm.setStop();
+		elevator.setStop();
+		drivetrain.setCoast();
+		drivetrain.setStop();
+		manip.setStop();
+		climber.setStop();
+		hooks.setDown();
+		ramp.setIn();
 	}
+
 }

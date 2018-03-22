@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1732.robot.commands.autos;
+package org.usfirst.frc.team1732.robot.commands.autos.base;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -18,7 +18,7 @@ public class ManipAutoEject extends CommandGroup {
 	}
 
 	public ManipAutoEject(double manipSpeed) {
-		this(0.25, manipSpeed);
+		this(0.3, manipSpeed);
 	}
 
 }

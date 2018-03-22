@@ -6,28 +6,31 @@ public class PracticeConfig extends RobotConfig {
 
 	{
 		// drivetrain
-		effectiveRobotWidth = 28.1877; // calculate
+		effectiveRobotWidth = 25; // calculate
 		drivetrainInchesPerPulse = 136 / 70679.5; // calculate
 		maxUnitsPer100Ms = 7500; // measure
 		// drivetrainConfig. Change stuff like this:
 		drivetrainConfig.enableVoltageCompensation = true;
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityPID.kP = 0.45/* 0.4 */;
-		drivetrainVelocityPID.kI = 1;// 0.5;
-		drivetrainVelocityPID.kD = 0;
-		drivetrainVelocityPID.kF = 1023 / 7500/* 5000 */;
-		drivetrainVelocityPID.integralZone = 100;// zone is sensor units per 100m
-		drivetrainVelocityPID.allowableError = 0;
-		drivetrainVelocityPID.maxIntegralAccumulated = 100;
-		drivetrainVelocityPID.secondsFromNeutralToFull = 0;
+		drivetrainVelocityLeftPID.kP = 0.4; // 0.4;
+		drivetrainVelocityLeftPID.kI = 0.01;
+		drivetrainVelocityLeftPID.kD = 0;
+		drivetrainVelocityLeftPID.kF = 0.763 * 1023 / 3250/* 5000 */;
+		drivetrainVelocityLeftPID.integralZone = 5000;// zone is sensor units per 100m
+		drivetrainVelocityLeftPID.allowableError = 0;
+		drivetrainVelocityLeftPID.maxIntegralAccumulated = 5000;
+		drivetrainVelocityLeftPID.secondsFromNeutralToFull = 0;
+		drivetrainVelocityRightPID = drivetrainVelocityLeftPID.clone();
+		drivetrainVelocityRightPID.kP = 0.4;// 0.8;
+		drivetrainVelocityRightPID.kF = 0.752 * 1023 / 3950;
 
 		// arm
 		armConfig.enableVoltageCompensation = true;
 		armMagicVel = 1203;
-		armMagicAccel = 1200;
-		armMagicPID.kF = 1023 / 1378; // 1023 / max sensor units per 100 ms
-		armMagicPID.kP = 4.1;
+		armMagicAccel = 700;
+		armMagicPID.kF = 1023 / 978; // 1023 / max sensor units per 100 ms
+		armMagicPID.kP = 6.1;
 		armMagicPID.kI = 0.1;
 		armMagicPID.kD = 0;
 		armMagicPID.integralZone = 100;
@@ -44,7 +47,8 @@ public class PracticeConfig extends RobotConfig {
 		elevatorMagicPID.kD = 0;
 		elevatorMagicPID.integralZone = 0;
 		elevatorMagicPID.maxIntegralAccumulated = 0;
-		reverseElevatorButton = false;
+		reverseElevatorButton = true;
+		reverseElevatorSensor = false;
 
 		// climber
 		climberConfig.enableVoltageCompensation = true;

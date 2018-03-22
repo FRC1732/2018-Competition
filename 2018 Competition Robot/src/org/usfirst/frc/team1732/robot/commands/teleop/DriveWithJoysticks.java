@@ -35,5 +35,6 @@ public class DriveWithJoysticks extends NotifierCommand {
 	}
 
 	@Override
-	protected void whenEnded() {}
+	protected void whenEnded() {
+	}
 }

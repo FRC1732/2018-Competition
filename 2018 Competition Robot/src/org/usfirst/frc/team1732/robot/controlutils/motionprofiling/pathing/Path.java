@@ -55,10 +55,18 @@ public final class Path {
 	}
 
 	public void addWaypoint(Waypoint w) {
-		addWaypoint(w, 0.5);
+		addWaypoint(w, false);
 	}
 
 	public void addWaypoint(Waypoint w, double midControlPercent) {
+		addWaypoint(w, midControlPercent, false);
+	}
+
+	public void addWaypoint(Waypoint w, boolean noAccel) {
+		addWaypoint(w, 0.5, noAccel);
+	}
+
+	public void addWaypoint(Waypoint w, double midControlPercent, boolean noAccel) {
 		// System.out.println("ADDING WAYPOINT: " + w.toString());
 		double theta1 = prev.heading.getAbsoluteAngle();
 		double theta2 = w.heading.getAbsoluteAngle();
@@ -90,7 +98,7 @@ public final class Path {
 			System.err.println("INVALID WAYPOINT/BAD PATH");
 		}
 		if (curve != null) {
-			segments.add(new PathSegment(prev, w, curve));
+			segments.add(new PathSegment(prev, w, curve, noAccel));
 			prev = w;
 		}
 	}
@@ -160,12 +168,12 @@ public final class Path {
 			}
 		}
 		MotionProfileConstraints constraints = new MotionProfileConstraints(maxVelocity, maxAcceleration);
-
-		MotionState previousState = new MotionState(0, 0, 0, maxAcceleration);
+		MotionProfileConstraints noAccel = new MotionProfileConstraints(maxVelocity, 0);
+		MotionState previousState = new MotionState(0, 0, segments.get(0).start.vel, maxAcceleration);
 
 		// System.out.println("Total length: " +
 		// segments.get(0).curve.getTotalArcLength());
-		double goalPos = segments.get(0).curve.getTotalArcLength() + previousState.pos();
+		double goalPos = segments.get(0).curve.getTotalArcLength();
 
 		MotionProfileGoal goalState = new MotionProfileGoal(goalPos, Math.abs(segments.get(0).end.vel),
 				CompletionBehavior.VIOLATE_MAX_ACCEL); // necessary because we restrict profiles to only moving forwards
@@ -177,8 +185,14 @@ public final class Path {
 		for (int i = 1; i < segments.size(); i++) {
 			goalPos = segments.get(i).curve.getTotalArcLength() + previousState.pos();
 			goalState = new MotionProfileGoal(goalPos, segments.get(i).end.vel, CompletionBehavior.VIOLATE_MAX_ACCEL);
-			currentProfile.appendProfile(
-					GenerateMotionProfile.generateStraightMotionProfile(constraints, goalState, previousState));
+			MotionProfile tempProfile;
+			if (segments.get(i).noAccel) {
+				tempProfile = GenerateMotionProfile.generateStraightMotionProfile(noAccel, goalState, previousState);
+			} else {
+				tempProfile = GenerateMotionProfile.generateStraightMotionProfile(constraints, goalState,
+						previousState);
+			}
+			currentProfile.appendProfile(tempProfile);
 			previousState = currentProfile.endState();
 		}
 		profile = currentProfile;
@@ -262,41 +276,21 @@ public final class Path {
 		public final int pointDurMs;
 		public double totalTimeSec;
 		public final double finalAbsCenterPos;
-		public final double initialHeading;
 
 		private final TreeMap<Double, PointPair<VelocityPoint>> map;
 
-		public PointProfile(MyIterator<PointPair<VelocityPoint>> iterator, double finalAbsCenterPos,
-				double initialHeading) {
+		public PointProfile(MyIterator<PointPair<VelocityPoint>> iterator, double finalAbsCenterPos) {
 			totalTimeSec = 0;
 			this.pointDurSec = iterator.baseDurationSec;
 			this.pointDurMs = iterator.baseDurationMs;
 			this.finalAbsCenterPos = finalAbsCenterPos;
-			this.initialHeading = initialHeading;
 			map = new TreeMap<>();
 			while (iterator.hasNext()) {
 				PointPair<VelocityPoint> pair = iterator.next();
 				map.put(totalTimeSec, pair);
 				// System.out.println(totalTimeSec + ", " + pair.left.velocity + ", " +
-				// pair.right.velocity);
-				totalTimeSec += pointDurSec;
-			}
-		}
-
-		public PointProfile(Iterator<PointPair<VelocityPoint>> iterator, double finalAbsCenterPos,
-				double initialHeading) {
-			totalTimeSec = 0;
-			// this.pointDurSec = iterator.baseDurationSec;
-			this.pointDurSec = 0;
-			this.pointDurMs = 0;
-			// this.pointDurMs = iterator.baseDurationMs;
-			this.finalAbsCenterPos = finalAbsCenterPos;
-			this.initialHeading = initialHeading;
-			map = new TreeMap<>();
-			while (iterator.hasNext()) {
-				PointPair<VelocityPoint> pair = iterator.next();
-				map.put(totalTimeSec, pair);
-				// System.out.println(pair.left.velocity + ", " + pair.right.velocity);
+				// pair.right.velocity + ", "
+				// + pair.left.headingDeg);
 				totalTimeSec += pointDurSec;
 			}
 		}
@@ -362,24 +356,25 @@ public final class Path {
 	}
 
 	public PointProfile getVelocityProfile(double robotWidth) {
-		return new PointProfile(getVelocityIterator(robotWidth), Math.abs(getProfile().endPos()),
-				Math.toDegrees(getOriginalHeading()));
+		return new PointProfile(getVelocityIterator(robotWidth), Math.abs(getProfile().endPos()));
 	}
 
 	public MyIterator<PointPair<VelocityPoint>> getVelocityIterator(double robotWidth) {
 		int pointDurationMs = 20; // navx can only update at 200 Hz
 		Iterator<PointPair<VelocityPoint>> iterator = new Iterator<PointPair<VelocityPoint>>() {
+			final double totalTime = profile.duration();
+			final double pointDurationSec = pointDurationMs / 1000.0;
+			final int pointCount = (int) (totalTime / (pointDurationSec)) + 1; // because we start at i=0 instead of 1
 
 			int cs = 0;
 			PathSegment currentSegment = segments.get(0);
 			double currentSegmentLength = currentSegment.curve.getTotalArcLength();
 			double segmentLengthSum = 0;
 
-			double totalTime = profile.duration();
-			double pointDurationSec = pointDurationMs / 1000.0;
-			int pointCount = (int) (totalTime / (pointDurationSec)) + 1; // because we start at i=0 instead of 1
-
 			int i = 0;
+
+			MotionState currentEndState = profile.stateByTimeClamped((i) * pointDurationSec);
+			final double startAngle = Math.toDegrees(currentSegment.curve.getTangentAngleAtArcLength(0));
 
 			@Override
 			public boolean hasNext() {
@@ -391,7 +386,7 @@ public final class Path {
 				VelocityPoint leftPoint = new VelocityPoint();
 				VelocityPoint rightPoint = new VelocityPoint();
 
-				MotionState currentEndState = profile.stateByTimeClamped((i) * pointDurationSec);
+				currentEndState = profile.stateByTimeClamped((i) * pointDurationSec);
 				// System.out.println("End Pos: " + currentEndState.pos());
 				if (Math.abs(currentEndState.pos()) >= currentSegmentLength + segmentLengthSum) {
 					System.out.println("CurrentState pos is greater than current curve length");
@@ -411,7 +406,10 @@ public final class Path {
 				double endArcLength = Math.abs(currentEndState.pos()) - segmentLengthSum;
 				double endVel = currentEndState.vel();
 				// double endVel = profile.velocityByTimeClamped((i) * pointDurationSec);
-				double endHeading = Math.toDegrees(currentSegment.curve.getHeadingAtArcLength(endArcLength));
+				double endAngle = Math.toDegrees(currentSegment.curve.getTangentAngleAtArcLength(endArcLength));
+				// the following arguements are in the correct order because angle increased in
+				// the opposite direction to heading
+				double endHeading = Util.getContinuousError(startAngle, endAngle, 360);
 
 				leftPoint.headingDeg = endHeading;
 				rightPoint.headingDeg = endHeading;
@@ -422,23 +420,25 @@ public final class Path {
 				} else { // if curving
 					double curvature = currentSegment.curve.getCurvatureAtArcLength(endArcLength);
 					double r = 1 / curvature;
-					double lR = Math.abs(r - robotWidth / 2);
-					double rR = Math.abs(r + robotWidth / 2);
+					double lR = Math.abs(r) - robotWidth / 2 * Math.signum(r);
+					double rR = Math.abs(r) + robotWidth / 2 * Math.signum(r);
 					r = Math.abs(r);
 					double lK = lR / r;
 					double rK = rR / r;
-					leftPoint.velocity = endVel * lK;
-					rightPoint.velocity = endVel * rK;
+					if (driveForwards) {
+						leftPoint.velocity = endVel * lK;
+						rightPoint.velocity = endVel * rK;
+					} else {
+						rightPoint.velocity = endVel * lK;
+						leftPoint.velocity = endVel * rK;
+					}
+
 				}
 				i++;
 				return new PointPair<VelocityPoint>(leftPoint, rightPoint);
 			}
 		};
 		return new MyIterator<PointPair<VelocityPoint>>(iterator, pointDurationMs);
-	}
-
-	public double getOriginalHeading() {
-		return segments.get(0).start.heading.getHeading();
 	}
 
 }

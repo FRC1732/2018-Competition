@@ -33,8 +33,8 @@ public class Climber extends Subsystem {
 		// ???
 	}
 
-	public void stop() {
-		master.set(ControlMode.PercentOutput, 0);
+	public void setStop() {
+		master.neutralOutput();
 	}
 
 	@Override

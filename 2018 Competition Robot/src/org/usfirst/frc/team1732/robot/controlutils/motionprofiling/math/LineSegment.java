@@ -80,8 +80,8 @@ public class LineSegment implements Curve {
 	}
 
 	@Override
-	public double getHeadingAtArcLength(double arcLength) {
-		return getDirection().getHeading();
+	public double getTangentAngleAtArcLength(double arcLength) {
+		return getDirection().getAbsoluteAngle();
 	}
 
 }

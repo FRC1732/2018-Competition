@@ -11,6 +11,8 @@ public class NavX extends GyroBase {
 
 	public NavX(AHRS navx) {
 		this.navx = navx;
+		Robot.dash.add("NavX Yaw", () -> navx.getYaw());
+		Robot.dash.add("NavX Total yaw", () -> navx.getAngle());
 	}
 
 	@Override
@@ -113,6 +115,10 @@ public class NavX extends GyroBase {
 		/* Connectivity Debugging Support */
 		Robot.dash.add(imu + "IMU_Byte_Count", () -> navx.getByteCount());
 		Robot.dash.add(imu + "IMU_Update_Count", () -> navx.getUpdateCount());
+	}
+
+	public boolean isConnected() {
+		return navx.isConnected();
 	}
 
 }

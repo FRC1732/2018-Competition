@@ -33,6 +33,10 @@ public class TalonEncoder extends EncoderBase {
 		return talon.getSelectedSensorVelocity(0) * distancePerPulse * 10;
 	}
 
+	public int getSensorRate() {
+		return talon.getSelectedSensorVelocity(0);
+	}
+
 	@Override
 	public int getPulses() {
 		return talon.getSelectedSensorPosition(0);
