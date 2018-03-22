@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="org/usfirst/frc/team1732/robot/commands/autos/ScaleLeftDouble.java|org/usfirst/frc/team1732/robot/commands/autos/ScaleLeftSingleStraight.java|org/usfirst/frc/team1732/robot/commands/autos/ScaleRightSingleStraight.java|org/usfirst/frc/team1732/robot/commands/autos/old/ScaleLeftDouble.java|org/usfirst/frc/team1732/robot/commands/autos/old/ScaleLeftSingleStraight.java|org/usfirst/frc/team1732/robot/commands/autos/old/ScaleRightSingleStraight.java" kind="src" path="src"/>
 	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
 	<classpathentry kind="var" path="networktables" sourcepath="ntcore.sources"/>
 	<classpathentry kind="var" path="opencv" sourcepath="opencv.sources"/>

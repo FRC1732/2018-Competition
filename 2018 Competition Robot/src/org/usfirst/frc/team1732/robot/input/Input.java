@@ -73,8 +73,7 @@ public class Input {
 		// Add commands here
 		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE,
-						Elevator.Positions.INTAKE));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		posExchange.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
 		posHuman.whenNotOverriden
@@ -97,39 +96,38 @@ public class Input {
 		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
 		posSwitch.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
 
-		posScaleHigh.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.MAX));
+		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SCALE_HIGH));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.CLIMB));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerUp.whenReleased(new ElevatorHoldPosition());
 		rockerDown.whenPressed(new ElevatorRunManualSafe(-0.3));
 		rockerDown.whenReleased(new ElevatorHoldPosition());
 
-		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.8));
-		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
-		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.2));
-		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(Manip.BASE_OUT_SPEED));
+		manipHiSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(1));
+		manipHiSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
+		manipLowSpeed.whenNotOverriden.whenPressed(new SetOuttakeSpeed(0.4));
+		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
 
 		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop());
+		leftTrigger.whenReleased(new ManipSetStop(Manip.RAMP_TIME));
 		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
 		rightTrigger.whenReleased(new ManipSetStop());
-
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 
 		shifting.whileHeld(new TeleopShift());
 
-		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
-		greenButton1.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
-		posTuck.whenOverriden.whenPressed(makeCommand(hooks, hooks::setDown));
-
 		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
-		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
-		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
-		greenButton2.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
+		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
+		posTuck.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
+		posTuck.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
+
+		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
+		// greenButton1.whenOverriden.whenReleased(makeCommand(hooks, hooks::setDown));
+		greenButton2.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
+		greenButton2.whenOverriden.whenReleased(makeCommand(ramp, ramp::setIn));
 
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 

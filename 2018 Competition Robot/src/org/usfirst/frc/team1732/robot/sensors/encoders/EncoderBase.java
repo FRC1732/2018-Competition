@@ -28,4 +28,8 @@ public abstract class EncoderBase {
 	public abstract void setDistancePerPulse(double distancePerPulse);
 
 	public abstract void zero();
+
+	public boolean isConnected() {
+		return getPulses() > 10;
+	}
 }

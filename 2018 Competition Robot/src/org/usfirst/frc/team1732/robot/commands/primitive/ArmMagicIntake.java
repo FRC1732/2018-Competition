@@ -2,9 +2,9 @@ package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import static org.usfirst.frc.team1732.robot.Robot.arm;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.subsystems.Arm.Positions;
 import org.usfirst.frc.team1732.robot.util.Debugger;
-import org.usfirst.frc.team1732.robot.util.Util;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -15,10 +15,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ArmMagicIntake extends CommandGroup {
 
 	private boolean hitButton = false;
+	private int minPosition = Integer.MAX_VALUE;
 
 	public ArmMagicIntake() {
 		addSequential(new ArmMagicIntakeUntilButton(this));
 		addSequential(new ArmUntilButton(this));
+	}
+
+	@Override
+	protected void end() {
+		System.out.println("Ended Arm Intake Command");
 	}
 
 	private static class ArmMagicIntakeUntilButton extends Command {
@@ -45,8 +51,9 @@ public class ArmMagicIntake extends CommandGroup {
 				parentCommand.hitButton = arm.isButtonPressed();
 			}
 
-			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(), arm.motor.getClosedLoopTarget(0),
-					arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
+			// Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
+			// arm.motor.getClosedLoopTarget(0),
+			// arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
 		}
 
 		@Override
@@ -56,9 +63,6 @@ public class ArmMagicIntake extends CommandGroup {
 
 		@Override
 		protected void end() {
-			if (parentCommand.hitButton) {
-				arm.resetArmPos();
-			}
 			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 		}
 
@@ -76,16 +80,18 @@ public class ArmMagicIntake extends CommandGroup {
 		@Override
 		protected void initialize() {
 			Debugger.logStart(this);
-			arm.setManual(-0.15);
+			arm.setManual(-0.2);
 		}
 
 		@Override
 		protected void execute() {
-			Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(), arm.motor.getClosedLoopTarget(0),
-					arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
+			// Util.logForGraphing(arm.getEncoderPulses(), arm.getDesiredPosition(),
+			// arm.motor.getClosedLoopTarget(0),
+			// arm.motor.getClosedLoopError(0), arm.motor.getMotorOutputPercent());
 			if (!parentCommand.hitButton) {
 				parentCommand.hitButton = arm.isButtonPressed();
 			}
+			parentCommand.minPosition = Math.min(parentCommand.minPosition, Robot.arm.getEncoderPulses());
 		}
 
 		@Override
@@ -97,7 +103,8 @@ public class ArmMagicIntake extends CommandGroup {
 		protected void end() {
 			Debugger.logEnd(this, "Hit button: " + parentCommand.hitButton);
 			if (parentCommand.hitButton) {
-				arm.resetArmPos();
+				int currentPositionRelativeToButton = Robot.arm.getEncoderPulses() - parentCommand.minPosition;
+				arm.resetArmPos(currentPositionRelativeToButton);
 			}
 			int position = Positions.INTAKE.value;
 			arm.useMagicControl(position);
