@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
 		gameDataWaiter.start();
 		Debugger.enableDetailed();
 		autoStarted = false;
-		new FollowVelocityPath(new TestPath().getPath());
+//		new FollowVelocityPath(new TestPath().getPath());
 	}
 
 	/**
