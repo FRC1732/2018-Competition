@@ -30,8 +30,8 @@ public class ElevatorRunManualSafe extends Command {
 	protected void execute() {
 		int range = 75;
 		int adjust = range + 100;
-		if (Robot.elevator.getEncoderPulses() > Elevator.Positions.MAX.value - range) {
-			int val = Elevator.Positions.MAX.value - adjust;
+		if (Robot.elevator.getEncoderPulses() > Elevator.Positions.MAX.value) {
+			int val = Elevator.Positions.MAX.value;
 			Robot.elevator.useMagicControl(val);
 			Robot.elevator.set(val);
 		}
@@ -41,8 +41,8 @@ public class ElevatorRunManualSafe extends Command {
 			Robot.elevator.useMagicControl(val);
 			Robot.elevator.set(val);
 		}
-		if (Robot.elevator.getEncoderPulses() < Elevator.Positions.INTAKE.value + range) {
-			int val = Elevator.Positions.INTAKE.value + adjust;
+		if (Robot.elevator.getEncoderPulses() < Elevator.Positions.INTAKE.value) {
+			int val = Elevator.Positions.INTAKE.value;
 			Robot.elevator.useMagicControl(val);
 			Robot.elevator.set(val);
 		}

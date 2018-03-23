@@ -2,7 +2,9 @@ package org.usfirst.frc.team1732.robot.commands.autos;
 
 import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.autos.base.ManipAutoEject;
+import org.usfirst.frc.team1732.robot.commands.autos.base.PostAuto;
+import org.usfirst.frc.team1732.robot.commands.autos.base.PreAuto;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmMagicPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
@@ -16,12 +18,11 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class SwitchCenterFront extends CommandGroup {
 
 	public SwitchCenterFront() {
-		addParallel(new ArmHoldPosition());
-
+		addSequential(new PreAuto());
 		if (DriverStationData.closeSwitchIsLeft) {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontLeft));
+			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontLeft));
 		} else {
-			addSequential(new FollowVelocityPath(Robot.paths.switchCenterFrontStraight));
+			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontStraight));
 		}
 		addParallel(new CommandGroup() {
 			{
@@ -30,6 +31,7 @@ public class SwitchCenterFront extends CommandGroup {
 				addSequential(new ManipAutoEject(0.7));
 			}
 		});
-		addSequential(new DriveTime(0.3, 0.3, NeutralMode.Coast, 4, 0));
+		addSequential(new DriveTime(0.2, 0.2, NeutralMode.Coast, 2, 0));
+		addSequential(new PostAuto());
 	}
 }

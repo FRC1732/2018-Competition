@@ -27,7 +27,7 @@ public class ArmHoldPosition extends InstantCommand {
 		Debugger.logStart(this);
 		int pos = Robot.arm.getEncoderPulses();
 		Robot.arm.useMagicControl(pos + adjust);
-		Robot.arm.holdPosition();
+		Robot.arm.set(pos + adjust);
 	}
 
 }

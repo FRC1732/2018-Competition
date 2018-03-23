@@ -19,6 +19,7 @@ import org.usfirst.frc.team1732.robot.commands.teleop.TeleopShift;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Elevator;
+import org.usfirst.frc.team1732.robot.subsystems.Manip;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -95,10 +96,9 @@ public class Input {
 		posSwitch.whenOverriden.whenPressed(makeCommand(elevator, () -> elevator.setManual(0.4)));
 		posSwitch.whenOverriden.whenReleased(makeCommand(elevator, elevator::setStop));
 
-		posScaleHigh.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.MAX));
+		posScaleHigh.whenOverriden.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.MAX));
 		posScaleLow.whenOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.SWITCH, Elevator.Positions.SCALE_HIGH));
+				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.CLIMB, Elevator.Positions.CLIMB));
 
 		rockerUp.whenPressed(new ElevatorRunManualSafe(0.4));
 		rockerUp.whenReleased(new ElevatorHoldPosition());
@@ -111,25 +111,24 @@ public class Input {
 		manipLowSpeed.whenNotOverriden.whenReleased(new SetOuttakeSpeed(0.5));
 
 		leftTrigger.whenPressed(new ManipSetIn());
-		leftTrigger.whenReleased(new ManipSetStop());
+		leftTrigger.whenReleased(new ManipSetStop(Manip.RAMP_TIME));
 		rightTrigger.whenPressed(makeCommand(manip, manip::setOutVariable));
 		rightTrigger.whenReleased(new ManipSetStop());
-
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
 
 		shifting.whileHeld(new TeleopShift());
 
-		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
-		greenButton1.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
-		posTuck.whenOverriden.whenPressed(makeCommand(hooks, hooks::setDown));
-
 		redButton.whenOverriden.whenPressed(makeCommand(climber, climber::climb));
-		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
-		greenButton2.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
-		greenButton2.whenOverriden.whenReleased(makeCommand(climber, climber::stop));
+		redButton.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
+		posTuck.whenOverriden.whenPressed(makeCommand(climber, climber::reverseClimb));
+		posTuck.whenOverriden.whenReleased(makeCommand(climber, climber::setStop));
 
-		greenButton2.whenNotOverriden.whenPressed(makeCommand(arm, arm::holdPosition));
+		greenButton1.whenOverriden.whenPressed(makeCommand(hooks, hooks::setUp));
+		// greenButton1.whenOverriden.whenReleased(makeCommand(hooks, hooks::setDown));
+		greenButton2.whenOverriden.whenPressed(makeCommand(ramp, ramp::setOut));
+		greenButton2.whenOverriden.whenReleased(makeCommand(ramp, ramp::setIn));
+
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
 
 		// magicArm.whenPressed(new ArmTest(0.3));

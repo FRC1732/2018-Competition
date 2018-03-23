@@ -120,7 +120,7 @@ public class TestProfile extends CommandGroup {
 		// path.addWaypoint(new Waypoint(endingX, endingY, Math.toRadians(-90), 0));
 		// path.generateProfile(70, 80 * 0.5);
 
-		profile = Robot.paths.scaleRightCross;
+		profile = Robot.paths.rightScaleCross;
 		addSequential(new FollowVelocityPath(profile));
 		addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 	}

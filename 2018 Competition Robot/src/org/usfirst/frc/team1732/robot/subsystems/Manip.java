@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
@@ -15,7 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Manip extends Subsystem {
 
-	public static final double STOP_TIME = 0.25;
+	public static final double RAMP_TIME = 0.6;
+	public static final double CURRENT_STOP_TIME = 0.25;
 	public static final double A_BASE_IN_SPEED = 1;
 	public static final double B_BASE_IN_SPEED = 1;
 	public static final double BASE_OUT_SPEED = 0.5;
@@ -52,6 +54,7 @@ public class Manip extends Subsystem {
 
 	public void setOutVariable() {
 		System.out.println("variable out set: " + absVariableOut);
+		setRampTime(0);
 		setOut(absVariableOut);
 	}
 
@@ -72,6 +75,11 @@ public class Manip extends Subsystem {
 	public void setStop() {
 		victorA.neutralOutput();
 		victorB.neutralOutput();
+	}
+
+	public void setRampTime(double rampTime) {
+		victorA.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
+		victorB.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
 	}
 
 	public boolean assumedCube() {
