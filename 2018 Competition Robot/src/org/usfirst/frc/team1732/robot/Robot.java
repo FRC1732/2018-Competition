@@ -11,7 +11,9 @@ import org.usfirst.frc.team1732.robot.autotools.AutoChooser;
 import org.usfirst.frc.team1732.robot.autotools.DriverStationData;
 import org.usfirst.frc.team1732.robot.commands.Paths;
 import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
+import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
+import org.usfirst.frc.team1732.robot.controlutils.guiPathing.TestPath;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
 import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
@@ -168,6 +170,7 @@ public class Robot extends TimedRobot {
 		gameDataWaiter.start();
 		Debugger.enableDetailed();
 		autoStarted = false;
+		new FollowVelocityPath(new TestPath().getPath());
 	}
 
 	/**
