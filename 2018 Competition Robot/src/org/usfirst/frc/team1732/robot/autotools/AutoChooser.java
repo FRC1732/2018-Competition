@@ -3,20 +3,19 @@ package org.usfirst.frc.team1732.robot.autotools;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.commands.autos.DefaultDriveForward;
 import org.usfirst.frc.team1732.robot.commands.autos.RightScaleScale;
 import org.usfirst.frc.team1732.robot.commands.autos.RightScaleScaleNoCross;
+import org.usfirst.frc.team1732.robot.commands.autos.RightScaleScaleNoCrossStraight;
 import org.usfirst.frc.team1732.robot.commands.autos.RightScaleSwitch;
 import org.usfirst.frc.team1732.robot.commands.autos.RightScaleSwitchNoCross;
 import org.usfirst.frc.team1732.robot.commands.autos.SwitchCenterFront;
-import org.usfirst.frc.team1732.robot.commands.primitive.DriveTime;
-import org.usfirst.frc.team1732.robot.commands.testing.TestCubePickup;
+import org.usfirst.frc.team1732.robot.commands.autos.base.RightScaleRightTwice;
 import org.usfirst.frc.team1732.robot.commands.testing.TestProfile;
 import org.usfirst.frc.team1732.robot.commands.testing.TestVelocityFollowing;
 import org.usfirst.frc.team1732.robot.input.Input;
 import org.usfirst.frc.team1732.robot.util.Debugger;
 import org.usfirst.frc.team1732.robot.util.Util;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -27,10 +26,13 @@ public final class AutoChooser {
 		RightScaleScale(() -> new RightScaleScale()), //
 		RightScaleSwitchNoCross(() -> new RightScaleSwitchNoCross()), //
 		RightScaleScaleNoCross(() -> new RightScaleScaleNoCross()), //
+		DriveForward(() -> new DefaultDriveForward()), //
+		RightScaleScaleNoCrossStraight(() -> new RightScaleScaleNoCrossStraight()), //
+		ALWAYS_RIGHT_SCALE_SCALE(() -> new RightScaleRightTwice()), //
 		TestProfile(() -> new TestProfile()), //
-		TestCubePickup(() -> new TestCubePickup()), //
-		DriveTime(() -> new DriveTime(-0.7, -0.7, NeutralMode.Brake, 20, 100)), //
-		DriveVelocity(() -> new TestVelocityFollowing(75, 75)); //
+		// TestCubePickup(() -> new TestCubePickup()), //
+		// DriveTime(() -> new DriveTime(0.4, 0.4, NeutralMode.Brake, 20, 0.5)), //
+		DriveVelocity(() -> new TestVelocityFollowing(30, 30)); //
 
 		private final Supplier<Command> commandSupplier;
 

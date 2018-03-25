@@ -24,14 +24,14 @@ public class SwitchCenterFront extends CommandGroup {
 		} else {
 			addSequential(new FollowVelocityPath(Robot.paths.centerSwitchFrontStraight));
 		}
-		addParallel(new CommandGroup() {
+		addParallel(new DriveTime(0.2, 0.2, NeutralMode.Coast, 2, 0));
+		addSequential(new CommandGroup() {
 			{
 				addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
 				addSequential(new Wait(2));
 				addSequential(new ManipAutoEject(0.7));
 			}
 		});
-		addSequential(new DriveTime(0.2, 0.2, NeutralMode.Coast, 2, 0));
 		addSequential(new PostAuto());
 	}
 }

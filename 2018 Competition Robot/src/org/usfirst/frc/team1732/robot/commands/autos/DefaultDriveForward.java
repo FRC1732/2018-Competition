@@ -21,7 +21,7 @@ public class DefaultDriveForward extends CommandGroup {
 				addSequential(new FollowVelocityPath(Robot.paths.defaultDriveStraight));
 			}
 		});
-		addSequential(new ArmMagicPosition(Arm.Positions.INTAKE));
+		// addSequential(new ArmMagicPosition(Arm.Positions.INTAKE));
 		// addSequential(new PostAuto());
 	}
 }

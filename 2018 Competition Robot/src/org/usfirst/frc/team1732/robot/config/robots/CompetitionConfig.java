@@ -5,6 +5,7 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 public class CompetitionConfig extends RobotConfig {
 
 	{
+		waypointScaler = 1;
 		// drivetrain
 		effectiveRobotWidth = 25; // 28.1877; // calculate
 		drivetrainInchesPerPulse = 100.0 / ((51310 - (12) + 51034 - (117)) / 2.0); // = 0.001957
@@ -14,16 +15,16 @@ public class CompetitionConfig extends RobotConfig {
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
 		drivetrainVelocityLeftPID.kP = 0.4;// 0.45/* 0.4 */;
-		drivetrainVelocityLeftPID.kI = 0.01;// 1;// 0.5;
+		drivetrainVelocityLeftPID.kI = 0.01 / 5;// 1;// 0.5;
 		drivetrainVelocityLeftPID.kD = 0;
-		drivetrainVelocityLeftPID.kF = 0.763 * 1023 / 3250; // 1023 / 7500/* 5000 */;
+		drivetrainVelocityLeftPID.kF = 0.390 * 1023 / 3202; // 1023 / 7500/* 5000 */;
 		drivetrainVelocityLeftPID.integralZone = 5000; // 100;// zone is sensor units per 100m
 		drivetrainVelocityLeftPID.allowableError = 0;
 		drivetrainVelocityLeftPID.maxIntegralAccumulated = 5000; // 100;
 		drivetrainVelocityLeftPID.secondsFromNeutralToFull = 0;
 		drivetrainVelocityRightPID = drivetrainVelocityLeftPID.clone();
 		drivetrainVelocityRightPID.kP = 0.4;// 0.8;
-		drivetrainVelocityRightPID.kF = 0.752 * 1023 / 3950;
+		drivetrainVelocityRightPID.kF = 0.388 * 1023 / 3108;
 		// arm
 		armConfig.enableVoltageCompensation = true;
 		armMagicVel = 1203;

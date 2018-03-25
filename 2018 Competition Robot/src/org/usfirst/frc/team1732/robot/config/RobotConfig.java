@@ -21,6 +21,8 @@ public class RobotConfig {
 	public final double robotLength = 38.5;
 	public final double robotWidth = 33.5;
 
+	public double waypointScaler = 1;
+
 	public double effectiveRobotWidth = 0;
 	public double drivetrainInchesPerPulse = 0;
 	public double maxUnitsPer100Ms = 0;
