@@ -43,7 +43,7 @@ public class ManipSetInUntilCube extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return manip.aboveStopCurrent() && stopTimer.get() > Manip.STOP_TIME;
+		return manip.aboveStopCurrent() && stopTimer.get() > Manip.CURRENT_STOP_TIME;
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public class RobotConfig {
 	public final double robotLength = 38.5;
 	public final double robotWidth = 33.5;
 
+	public double waypointScaler = 1;
+
 	public double effectiveRobotWidth = 0;
 	public double drivetrainInchesPerPulse = 0;
 	public double maxUnitsPer100Ms = 0;
@@ -45,9 +47,10 @@ public class RobotConfig {
 	public final CTREParam rightFollower1 = new CTREParam(14, reverseRight, rightMasterID);
 	public final CTREParam rightFollower2 = new CTREParam(13, reverseRight, rightMasterID);
 
-	public final ClosedLoopProfile drivetrainVelocityPID = new ClosedLoopProfile("Drivetrain Velocity PID",
+	public ClosedLoopProfile drivetrainVelocityLeftPID = new ClosedLoopProfile("Drivetrain Velocity Left PID",
 			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
+	public ClosedLoopProfile drivetrainVelocityRightPID = new ClosedLoopProfile("Drivetrain Velocity Right PID",
+			FeedbackDevice.QuadEncoder, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	// arm
 	public final CTREConfig armConfig = CTREConfig.getDefaultConfig();
 	private final boolean reverseArm = true;
@@ -79,7 +82,7 @@ public class RobotConfig {
 		elevatorConfig.openLoopRamp = elevatorRampTime;
 	}
 	private final boolean reverseElevator = true;
-	public final boolean reverseElevatorSensor = true;
+	public boolean reverseElevatorSensor = true;
 	public final CTREParam elevator = new CTREParam(3, reverseElevator);
 	public final ClosedLoopProfile elevatorMagicPID = new ClosedLoopProfile("Elevator Magic PID",
 			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -132,7 +135,7 @@ public class RobotConfig {
 	public static RobotConfig getConfig() {
 		String robot = Preferences.getInstance().getString(PREF_KEY, ROBOTS.DEFAULT.name());
 		Preferences.getInstance().putString(PREF_KEY, robot);
-		RobotConfig config = ROBOTS.valueOf(ROBOTS.class, robot).getConfig();
+		RobotConfig config = Enum.valueOf(ROBOTS.class, robot).getConfig();
 		System.out.println("Loaded robot: " + config.getClass().getName());
 		return config;
 	}

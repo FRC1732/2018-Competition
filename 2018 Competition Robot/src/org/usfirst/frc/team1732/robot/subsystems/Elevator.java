@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -33,7 +32,6 @@ public class Elevator extends Subsystem {
 	private int desiredPosition;
 	private boolean desiredIsSet;
 	private boolean autoControl = false;
-	private static final String key = "Elevator Starting Count";
 
 	private final int magicVel;
 	private final int magicAccel;
@@ -54,11 +52,9 @@ public class Elevator extends Subsystem {
 
 		encoder = new TalonEncoder(motor, FeedbackDevice.QuadEncoder);
 		encoder.setPhase(config.reverseElevatorSensor);
+		encoder.setDistancePerPulse(1);
 
 		allowedError = config.elevatorAllowedErrorCount;
-
-		// int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		// Preferences.getInstance().putDouble(key, startingCount);
 
 		Robot.dash.add("Elevator Encoder Position", encoder::getPosition);
 		Robot.dash.add("Elevator Encoder Pulses", encoder::getPulses);
@@ -77,8 +73,8 @@ public class Elevator extends Subsystem {
 
 		// 3311
 		// set these in pulses
-		BUTTON_POS(2025), INTAKE(2025), HUMAN(14000), RADIO(13415), HIT_RAMP(14228), SCALE_LOW(13840), SCALE_HIGH(
-				22389), MAX(30958);
+		BUTTON_POS(2025), INTAKE(2025), SWITCH_AUTO(18000), HUMAN(14000), CLIMB(10206), RADIO(13415), HIT_RAMP(
+				14228), SCALE_LOW(13840), SCALE_AUTO(19389), SCALE_HIGH(28389), MAX(30958);
 
 		public final int value;
 
@@ -91,12 +87,11 @@ public class Elevator extends Subsystem {
 
 	@Override
 	public void periodic() {
-		int startingCount = (int) Preferences.getInstance().getDouble(key, 0.0);
-		Preferences.getInstance().putDouble(key, startingCount);
+		int currentPosition = encoder.getPulses();
 		if (autoControl) {
-			if (desiredPosition < Positions.RADIO.value) {
+			if (desiredPosition < Positions.RADIO.value && currentPosition > Positions.RADIO.value - allowedError) {
 				if (!Robot.arm.isElevatorSafeToGoDown() && desiredIsSet) {
-					motor.set(ControlMode.MotionMagic, Positions.RADIO.value);
+					motor.set(ControlMode.MotionMagic, currentPosition);
 					desiredIsSet = false;
 				}
 				if (Robot.arm.isElevatorSafeToGoDown() && !desiredIsSet) {
@@ -153,14 +148,14 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isArmSafeToGoUp() {
-		return encoder.getPulses() + allowedError > Positions.RADIO.value;
+		return encoder.getPulses() > Positions.RADIO.value - allowedError;
 	}
 
 	public boolean isArmSafeToGoDown() {
-		if (encoder.getPulses() - allowedError < Positions.HIT_RAMP.value)
+		if (encoder.getPulses() < Positions.HIT_RAMP.value + allowedError)
 			return true;
 		else // only if the above is false
-			return !(getDesiredPosition() < Positions.HIT_RAMP.value);
+			return getDesiredPosition() > Positions.HIT_RAMP.value;
 	}
 
 	public int getEncoderPulses() {

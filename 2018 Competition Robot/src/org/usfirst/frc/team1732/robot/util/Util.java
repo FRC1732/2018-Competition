@@ -127,10 +127,23 @@ public class Util {
 
 	public static void logForGraphing(Object... obs) {
 		for (Object obj : obs) {
-			System.out.print(obj + "\t, ");
+			System.out.print(obj + ", ");
 		}
 		System.out.println();
 		// Arrays.asList(obs).forEach(o -> Debugger.logDetailedInfo(o + ", "));
 		// Debugger.logDetailedInfo("");
+	}
+
+	public static double getContinuousError(double angleSetpoint, double angleCurrent, double inputRange) {
+		double error = angleSetpoint - angleCurrent;
+		error %= inputRange;
+		if (Math.abs(error) > inputRange / 2) {
+			if (error > 0) {
+				return error - inputRange;
+			} else {
+				return error + inputRange;
+			}
+		}
+		return error;
 	}
 }

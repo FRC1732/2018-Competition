@@ -14,6 +14,7 @@ public class JoystickRangeButton extends Button {
 		this.minActivation = minActivation;
 	}
 
+	@Override
 	public boolean get() {
 		if (minActivation > 0) {
 			return joystick.getRawAxis(axisNumber) > minActivation;

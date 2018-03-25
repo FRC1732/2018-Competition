@@ -11,6 +11,7 @@ public class DrivetrainRamp extends Command {
 		requires(Robot.drivetrain);
 	}
 
+	@Override
 	protected void initialize() {
 		Debugger.logDetailedInfo(Robot.drivetrain.leftMaster.configOpenloopRamp(90, 10).name());
 		Debugger.logDetailedInfo(Robot.drivetrain.rightMaster.configOpenloopRamp(90, 10).name());
@@ -18,10 +19,12 @@ public class DrivetrainRamp extends Command {
 		Robot.drivetrain.setRight(1);
 	}
 
+	@Override
 	protected boolean isFinished() {
 		return false;
 	}
 
+	@Override
 	protected void end() {
 		Robot.drivetrain.drive.tankDrive(0, 0);
 		Debugger.logDetailedInfo(Robot.drivetrain.leftMaster.configOpenloopRamp(0, 10).name());

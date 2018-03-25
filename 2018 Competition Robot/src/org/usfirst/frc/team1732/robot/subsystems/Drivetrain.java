@@ -51,25 +51,26 @@ public class Drivetrain extends Subsystem {
 	public final double effectiveRobotWidth;
 	public final double maxUnitsPer100Ms;
 
-	public final ClosedLoopProfile velocityGains;
+	public final ClosedLoopProfile velocityGainsLeft;
+	public final ClosedLoopProfile velocityGainsRight;
 
 	public Drivetrain(RobotConfig config) {
 		shifter = new Solenoid(config.shiftingSolenoidID);
 		highGearValue = config.highGearValue;
 
-		leftMaster = MotorUtils.makeTalon(config.leftMaster,
-				config.drivetrainConfig);
-		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1,
-				config.drivetrainConfig, leftMaster);
-		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2,
-				config.drivetrainConfig, leftMaster);
+		leftMaster = MotorUtils.makeTalon(config.leftMaster, config.drivetrainConfig);
+		leftVictor1 = MotorUtils.makeVictorFollower(config.leftFollower1, config.drivetrainConfig, leftMaster);
+		leftVictor2 = MotorUtils.makeVictorFollower(config.leftFollower2, config.drivetrainConfig, leftMaster);
 
 		rightMaster = MotorUtils.makeTalon(config.rightMaster, config.drivetrainConfig);
 		rightVictor1 = MotorUtils.makeVictorFollower(config.rightFollower1, config.drivetrainConfig, rightMaster);
 		rightVictor2 = MotorUtils.makeVictorFollower(config.rightFollower2, config.drivetrainConfig, rightMaster);
 
-		velocityGains = config.drivetrainVelocityPID;
-		velocityGains.applyToTalon(leftMaster, rightMaster);
+		velocityGainsLeft = config.drivetrainVelocityLeftPID;
+		velocityGainsRight = config.drivetrainVelocityRightPID;
+		velocityGainsLeft.applyToTalon(leftMaster);
+		velocityGainsRight.applyToTalon(rightMaster);
+
 		maxUnitsPer100Ms = config.maxUnitsPer100Ms;
 
 		// ClosedLoopProfile.applyZeroGainToTalon(FeedbackDevice.QuadEncoder,
@@ -151,11 +152,15 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void setLeft(double percentVolt) {
+		double d = Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT);
+		System.out.println("set left: " + d);
 		leftMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
 	}
 
 	public void setRight(double percentVolt) {
-		rightMaster.set(ControlMode.PercentOutput, Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT));
+		double d = Util.limit(percentVolt, -MAX_OUTPUT, MAX_OUTPUT);
+		System.out.println("set right: " + d);
+		rightMaster.set(ControlMode.PercentOutput, d);
 	}
 
 	public void selectGains(ClosedLoopProfile gains) {

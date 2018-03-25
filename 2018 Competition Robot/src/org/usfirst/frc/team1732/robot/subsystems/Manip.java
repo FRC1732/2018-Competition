@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1732.robot.subsystems;
 
+import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.config.MotorUtils;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 
@@ -15,9 +16,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Manip extends Subsystem {
 
-	public static final double STOP_TIME = 0.25;
-	public static final double A_BASE_IN_SPEED = 0.9;
-	public static final double B_BASE_IN_SPEED = 0.5;
+	public static final double RAMP_TIME = 0.6;
+	public static final double CURRENT_STOP_TIME = 0.25;
+	public static final double A_BASE_IN_SPEED = 1;
+	public static final double B_BASE_IN_SPEED = 1;
 	public static final double BASE_OUT_SPEED = 0.5;
 
 	public final VictorSPX victorA;
@@ -25,6 +27,8 @@ public class Manip extends Subsystem {
 	public final double stopCurrent;
 
 	private double absVariableOut = BASE_OUT_SPEED;
+
+	private boolean assumeCube = true;
 
 	public Manip(RobotConfig config) {
 		victorA = MotorUtils.makeVictor(config.manipA, config.manipConfig);
@@ -36,7 +40,8 @@ public class Manip extends Subsystem {
 	public void initDefaultCommand() {
 	}
 
-	// might end up using a sensor for this
+	// might end up using a sensor for this (cube detection)
+
 	public boolean aboveStopCurrent() {
 		return false;
 		// return victor.getOutputCurrent() > stopCurrent;
@@ -49,21 +54,35 @@ public class Manip extends Subsystem {
 
 	public void setOutVariable() {
 		System.out.println("variable out set: " + absVariableOut);
+		setRampTime(0);
 		setOut(absVariableOut);
 	}
 
 	public void setIn() {
 		victorA.set(ControlMode.PercentOutput, -A_BASE_IN_SPEED);
 		victorB.set(ControlMode.PercentOutput, -B_BASE_IN_SPEED);
+		// System.out.println("MANIP SET IN");
+		assumeCube = true;
 	}
 
 	public void setOut(double absOutSpeed) {
 		victorA.set(ControlMode.PercentOutput, absOutSpeed);
 		victorB.set(ControlMode.PercentOutput, absOutSpeed);
+		// System.out.println("MANIP SET OUT");
+		assumeCube = false;
 	}
 
 	public void setStop() {
 		victorA.neutralOutput();
 		victorB.neutralOutput();
+	}
+
+	public void setRampTime(double rampTime) {
+		victorA.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
+		victorB.configOpenloopRamp(rampTime, Robot.CONFIG_TIMEOUT);
+	}
+
+	public boolean assumedCube() {
+		return assumeCube;
 	}
 }
