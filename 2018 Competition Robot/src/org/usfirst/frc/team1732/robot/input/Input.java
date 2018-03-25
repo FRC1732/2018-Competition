@@ -130,7 +130,7 @@ public class Input {
 		greenButton2.whenOverriden.whenReleased(makeCommand(ramp, ramp::setIn));
 
 		limelightToggle.whenPressed(makeCommand(sensors.limelight::toggleLED));
-
+		greenButton1.whenNotOverriden.whenPressed(makeCommand(sensors.limelight::takeSnapshot));
 		// magicArm.whenPressed(new ArmTest(0.3));
 
 		// magicElevator.whenPressed(new ElevatorTest(0.3));

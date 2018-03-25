@@ -5,29 +5,32 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 public class CompetitionConfig extends RobotConfig {
 
 	{
+		waypointScaler = 1;
 		// drivetrain
-		effectiveRobotWidth = 28.1877; // calculate
+		effectiveRobotWidth = 25; // 28.1877; // calculate
 		drivetrainInchesPerPulse = 100.0 / ((51310 - (12) + 51034 - (117)) / 2.0); // = 0.001957
 		maxUnitsPer100Ms = 7500; // measure
 		// drivetrainConfig. Change stuff like this:
+		drivetrainConfig.enableVoltageCompensation = true;
 		drivetrainConfig.openLoopRamp = 0;
 		// change PID values like this:
-		drivetrainVelocityLeftPID.kP = 0.45/* 0.4 */;
-		drivetrainVelocityLeftPID.kI = 1;// 0.5;
+		drivetrainVelocityLeftPID.kP = 0.4;// 0.45/* 0.4 */;
+		drivetrainVelocityLeftPID.kI = 0.01 / 5;// 1;// 0.5;
 		drivetrainVelocityLeftPID.kD = 0;
-		drivetrainVelocityLeftPID.kF = 1023 / 7500/* 5000 */;
-		drivetrainVelocityLeftPID.integralZone = 100;// zone is sensor units per 100m
+		drivetrainVelocityLeftPID.kF = 0.390 * 1023 / 3202; // 1023 / 7500/* 5000 */;
+		drivetrainVelocityLeftPID.integralZone = 5000; // 100;// zone is sensor units per 100m
 		drivetrainVelocityLeftPID.allowableError = 0;
-		drivetrainVelocityLeftPID.maxIntegralAccumulated = 100;
+		drivetrainVelocityLeftPID.maxIntegralAccumulated = 5000; // 100;
 		drivetrainVelocityLeftPID.secondsFromNeutralToFull = 0;
 		drivetrainVelocityRightPID = drivetrainVelocityLeftPID.clone();
-
+		drivetrainVelocityRightPID.kP = 0.4;// 0.8;
+		drivetrainVelocityRightPID.kF = 0.388 * 1023 / 3108;
 		// arm
 		armConfig.enableVoltageCompensation = true;
 		armMagicVel = 1203;
-		armMagicAccel = 1000;
-		armMagicPID.kF = 1023 / 1378; // 1023 / max sensor units per 100 ms
-		armMagicPID.kP = 4.1;
+		armMagicAccel = 700;
+		armMagicPID.kF = 1023 / 978; // 1378; // 1023 / max sensor units per 100 ms
+		armMagicPID.kP = 6.1; // 4.1;
 		armMagicPID.kI = 0.1;
 		armMagicPID.kD = 0;
 		armMagicPID.integralZone = 100;

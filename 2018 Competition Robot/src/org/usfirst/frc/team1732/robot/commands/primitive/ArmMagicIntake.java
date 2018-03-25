@@ -107,8 +107,8 @@ public class ArmMagicIntake extends CommandGroup {
 				arm.resetArmPos(currentPositionRelativeToButton);
 			}
 			int position = Positions.INTAKE.value;
-			arm.useMagicControl(position);
-			arm.set(position);
+			arm.useMagicControl(position - 5);
+			arm.set(position - 5);
 		}
 
 	}

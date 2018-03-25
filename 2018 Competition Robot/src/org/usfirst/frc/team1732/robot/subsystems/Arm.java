@@ -71,7 +71,7 @@ public class Arm extends Subsystem {
 		// BUTTON_POS(0), INTAKE(0), EXCHANGE(269), HUMAN_PLAYER(570), SWITCH(2642),
 		// CLIMB(5000), START(4093), TUCK(
 		// 6432), SCALE_LOW(7622), SCALE_HIGH(7622);
-		BUTTON_POS(-55), INTAKE(-55), EXCHANGE(159), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(2833), START(2729), TUCK(
+		BUTTON_POS(-75), INTAKE(-75), EXCHANGE(159), HUMAN_PLAYER(420), SWITCH(1716), CLIMB(2833), START(2729), TUCK(
 				4288), SCALE_LOW(5081), SCALE_HIGH(5081);
 
 		public final int value;
@@ -113,6 +113,12 @@ public class Arm extends Subsystem {
 					desiredIsSet = true;
 				}
 			}
+		}
+		if (Util.epsilonEquals(desiredPosition, Positions.INTAKE.value, 75)
+				&& Util.epsilonEquals(currentPosition, Positions.INTAKE.value, 75)) {
+			motor.config_kP(magicGains.slotIdx, magicGains.kP * 1.5, Robot.CONFIG_TIMEOUT);
+		} else {
+			motor.config_kP(magicGains.slotIdx, magicGains.kP, Robot.CONFIG_TIMEOUT);
 		}
 
 	}

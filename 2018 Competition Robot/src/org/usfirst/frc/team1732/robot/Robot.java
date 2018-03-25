@@ -15,7 +15,9 @@ import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
 import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import org.usfirst.frc.team1732.robot.controlutils.guiPathing.TestPath;
 import org.usfirst.frc.team1732.robot.input.Input;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.CamMode;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
+import org.usfirst.frc.team1732.robot.sensors.Limelight.StreamMode;
 import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
@@ -100,7 +102,7 @@ public class Robot extends TimedRobot {
 		hooks = new Hooks(robotConfig);
 		sensors = new Sensors(robotConfig);
 		ramp = new Ramp(robotConfig);
-		paths = new Paths();
+		paths = new Paths(robotConfig);
 
 		joysticks = new Input(robotConfig);
 		AutoChooser.addListener(joysticks);
@@ -198,6 +200,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		protectRobot();
+		sensors.limelight.setCamMode(CamMode.DRIVER_FEEDBACK);
+		sensors.limelight.setStreamMode(StreamMode.PIP_SECONDARY);
 		Debugger.disable();
 	}
 
@@ -233,6 +237,7 @@ public class Robot extends TimedRobot {
 		climber.setStop();
 		hooks.setDown();
 		ramp.setIn();
+		sensors.limelight.setLEDMode(LEDMode.OFF);
 	}
 
 }
