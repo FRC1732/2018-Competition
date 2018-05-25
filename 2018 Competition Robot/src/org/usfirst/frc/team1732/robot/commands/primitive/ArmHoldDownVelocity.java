@@ -1,26 +1,32 @@
 package org.usfirst.frc.team1732.robot.commands.primitive;
 
 import org.usfirst.frc.team1732.robot.Robot;
+import org.usfirst.frc.team1732.robot.controlutils.ClosedLoopProfile;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ArmHoldDown extends Command {
+public class ArmHoldDownVelocity extends Command {
 
-	public ArmHoldDown() {
+	public ArmHoldDownVelocity() {
 		requires(Robot.arm);
 	}
+
+	private static final ClosedLoopProfile armVelocityGains = new ClosedLoopProfile("Arm Velocity Gains",
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
 		Robot.arm.setManual(0);
-		System.out.println("Starting to hold arm down!");
-		Robot.arm.motor.set(ControlMode.Current, -0.5);
+		System.out.println("Starting to hold arm down velocity!");
+		Robot.arm.motor.set(ControlMode.Velocity, 0);
+		armVelocityGains.applyToTalon(Robot.arm.motor);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -38,7 +44,7 @@ public class ArmHoldDown extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		System.out.println("Stopped holding arm down!");
+		System.out.println("Stopped holding arm down velocity!");
 		Robot.arm.holdPosition();
 	}
 }
