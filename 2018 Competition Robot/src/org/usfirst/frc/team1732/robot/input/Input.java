@@ -10,7 +10,7 @@ import static org.usfirst.frc.team1732.robot.Robot.sensors;
 import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
-import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldDownCurrent;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldDownVelocity;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -75,7 +75,7 @@ public class Input {
 
 		// Add commands here
 
-		armHoldDowntest.toggleWhenActive(new ArmHoldDownCurrent());
+		armHoldDowntest.toggleWhenActive(new ArmHoldDownVelocity());
 		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));

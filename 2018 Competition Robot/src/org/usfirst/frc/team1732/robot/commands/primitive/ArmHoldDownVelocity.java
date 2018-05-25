@@ -18,7 +18,7 @@ public class ArmHoldDownVelocity extends Command {
 	}
 
 	private static final ClosedLoopProfile armVelocityGains = new ClosedLoopProfile("Arm Velocity Gains",
-			FeedbackDevice.CTRE_MagEncoder_Absolute, 2, 0, 0, 0, 0, 0, 0, 0, 0);
+			FeedbackDevice.CTRE_MagEncoder_Absolute, 3, 20, 0, 0, 0, 0, 0, 0, 0);
 
 	// Called just before this Command runs the first time
 	@Override
@@ -45,6 +45,7 @@ public class ArmHoldDownVelocity extends Command {
 	@Override
 	protected void end() {
 		System.out.println("Stopped holding arm down velocity!");
+		Robot.arm.useMagicControl(Robot.arm.getEncoderPulses());
 		Robot.arm.holdPosition();
 	}
 }
