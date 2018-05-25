@@ -10,6 +10,7 @@ import static org.usfirst.frc.team1732.robot.Robot.sensors;
 import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ArmHoldDown;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
@@ -70,7 +71,11 @@ public class Input {
 		JoystickButton shifting = new JoystickButton(right, 5);
 		JoystickButton limelightToggle = new JoystickButton(left, 7);
 
+		JoystickButton armHoldDowntest = new JoystickButton(left, 6);
+
 		// Add commands here
+
+		armHoldDowntest.toggleWhenActive(new ArmHoldDown());
 		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));

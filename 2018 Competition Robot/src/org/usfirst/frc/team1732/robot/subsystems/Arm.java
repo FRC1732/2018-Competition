@@ -90,6 +90,7 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
+		Debugger.logSimpleInfo("Arm current: " + motor.getOutputCurrent());
 		int currentPosition = encoder.getPulses();
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && currentPosition < Positions.TUCK.value + allowedError) {

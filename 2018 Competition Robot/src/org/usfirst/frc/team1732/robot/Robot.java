@@ -200,7 +200,8 @@ public class Robot extends TimedRobot {
 		protectRobot();
 		sensors.limelight.setCamMode(CamMode.DRIVER_FEEDBACK);
 		sensors.limelight.setStreamMode(StreamMode.PIP_SECONDARY);
-		Debugger.disable();
+		Debugger.enableSimple();
+		// Debugger.disable();
 	}
 
 	@Override
