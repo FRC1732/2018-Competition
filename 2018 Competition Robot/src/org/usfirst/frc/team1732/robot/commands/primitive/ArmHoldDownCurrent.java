@@ -20,7 +20,7 @@ public class ArmHoldDownCurrent extends Command {
 	protected void initialize() {
 		Robot.arm.setManual(0);
 		System.out.println("Starting to hold arm down current!");
-		Robot.arm.motor.set(ControlMode.Current, 0);
+		Robot.arm.motor.set(ControlMode.Current, -10);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

@@ -92,11 +92,11 @@ public class Arm extends Subsystem {
 		// Robot.arm.motor.getClosedLoopTarget(0),
 		// Robot.arm.motor.getClosedLoopError(0),
 		// Robot.arm.motor.getMotorOutputPercent());
-		if (limitPrint % 5 == 0) {
-			Debugger.logSimpleInfo("Arm current: " + motor.getOutputCurrent());
-			limitPrint = 0;
-		}
-		limitPrint++;
+		// if (limitPrint % 5 == 0) {
+		// Debugger.logSimpleInfo("Arm current: " + motor.getOutputCurrent());
+		// limitPrint = 0;
+		// }
+		// limitPrint++;
 		int currentPosition = encoder.getPulses();
 		if (autoControl) {
 			if (desiredPosition > Positions.TUCK.value && currentPosition < Positions.TUCK.value + allowedError) {
