@@ -64,9 +64,10 @@ public class RightScaleRightTwice extends CommandGroup {
 			{
 				addParallel(new CommandGroup() {
 					{
-						addSequential(new Wait(1));
-						addSequential(
-								new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_AUTO));
+						addSequential(new Wait(0.25));
+						addSequential(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.SCALE_LOW));
+						// new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW,
+						// Elevator.Positions.SCALE_AUTO));
 					}
 				});
 				addSequential(new FollowVelocityPath(profile3));
