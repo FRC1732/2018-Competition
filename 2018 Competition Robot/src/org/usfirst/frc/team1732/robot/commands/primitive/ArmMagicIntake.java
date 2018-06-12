@@ -23,6 +23,12 @@ public class ArmMagicIntake extends CommandGroup {
 	}
 
 	@Override
+	protected void initialize() {
+		hitButton = false;
+		minPosition = Integer.MAX_VALUE;
+	}
+
+	@Override
 	protected void end() {
 		System.out.println("Ended Arm Intake Command");
 	}

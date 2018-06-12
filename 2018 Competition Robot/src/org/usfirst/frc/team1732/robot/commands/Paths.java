@@ -21,17 +21,19 @@ public class Paths {
 		robotWidth = config.robotWidth;
 		effectiveWidth = config.effectiveRobotWidth;
 
-		defaultDriveStraight = makeDefaultDriveStraight();
-		centerSwitchFrontLeft = makeCenterSwitchFrontLeft();
-		centerSwitchFrontStraight = makeCenterSwitchFrontStraight();
+		defaultDriveStraight = makeDefaultDriveStraight(); // default drive straight
+		centerSwitchFrontLeft = makeCenterSwitchFrontLeft(); // drives to the left switch plate to score in the front
+		centerSwitchFrontStraight = makeCenterSwitchFrontStraight(); // drives to the right switch plate to score in the
+																		// front
 		// scaleLeftStraight = makeScaleLeftStraight();
 		// scaleLeftCross = makeScaleLeftCross();
-		rightScaleCross = makeRightScaleCross();
-		rightScaleStraight = makeRightScaleStraight();
+		rightScaleCross = makeRightScaleCross(); // drives to the left scale starting on the right, ending at the left
+		rightScaleStraight = makeRightScaleStraight(); // drives to the right scale starting on the right
 		// scaleLeftSwitch = makeScaleLeftSwitch();
-		rightSwitchRightSide = makeRightSwitchRightSide();
+		rightSwitchRightSide = makeRightSwitchRightSide(); // drives to the right switch scoring into the side
 		// leftCubeGrabStraight = makeLeftCubeGrabStraight();
-		rightCubeGrabStraightRight = makeRightCubeGrabStraightRight();
+		rightCubeGrabStraightRight = makeRightCubeGrabStraightRight(); // picks up the second cube after not crossing
+																		// the middle and scoring in the right switch
 		rightCubeGrabStraightLeft = makeRightCubeStraightLeft();
 		rightScaleRightReturn = makeRightScaleRightReturn();
 		rightScaleLeftReturn = makeRightScaleLeftReturn();
@@ -127,12 +129,13 @@ public class Paths {
 
 	public PointProfile makeRightScaleStraight() {
 		Path path;
-		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 10 + 14;
-		double startingY = robotLength / 2.0;
+		double startingX = Field.Switch.BOUNDARY.getMaxX() + robotWidth / 2.0 + 10 + 14; // mathy position
+		double startingY = robotLength / 2.0; // mathy position
 		path = new Path(new Waypoint(startingX, startingY, Math.PI / 2, 0), true);
 		double endingX = Field.Scale.RIGHT_PLATE.getCenterX() + robotWidth / 2;
 		double endingY = Field.Scale.RIGHT_PLATE.getY() - robotLength;
-		path.addWaypoint(new Waypoint(endingX + 10, endingY + 35, 4 * Math.PI / 7, 0));
+		// Math.toRadians(angrad);
+		path.addWaypoint(new Waypoint(endingX + 10 /* fudge numbers here */, endingY + 35, 4 * Math.PI / 7, 0));
 		path.generateProfile(maxVelocity, maxAcceleration);
 
 		return path.getVelocityProfile(effectiveWidth);
