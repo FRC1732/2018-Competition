@@ -135,7 +135,7 @@ public class Paths {
 		double endingX = Field.Scale.RIGHT_PLATE.getCenterX() + robotWidth / 2;
 		double endingY = Field.Scale.RIGHT_PLATE.getY() - robotLength;
 		// Math.toRadians(angrad);
-		path.addWaypoint(new Waypoint(endingX + 10 /* fudge numbers here */, endingY + 35, 4 * Math.PI / 7, 0));
+		path.addWaypoint(new Waypoint(endingX + 10 /* fudge numbers here */, endingY + 34, 4 * Math.PI / 7, 0));
 		path.generateProfile(maxVelocity, maxAcceleration);
 
 		return path.getVelocityProfile(effectiveWidth);
