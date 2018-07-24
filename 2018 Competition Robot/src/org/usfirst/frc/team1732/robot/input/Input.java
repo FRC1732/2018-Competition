@@ -11,6 +11,8 @@ import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipClampIn;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipClampOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRunManualSafe;
@@ -70,6 +72,10 @@ public class Input {
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
 
+		// New
+		JoystickButton clampIn = new JoystickButton(left, 2);
+		JoystickButton clampOut = new JoystickButton(right, 2);
+
 		JoystickButton leftIntake = new JoystickButton(left, 3);
 		JoystickButton rightTuck = new JoystickButton(right, 3);
 
@@ -122,6 +128,10 @@ public class Input {
 		rightTrigger.whenReleased(new ManipSetStop());
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+
+		// New
+		clampIn.whenPressed(new ManipClampIn());
+		clampOut.whenPressed(new ManipClampOut());
 
 		shifting.whileHeld(new TeleopShift());
 
