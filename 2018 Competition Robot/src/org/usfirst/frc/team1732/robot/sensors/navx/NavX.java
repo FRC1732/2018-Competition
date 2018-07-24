@@ -8,6 +8,8 @@ import com.kauailabs.navx.frc.AHRS;
 public class NavX extends GyroBase {
 
 	private final AHRS navx;
+	// New heading variable;
+	double heading = 0;
 
 	public NavX(AHRS navx) {
 		this.navx = navx;
@@ -28,6 +30,15 @@ public class NavX extends GyroBase {
 	@Override
 	public void zero() {
 		navx.zeroYaw();
+	}
+
+	// New getHeading Method
+	public double getHeading() {
+		heading = navx.getAngle();
+		if (heading < 0) {
+			heading = 360 + heading;
+		}
+		return heading;
 	}
 
 	public void addToDashboard() {

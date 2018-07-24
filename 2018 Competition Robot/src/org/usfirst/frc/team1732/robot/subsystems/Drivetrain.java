@@ -183,4 +183,10 @@ public class Drivetrain extends Subsystem {
 		return desiredUnitsPer100Ms * 10 * inchesPerPulse;
 	}
 
+	// New Drive Method
+	public void drive(double left, double right) {
+		leftMaster.set(ControlMode.PercentOutput, left);
+		rightMaster.set(ControlMode.PercentOutput, right);
+	}
+
 }
