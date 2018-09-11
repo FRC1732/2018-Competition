@@ -189,4 +189,10 @@ public class Drivetrain extends Subsystem {
 		rightMaster.set(ControlMode.PercentOutput, right);
 	}
 
+	// New Encoder Methods
+	public void resetEncoders() {
+		rightEncoder.zero();
+		leftEncoder.zero();
+	}
+
 }

@@ -32,6 +32,29 @@ public class SwitchCenterFront extends CommandGroup {
 				addSequential(new ManipAutoEject(0.7));
 			}
 		});
+
+		/*
+		 * New Auto Pathing if (DriverStationData.closeSwitchIsLeft) { addSequential(new
+		 * CommandGroup() { { addParallel(new
+		 * ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		 * addParallel(new CommandGroup() { { addSequential(new Wait(0.25));
+		 * addSequential(new ManipSetIn()); } }); addSequential(new
+		 * DriveToAngleWithRadius(90, 60, false)); addParallel(new
+		 * DriveWithEncoders(-30)); addSequential(new ManipSetStop(Manip.RAMP_TIME));
+		 * addParallel(new DriveToAngleWithRadius(90, 70, true)); addParallel(new
+		 * CommandGroup() { { addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
+		 * addSequential(new Wait(2)); addSequential(new ManipAutoEject(0.7)); } }); }
+		 * }); } else { addSequential(new CommandGroup() { { addParallel(new
+		 * ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+		 * addParallel(new CommandGroup() { { addSequential(new Wait(0.25));
+		 * addSequential(new ManipSetIn()); } }); addSequential(new
+		 * DriveToAngleWithRadius(-90, 60, false)); addParallel(new
+		 * DriveWithEncoders(-30)); addSequential(new ManipSetStop(Manip.RAMP_TIME));
+		 * addParallel(new DriveoAngleWithRadius(-90, 70, true)); addParallel(new
+		 * CommandGroup() { { addParallel(new ArmMagicPosition(Arm.Positions.TUCK));
+		 * addSequential(new Wait(2)); addSequential(new ManipAutoEject(0.7)); } }); }
+		 * }); }
+		 */
 		addSequential(new PostAuto());
 	}
 }
