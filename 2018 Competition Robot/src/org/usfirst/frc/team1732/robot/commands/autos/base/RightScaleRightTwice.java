@@ -4,6 +4,7 @@ import org.usfirst.frc.team1732.robot.Robot;
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.DriveVoltage;
 import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPath;
+import org.usfirst.frc.team1732.robot.commands.primitive.FollowVelocityPathLimelight;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.primitive.Wait;
@@ -53,8 +54,8 @@ public class RightScaleRightTwice extends CommandGroup {
 						addSequential(new ManipSetIn());
 					}
 				});
-				// addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
-				addSequential(new FollowVelocityPath(profile2));
+				addSequential(new FollowVelocityPathLimelight(profile2, 0.3));
+				// addSequential(new FollowVelocityPath(profile2));
 				addSequential(new DriveVoltage(0, 0, NeutralMode.Brake));
 			}
 		});
@@ -64,8 +65,10 @@ public class RightScaleRightTwice extends CommandGroup {
 			{
 				addParallel(new CommandGroup() {
 					{
-						addSequential(new Wait(0.25));
+						addSequential(new Wait(0.45));
 						addSequential(
+								// new ArmElevatorSetPosition(Arm.Positions.TUCK,
+								// Elevator.Positions.INTAKE));
 								new ArmElevatorSetPosition(Arm.Positions.SCALE_LOW, Elevator.Positions.SCALE_AUTO));
 					}
 				});

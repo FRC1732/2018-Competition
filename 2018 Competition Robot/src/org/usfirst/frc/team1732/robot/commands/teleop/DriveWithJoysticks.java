@@ -26,7 +26,9 @@ public class DriveWithJoysticks extends NotifierCommand {
 	protected void exec() {
 		// drive.tankDrive(Robot.joysticks.getLeft(), Robot.joysticks.getRight(),
 		// false);
-		drive.tankDrive(-Robot.joysticks.getRight(), -Robot.joysticks.getLeft(), false);
+		final double SENSITIVITY = 0.6;
+
+		drive.tankDrive(-Robot.joysticks.getRight() * SENSITIVITY, -Robot.joysticks.getLeft() * SENSITIVITY, false);
 	}
 
 	@Override

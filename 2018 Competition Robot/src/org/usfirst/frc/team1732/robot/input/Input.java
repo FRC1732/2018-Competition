@@ -11,6 +11,8 @@ import static org.usfirst.frc.team1732.robot.util.InstantLambda.makeCommand;
 
 import org.usfirst.frc.team1732.robot.commands.primitive.ArmElevatorSetPosition;
 import org.usfirst.frc.team1732.robot.commands.primitive.ElevatorHoldPosition;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipClampIn;
+import org.usfirst.frc.team1732.robot.commands.primitive.ManipClampOut;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetIn;
 import org.usfirst.frc.team1732.robot.commands.primitive.ManipSetStop;
 import org.usfirst.frc.team1732.robot.commands.teleop.ElevatorRunManualSafe;
@@ -40,7 +42,6 @@ public class Input {
 		// Define all the buttons here
 		JoystickButton override = new JoystickButton(buttons, 12);
 
-		OverrideButton posIntake = new OverrideButton(new JoystickButton(buttons, 1), override);
 		OverrideButton posExchange = new OverrideButton(new JoystickButton(buttons, 2), override);
 		OverrideButton posHuman = new OverrideButton(new JoystickButton(buttons, 3), override);
 		OverrideButton posSwitch = new OverrideButton(new JoystickButton(buttons, 4), override);
@@ -61,8 +62,19 @@ public class Input {
 		JoystickButton rockerDown = new JoystickButton(autoDial, 12);
 		// ThreePosSwitch rocker = new ThreePosSwitch(rockerUp, rockerDown);
 
+		RepeatUntilConflictButton posIntakeRepeatUntilConflict = new RepeatUntilConflictButton(
+				new JoystickButton(buttons, 1), posExchange.whenNotOverriden, posHuman.whenNotOverriden,
+				posSwitch.whenNotOverriden, posTuck.whenNotOverriden, posScaleLow.whenNotOverriden,
+				posScaleHigh.whenNotOverriden, redButton.whenNotOverriden, greenButton1.whenNotOverriden,
+				greenButton2.whenNotOverriden, rockerUp, rockerDown);
+		OverrideButton posIntake = new OverrideButton(posIntakeRepeatUntilConflict, override);
+
 		JoystickButton leftTrigger = new JoystickButton(left, 1);
 		JoystickButton rightTrigger = new JoystickButton(right, 1);
+
+		// New
+		JoystickButton clampIn = new JoystickButton(left, 2);
+		JoystickButton clampOut = new JoystickButton(right, 2);
 
 		JoystickButton leftIntake = new JoystickButton(left, 3);
 		JoystickButton rightTuck = new JoystickButton(right, 3);
@@ -73,7 +85,7 @@ public class Input {
 		// Add commands here
 		// posIntake.whenNotOverriden.whenPressed(new ArmMagicPosition(5000));
 		posIntake.whenNotOverriden
-				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
+				.whileHeld(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));// );
 		posExchange.whenNotOverriden
 				.whenPressed(new ArmElevatorSetPosition(Arm.Positions.EXCHANGE, Elevator.Positions.INTAKE));
 		posHuman.whenNotOverriden
@@ -116,6 +128,10 @@ public class Input {
 		rightTrigger.whenReleased(new ManipSetStop());
 		leftIntake.whenPressed(new ArmElevatorSetPosition(Arm.Positions.INTAKE, Elevator.Positions.INTAKE));
 		rightTuck.whenPressed(new ArmElevatorSetPosition(Arm.Positions.TUCK, Elevator.Positions.INTAKE));
+
+		// New
+		clampIn.whenPressed(new ManipClampIn());
+		clampOut.whenPressed(new ManipClampOut());
 
 		shifting.whileHeld(new TeleopShift());
 

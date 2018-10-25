@@ -7,6 +7,7 @@ import org.usfirst.frc.team1732.robot.config.RobotConfig;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -26,6 +27,10 @@ public class Manip extends Subsystem {
 	public final VictorSPX victorB;
 	public final double stopCurrent;
 
+	// New
+	public final Solenoid clamp;
+	public final boolean IN = true;
+
 	private double absVariableOut = BASE_OUT_SPEED;
 
 	private boolean assumeCube = true;
@@ -34,6 +39,9 @@ public class Manip extends Subsystem {
 		victorA = MotorUtils.makeVictor(config.manipA, config.manipConfig);
 		victorB = MotorUtils.makeVictor(config.manipB, config.manipConfig);
 		stopCurrent = config.manipStopCurrent;
+
+		// New
+		clamp = new Solenoid(config.hookSolenoidID);
 	}
 
 	@Override
@@ -75,6 +83,14 @@ public class Manip extends Subsystem {
 	public void setStop() {
 		victorA.neutralOutput();
 		victorB.neutralOutput();
+	}
+
+	public void clampIn() {
+		clamp.set(IN);
+	}
+
+	public void clampOut() {
+		clamp.set(!IN);
 	}
 
 	public void setRampTime(double rampTime) {

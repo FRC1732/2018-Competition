@@ -19,6 +19,11 @@ public class ElevatorMagicIntake extends CommandGroup {
 		addSequential(new ElevatorUntilButton(this));
 	}
 
+	@Override
+	protected void initialize() {
+		hitButton = false;
+	}
+
 	private static class ElevatorMagicIntakeUntilButton extends Command {
 
 		private final ElevatorMagicIntake parentCommand;

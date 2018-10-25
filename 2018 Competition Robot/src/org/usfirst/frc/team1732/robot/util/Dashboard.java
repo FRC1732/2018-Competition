@@ -40,15 +40,19 @@ public class Dashboard {
 		}
 
 		public void putToDashboard() {
-			Object o = sup.get();
-			if (o instanceof Number) {
-				SmartDashboard.putNumber(name, ((Number) o).doubleValue());
-			} else if (o instanceof Boolean) {
-				SmartDashboard.putBoolean(name, (Boolean) o);
-			} else if (o instanceof String) {
-				SmartDashboard.putString(name, (String) o);
-			} else if (o instanceof Sendable) {
-				SmartDashboard.putData((Sendable) o);
+			try {
+				Object o = sup.get();
+				if (o instanceof Number) {
+					SmartDashboard.putNumber(name, ((Number) o).doubleValue());
+				} else if (o instanceof Boolean) {
+					SmartDashboard.putBoolean(name, (Boolean) o);
+				} else if (o instanceof String) {
+					SmartDashboard.putString(name, (String) o);
+				} else if (o instanceof Sendable) {
+					SmartDashboard.putData((Sendable) o);
+				}
+			} catch (Exception e) {
+				System.out.println("An Exception occured");
 			}
 		}
 	}

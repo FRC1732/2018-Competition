@@ -18,6 +18,7 @@ import org.usfirst.frc.team1732.robot.sensors.Limelight.LEDMode;
 import org.usfirst.frc.team1732.robot.sensors.Limelight.StreamMode;
 import org.usfirst.frc.team1732.robot.sensors.SensorChecker;
 import org.usfirst.frc.team1732.robot.sensors.Sensors;
+import org.usfirst.frc.team1732.robot.sensors.navx.NavX;
 import org.usfirst.frc.team1732.robot.subsystems.Arm;
 import org.usfirst.frc.team1732.robot.subsystems.Climber;
 import org.usfirst.frc.team1732.robot.subsystems.Drivetrain;
@@ -28,6 +29,8 @@ import org.usfirst.frc.team1732.robot.subsystems.Ramp;
 import org.usfirst.frc.team1732.robot.util.BooleanTimer;
 import org.usfirst.frc.team1732.robot.util.Dashboard;
 import org.usfirst.frc.team1732.robot.util.Debugger;
+
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -56,6 +59,10 @@ public class Robot extends TimedRobot {
 	public static Hooks hooks;
 	public static Sensors sensors;
 	public static Ramp ramp;
+
+	// New NavX Object
+	public static AHRS ahrs;
+	public static NavX navx;
 
 	// paths
 	public static Paths paths;
@@ -101,6 +108,9 @@ public class Robot extends TimedRobot {
 		sensors = new Sensors(robotConfig);
 		ramp = new Ramp(robotConfig);
 		paths = new Paths(robotConfig);
+
+		// New NavX Init
+		navx = new NavX(ahrs);
 
 		joysticks = new Input(robotConfig);
 		AutoChooser.addListener(joysticks);
